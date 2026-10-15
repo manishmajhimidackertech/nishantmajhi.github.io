@@ -1,0 +1,142 @@
+html {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif, system;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+  gap: 0.5rem;
+  background-image: url("../img/background.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  font-size: medium;
+}
+form {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  border-radius: 0.6rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+input,
+button {
+  outline: transparent;
+  border: none;
+  font-size: 1rem;
+}
+
+#query_string {
+  border-radius: 0.6rem 0 0 0.6rem;
+  padding-left: 2ch;
+  flex-grow: 1;
+  color: var(--input-color);
+  background-color: transparent;
+}
+
+#search-button {
+  border-radius: 0 0.6rem 0.6rem 0;
+  padding: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.4s, transform 0.4s;
+}
+#search-button:active {
+  transform: scale(105%);
+}
+
+#open-calculator {
+  padding: 0;
+  position: fixed;
+}
+
+#calculator-icon {
+  border-radius: 0.8rem;
+  transition: transform 0.4s;
+}
+#calculator-icon:hover {
+  transform: scale(108%);
+}
+#calculator-icon:active {
+  transform: scale(100%);
+}
+
+.search_engines {
+  display: flex;
+  justify-content: center;
+  gap: 1ch;
+}
+
+@media (orientation: landscape) {
+  main nav {
+    gap: 6ch;
+  }
+  .search_engines input {
+    width: 1rem;
+  }
+  .search_engines img {
+    height: 2rem;
+  }
+
+  main form {
+    width: 60vw;
+  }
+
+  main input[type="text"],
+  main button {
+    font-size: 1.2rem;
+  }
+
+  #open-calculator {
+    left: 1rem;
+    top: 1rem;
+  }
+  #calculator-icon {
+    height: 4rem;
+  }
+}
+
+@media (orientation: portrait) {
+  main nav {
+    gap: 2ch;
+  }
+  #yahoo {
+    display: none;
+  }
+  .search_engines input {
+    width: 0.8rem;
+  }
+  .search_engines img {
+    height: 1.5rem;
+  }
+
+  main form {
+    width: 80vw;
+  }
+
+  main input[type="text"],
+  main button {
+    font-size: 0.9rem;
+  }
+
+  #open-calculator {
+    left: 0.5rem;
+    top: 0.5rem;
+  }
+  #calculator-icon {
+    height: 2.5rem;
+  }
+}

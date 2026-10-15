@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <title>TrigEqK</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="math.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Trigonometric Equation Check</h1>
+    </header>
+
+    <main>
+      <section class="input-section">
+        <label for="equation" class="input-label">Enter an equation</label>
+        <div class="input-row">
+          <input
+            type="text"
+            placeholder="e.g. sin(x)^2 + cos(x)^2 = 1"
+            aria-label="Trigonometric equation"
+            id="equation"
+            autocomplete="off"
+            spellcheck="false"
+            autofocus
+          />
+          <button type="button" id="check-btn" aria-label="Check equation">
+            Check
+          </button>
+        </div>
+        <p class="hint">
+          Use <code>x</code> as the angle variable. Supported: <code>sin</code>,
+          <code>cos</code>, <code>tan</code>, <code>sec</code>,
+          <code>csc</code>, <code>cot</code>, and standard operators
+          <code>+ - * / ^ ( )</code>.
+        </p>
+      </section>
+
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        id="live-announce"
+        class="sr-only"
+      ></div>
+
+      <section class="results-section" id="results" hidden>
+        <div class="summary-banner" id="summary-banner">
+          <span class="summary-icon" id="summary-icon"></span>
+          <span id="summary-text"></span>
+        </div>
+
+        <div class="tabs" role="tablist">
+          <button
+            role="tab"
+            class="tab active"
+            id="tab-standard"
+            aria-controls="panel-standard"
+            aria-selected="true"
+          >
+            Standard angles
+            <span class="tab-badge" id="badge-standard"></span>
+          </button>
+          <button
+            role="tab"
+            class="tab"
+            id="tab-random"
+            aria-controls="panel-random"
+            aria-selected="false"
+          >
+            Random angles
+            <span class="tab-badge" id="badge-random"></span>
+          </button>
+        </div>
+
+        <div role="tabpanel" id="panel-standard" aria-labelledby="tab-standard">
+          <table id="standard" aria-label="Standard angles test results">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Angle</th>
+                <th>LHS</th>
+                <th>RHS</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div
+          role="tabpanel"
+          id="panel-random"
+          aria-labelledby="tab-random"
+          hidden
+        >
+          <table id="random" aria-label="Random angles test results">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Angle</th>
+                <th>LHS</th>
+                <th>RHS</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="empty-state" id="empty-state">
+        <div class="empty-icon">∿</div>
+        <p class="empty-title">No equation checked yet</p>
+        <p class="empty-desc">
+          Type a trigonometric equation above and press
+          <strong>Check</strong> to verify it across angles.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Tests run against 17 standard angles (0°–360°) and 17 random angles.
+      </p>
+    </footer>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>

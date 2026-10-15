@@ -1,0 +1,2502 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Recursion in Multiplication</title>
+    <meta
+      name="description"
+      content="How to multiply two numbers on a decimal processor that has an adder, memory, and nothing else."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #faf8f2;
+        --panel: #fffefa;
+        --sunk: #f1eee4;
+        --ink: #15211c;
+        --dim: #5f6b65;
+        --faint: #8c948f;
+        --rule: #d4dcd3;
+        --ledger: #2c5d4c;
+        --ledger-soft: #e2ede6;
+        --carry: #a5391d;
+        --carry-soft: #f8e8e2;
+        --sans: "IBM Plex Sans", system-ui, sans-serif;
+        --serif: "IBM Plex Serif", Georgia, serif;
+        --mono: "IBM Plex Mono", ui-monospace, monospace;
+        --measure: 66ch;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--serif);
+        font-size: 17px;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+
+      .masthead {
+        border-bottom: 1px solid var(--ink);
+        background: repeating-linear-gradient(
+          90deg,
+          transparent 0 calc(10% - 1px),
+          var(--rule) calc(10% - 1px),
+          var(--rule) 10%
+        );
+      }
+      .masthead-inner {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 56px 32px 44px;
+      }
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ledger);
+        margin: 0 0 22px;
+        font-weight: 500;
+      }
+      .masthead h1 {
+        font-family: var(--sans);
+        font-weight: 600;
+        letter-spacing: -0.028em;
+        font-size: clamp(2.1rem, 5.6vw, 3.8rem);
+        line-height: 1.03;
+        margin: 0 0 18px;
+        max-width: 17ch;
+      }
+      .masthead h1 em {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+      }
+      .standfirst {
+        max-width: 54ch;
+        font-size: 1.1rem;
+        color: var(--dim);
+        margin: 0 0 34px;
+      }
+
+      .abstract {
+        background: var(--panel);
+        border: 1px solid var(--ink);
+        max-width: var(--measure);
+        margin: 0 0 26px;
+      }
+      .abstract-hd {
+        background: var(--ink);
+        color: var(--paper);
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 9px 18px;
+        font-weight: 500;
+      }
+      .abstract-body {
+        padding: 20px 22px;
+      }
+      .abstract-body p {
+        margin: 0 0 14px;
+        font-size: 16px;
+      }
+      .abstract-body p:last-child {
+        margin-bottom: 0;
+      }
+
+      .byline {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--faint);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 22px;
+        border-top: 1px solid var(--rule);
+        padding-top: 16px;
+        align-items: center;
+      }
+      .byline b {
+        color: var(--ledger);
+        font-weight: 500;
+      }
+      .dl {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--paper);
+        background: var(--ledger);
+        text-decoration: none;
+        padding: 7px 14px;
+        border-radius: 2px;
+        letter-spacing: 0.03em;
+      }
+      .dl:hover,
+      .dl:focus {
+        background: var(--ink);
+      }
+      .dl:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 2px;
+      }
+
+      .shell {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 32px;
+        display: grid;
+        grid-template-columns: 196px 1fr;
+        gap: 56px;
+      }
+      nav.toc {
+        position: sticky;
+        top: 0;
+        align-self: start;
+        padding: 44px 0;
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      nav.toc h2 {
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--faint);
+        font-weight: 500;
+        margin: 0 0 14px;
+        font-family: var(--mono);
+      }
+      nav.toc ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        counter-reset: toc;
+      }
+      nav.toc li {
+        counter-increment: toc;
+        margin-bottom: 9px;
+        display: flex;
+        gap: 10px;
+        line-height: 1.4;
+      }
+      nav.toc li::before {
+        content: counter(toc, decimal-leading-zero);
+        color: var(--faint);
+        flex: 0 0 auto;
+      }
+      nav.toc a {
+        color: var(--dim);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+      nav.toc a:hover,
+      nav.toc a:focus {
+        color: var(--ledger);
+        border-bottom-color: var(--ledger);
+      }
+      main {
+        padding: 44px 0 96px;
+        min-width: 0;
+      }
+
+      section {
+        margin-bottom: 72px;
+        scroll-margin-top: 24px;
+      }
+      section > h2 {
+        font-family: var(--sans);
+        font-weight: 600;
+        font-size: 1.62rem;
+        letter-spacing: -0.02em;
+        margin: 0 0 6px;
+        padding-top: 20px;
+        border-top: 2px solid var(--ink);
+      }
+      .snum {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        color: var(--ledger);
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 20px;
+        font-weight: 500;
+      }
+      section h3 {
+        font-family: var(--sans);
+        font-weight: 600;
+        font-size: 1.06rem;
+        letter-spacing: -0.01em;
+        margin: 38px 0 10px;
+      }
+      p {
+        max-width: var(--measure);
+        margin: 0 0 17px;
+      }
+      ul,
+      ol {
+        max-width: var(--measure);
+        padding-left: 22px;
+        margin: 0 0 17px;
+      }
+      li {
+        margin-bottom: 7px;
+      }
+      a {
+        color: var(--ledger);
+      }
+      code {
+        font-family: var(--mono);
+        font-size: 0.87em;
+        background: var(--sunk);
+        padding: 1px 5px;
+        border-radius: 2px;
+      }
+      strong {
+        font-weight: 600;
+      }
+      .eqn {
+        font-family: var(--mono);
+        font-size: 15px;
+        background: var(--sunk);
+        padding: 14px 18px;
+        max-width: var(--measure);
+        margin: 0 0 17px;
+      }
+
+      .spec {
+        background: var(--panel);
+        border: 1px solid var(--ink);
+        margin: 0 0 28px;
+        max-width: var(--measure);
+      }
+      .spec-hd {
+        background: var(--ink);
+        color: var(--paper);
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 9px 18px;
+        font-weight: 500;
+      }
+      .spec dl {
+        margin: 0;
+        padding: 20px 18px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 11px 20px;
+        font-size: 15px;
+      }
+      .spec dt {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--ledger);
+        padding-top: 3px;
+      }
+      .spec dd {
+        margin: 0;
+      }
+
+      .callout {
+        border-left: 3px solid var(--ledger);
+        background: var(--ledger-soft);
+        padding: 16px 20px;
+        margin: 0 0 24px;
+        max-width: var(--measure);
+        font-size: 16px;
+      }
+      .callout.warn {
+        border-left-color: var(--carry);
+        background: var(--carry-soft);
+      }
+      .callout p:last-child {
+        margin-bottom: 0;
+      }
+      .callout .tag {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ledger);
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+      }
+      .callout.warn .tag {
+        color: var(--carry);
+      }
+
+      table.data {
+        border-collapse: collapse;
+        font-family: var(--mono);
+        font-size: 13px;
+        margin: 0 0 24px;
+        width: 100%;
+        max-width: var(--measure);
+        background: var(--panel);
+      }
+      table.data.wide {
+        max-width: 100%;
+      }
+      table.data th {
+        text-align: left;
+        font-weight: 500;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--paper);
+        background: var(--ink);
+        padding: 8px 11px;
+        white-space: nowrap;
+      }
+      table.data td {
+        border-bottom: 1px solid var(--rule);
+        padding: 7px 11px;
+        vertical-align: top;
+      }
+      table.data tr:last-child td {
+        border-bottom: none;
+      }
+      table.data td.num {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      table.data .gap {
+        color: var(--carry);
+      }
+      table.data .mut {
+        color: var(--faint);
+      }
+
+      pre {
+        background: var(--ink);
+        color: #dce5df;
+        font-family: var(--mono);
+        font-size: 12.5px;
+        line-height: 1.62;
+        padding: 20px 22px;
+        overflow-x: auto;
+        margin: 0 0 24px;
+        border-radius: 2px;
+      }
+      pre .c {
+        color: #7e9a8c;
+        font-style: italic;
+      }
+      pre .k {
+        color: #9cc7b4;
+      }
+
+      .refs {
+        max-width: var(--measure);
+        font-size: 15px;
+      }
+      .ref {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        gap: 14px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--rule);
+      }
+      .ref:last-child {
+        border-bottom: none;
+      }
+      .ref .rn {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--ledger);
+        padding-top: 4px;
+      }
+      .ref .rt {
+        font-weight: 600;
+        font-family: var(--sans);
+        font-size: 15px;
+        display: block;
+        margin-bottom: 3px;
+      }
+      .ref .rm {
+        color: var(--dim);
+        font-size: 14px;
+        display: block;
+      }
+      .ref .rc {
+        color: var(--ink);
+        font-size: 14px;
+        display: block;
+        margin-top: 6px;
+      }
+
+      .machine {
+        border: 1px solid var(--ink);
+        background: var(--panel);
+        margin: 0 0 26px;
+      }
+      .machine-hd {
+        background: var(--ink);
+        color: var(--paper);
+        padding: 10px 18px;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        font-weight: 500;
+      }
+      .machine-hd .phase {
+        color: #9cc7b4;
+      }
+      .controls {
+        display: flex;
+        gap: 14px;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        padding: 18px;
+        border-bottom: 1px solid var(--rule);
+        background: var(--sunk);
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .field label {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .field input,
+      .field select {
+        font-family: var(--mono);
+        font-size: 16px;
+        padding: 7px 10px;
+        border: 1px solid var(--rule);
+        background: var(--panel);
+        color: var(--ink);
+        border-radius: 2px;
+      }
+      .field input {
+        width: 130px;
+      }
+      .field select {
+        font-size: 13px;
+        padding: 8px 10px;
+      }
+      .field input:focus,
+      .field select:focus {
+        outline: 2px solid var(--ledger);
+        outline-offset: 1px;
+        border-color: var(--ledger);
+      }
+      .btn {
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        padding: 9px 16px;
+        cursor: pointer;
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 2px;
+      }
+      .btn.ghost {
+        background: transparent;
+        color: var(--ink);
+      }
+      .btn:hover {
+        background: var(--ledger);
+        border-color: var(--ledger);
+        color: var(--paper);
+      }
+      .btn:focus-visible {
+        outline: 2px solid var(--ledger);
+        outline-offset: 2px;
+      }
+      .btn[disabled] {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      .btn[disabled]:hover {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--paper);
+      }
+      .btn.ghost[disabled]:hover {
+        background: transparent;
+        color: var(--ink);
+      }
+
+      .stage {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        min-height: 300px;
+      }
+      @media (max-width: 900px) {
+        .stage {
+          grid-template-columns: 1fr;
+        }
+      }
+      .chainpane {
+        border-right: 1px solid var(--rule);
+        padding: 16px 18px;
+        background: var(--panel);
+      }
+      .accpane {
+        padding: 16px 18px;
+        overflow-x: auto;
+      }
+      .panetitle {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--faint);
+        margin: 0 0 12px;
+      }
+      .chainrow {
+        display: grid;
+        grid-template-columns: 26px 66px 1fr;
+        gap: 8px;
+        align-items: center;
+        font-family: var(--mono);
+        font-size: 12.5px;
+        padding: 4px 6px;
+        margin-bottom: 2px;
+        border-left: 2px solid transparent;
+      }
+      .chainrow .ck {
+        color: var(--ledger);
+        font-weight: 500;
+      }
+      .chainrow .cr {
+        color: var(--faint);
+        font-size: 11px;
+      }
+      .chainrow .cv {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .chainrow.skip {
+        opacity: 0.3;
+      }
+      .chainrow.done {
+        background: var(--ledger-soft);
+        border-left-color: var(--ledger);
+      }
+      .chainrow.active {
+        background: #c9e0d2;
+        border-left-color: var(--ink);
+      }
+
+      .cell {
+        width: 30px;
+        height: 34px;
+        flex: 0 0 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--mono);
+        font-size: 15px;
+        font-weight: 500;
+        border: 1px solid var(--rule);
+        margin-right: -1px;
+        background: var(--panel);
+      }
+      .cell.pp {
+        background: var(--ledger-soft);
+        border-color: #b9cfc2;
+        color: var(--ledger);
+      }
+      .cell.blank {
+        background: transparent;
+        border-color: transparent;
+      }
+      .cell.sum {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+        font-weight: 600;
+      }
+      .acclabel {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--dim);
+        margin: 0 0 4px;
+        letter-spacing: 0.02em;
+      }
+      .accrow {
+        display: flex;
+        margin-bottom: 2px;
+      }
+      .accrule {
+        height: 1px;
+        background: var(--ink);
+        margin: 7px 0;
+      }
+      .meters {
+        display: flex;
+        border-top: 1px solid var(--rule);
+        background: var(--sunk);
+        flex-wrap: wrap;
+      }
+      .meter {
+        padding: 13px 18px;
+        border-right: 1px solid var(--rule);
+        flex: 1;
+        min-width: 132px;
+      }
+      .meter:last-child {
+        border-right: none;
+      }
+      .meter .mk {
+        font-family: var(--mono);
+        font-size: 9.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+        display: block;
+        margin-bottom: 4px;
+      }
+      .meter .mv {
+        font-family: var(--mono);
+        font-size: 21px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+      .meter .mv.hi {
+        color: var(--ledger);
+      }
+      .meter .mv.lo {
+        color: var(--carry);
+      }
+      .log {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        color: var(--dim);
+        padding: 11px 18px;
+        border-top: 1px solid var(--rule);
+        min-height: 38px;
+      }
+      .log b {
+        color: var(--ledger);
+        font-weight: 500;
+      }
+
+      .dlbox {
+        border: 1px solid var(--ink);
+        background: var(--panel);
+        padding: 22px;
+        max-width: var(--measure);
+        margin: 0 0 24px;
+      }
+      .dlbox p {
+        margin: 0 0 16px;
+      }
+      .dlbox p:last-child {
+        margin-bottom: 0;
+      }
+
+      footer {
+        border-top: 1px solid var(--ink);
+        padding: 32px;
+        text-align: center;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--faint);
+        letter-spacing: 0.04em;
+      }
+
+      @media (max-width: 860px) {
+        .shell {
+          grid-template-columns: 1fr;
+          gap: 0;
+          padding: 0 22px;
+        }
+        nav.toc {
+          position: static;
+          padding: 28px 0 0;
+          border-bottom: 1px solid var(--rule);
+        }
+        nav.toc ol {
+          columns: 2;
+          column-gap: 20px;
+        }
+        .masthead-inner {
+          padding: 38px 22px 32px;
+        }
+        body {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="masthead-inner">
+        <p class="eyebrow">Computer arithmetic · working paper</p>
+        <h1>Recursion in <em>multiplication</em></h1>
+        <p class="standfirst">
+          Multiplying two numbers on a processor that can only add.
+        </p>
+
+        <div class="abstract">
+          <div class="abstract-hd">Abstract</div>
+          <div class="abstract-body">
+            <p>
+              This paper describes a method for multiplying two whole numbers on
+              a processor that has an adder and memory and nothing else. It
+              cannot multiply, divide, subtract, or shift, and it stores numbers
+              as decimal digits.
+            </p>
+            <p>
+              Two problems have to be solved. The first is producing multiples
+              of a number without multiplying. We solve it with a short sequence
+              of additions, nine in total, where each result is built from
+              results already computed. The second is place value - the factor
+              of ten, hundred, or thousand that separates one column from the
+              next. We solve it by not performing it at all: the factor of ten
+              becomes the memory position a value is written to.
+            </p>
+            <p>
+              We then test whether the decimal requirement can be removed, and
+              show that it cannot. Removing it does not make the method faster;
+              it makes the method unnecessary. All measurements can be
+              reproduced with the code below.
+            </p>
+          </div>
+        </div>
+
+        <div class="byline">
+          <span><b>Operations available</b> add, load, store</span>
+          <span><b>Additions to build the table</b> nine</span>
+          <span><b>Shift operations</b> none</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell">
+      <nav class="toc" aria-label="Contents">
+        <h2>Contents</h2>
+        <ol>
+          <li><a href="#machine">The processor</a></li>
+          <li><a href="#problem">The problem</a></li>
+          <li><a href="#chain">Building the multiples</a></li>
+          <li><a href="#shift">Removing place value</a></li>
+          <li><a href="#algo">The method</a></li>
+          <li><a href="#demo">Try it</a></li>
+          <li><a href="#cost">How much it costs</a></li>
+          <li><a href="#code">The program</a></li>
+          <li><a href="#lit">Related work</a></li>
+          <li><a href="#assess">What is new</a></li>
+          <li><a href="#verify">Check it yourself</a></li>
+          <li><a href="#refs">References</a></li>
+        </ol>
+      </nav>
+
+      <main>
+        <!-- 1 -->
+        <section id="machine">
+          <h2>The processor</h2>
+          <span class="snum">Section 01</span>
+
+          <p>
+            Everything in this paper depends on how the processor stores
+            numbers, so we describe it before anything else. Leaving this vague
+            is how a hidden multiplication can slip into a method that is
+            supposed to avoid them.
+          </p>
+
+          <div class="spec">
+            <div class="spec-hd">The machine we are designing for</div>
+            <dl>
+              <dt>Counting</dt>
+              <dd>In tens, the way people count. Digits are 0 to 9.</dd>
+              <dt>Storage</dt>
+              <dd>
+                A number is a list of digits in memory, one digit per slot. Slot
+                0 holds the ones digit, slot 1 the tens digit, and so on.
+              </dd>
+              <dt>Arithmetic</dt>
+              <dd>It can add two digits and carry. That is all.</dd>
+              <dt>Memory</dt>
+              <dd>It can read and write a slot at a given position.</dd>
+              <dt>Missing</dt>
+              <dd>No multiply, no divide, no subtract, no shift.</dd>
+            </dl>
+          </div>
+
+          <p>
+            Two things follow from this, and the rest of the paper rests on
+            them.
+          </p>
+
+          <p>
+            <strong>Carrying does not need subtraction.</strong> When two digits
+            are added the answer is somewhere between 0 and 19. If it is more
+            than 9 we would normally subtract 10 and carry 1, but this processor
+            cannot subtract. Adding 6 instead and keeping only the lower four
+            bits gives the same digit, because for any value from 10 to 19,
+            <code>(value + 6) &amp; 15</code> equals <code>value − 10</code>.
+            The carry appears on its own. So carrying is done with an addition,
+            which the processor has.
+          </p>
+
+          <p>
+            <strong>Multiplying by ten is not an operation.</strong> Because the
+            processor counts in tens and stores one digit per slot, moving a
+            number one place to the left means writing it starting one slot
+            further along. Section 4 uses this.
+          </p>
+
+          <h3>Why the decimal requirement is not just convenient</h3>
+
+          <p>
+            Stating a requirement and then presenting a method that happens to
+            need it looks circular. So it is worth checking the other direction.
+            What happens if we take the requirement away?
+          </p>
+
+          <p>
+            Suppose the processor stores numbers in binary instead - as ones and
+            zeros packed into a word, which is how nearly every real processor
+            works. Nothing else changes. Moving a number one decimal place is
+            now real work, so we have to compute it by adding. The table below
+            counts additions for 32-bit numbers, averaged over four thousand
+            random pairs. The <em>base</em> is how many different digits the
+            number system uses: base ten uses 0 to 9, base two uses 0 and 1.
+          </p>
+
+          <table class="data wide">
+            <thead>
+              <tr>
+                <th>Base</th>
+                <th>Multiples needed</th>
+                <th>Additions</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2</td>
+                <td class="num">none</td>
+                <td class="num">44.5</td>
+                <td class="mut">no table at all</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td class="num">2</td>
+                <td class="num">42.5</td>
+                <td class="mut">the best of these</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td class="num">6</td>
+                <td class="num">42.7</td>
+                <td class="mut"></td>
+              </tr>
+              <tr>
+                <td>16</td>
+                <td class="num">14</td>
+                <td class="num">43.7</td>
+                <td class="mut">the table now costs more than it saves</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td class="num">8</td>
+                <td class="num">48.9</td>
+                <td class="gap">the worst option here</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            Base ten does worse than every binary option, including base two,
+            which needs
+            <strong>no multiples table at all</strong>. That is the point. The
+            table has ten entries because base ten has ten digits. Base ten is
+            worth using because moving a place is free. Moving a place is free
+            because the processor stores decimal digits. Take away the decimal
+            storage and all three fall together - the sensible base becomes two
+            or four, and the multiples table, which is the whole subject of this
+            paper, shrinks to nothing.
+          </p>
+
+          <p>
+            To be clear, decimal is not chosen for speed. This method needs
+            roughly two hundred digit additions for numbers of about 32 bits,
+            while a binary processor needs about forty-four word additions for
+            the same work. Binary is several times faster. Decimal storage
+            exists because binary cannot represent decimal fractions such as 0.1
+            exactly, which matters in money, tax, and accounting. That is why
+            decimal formats were added to the IEEE 754 standard in 2008 and why
+            IBM builds decimal hardware. Section 9 returns to this.
+          </p>
+        </section>
+
+        <!-- 2 -->
+        <section id="problem">
+          <h2>The problem</h2>
+          <span class="snum">Section 02</span>
+
+          <p>
+            Take <code>726 × 25</code>. The obvious approach is to add 726 to
+            itself 25 times. It works, but the number of additions depends on
+            the <em>value</em> of the multiplier rather than its length. A
+            six-digit multiplier would need close to a million additions. This
+            is not merely slow; it becomes unusable as soon as the numbers grow.
+          </p>
+
+          <p>
+            Long multiplication, the method taught in school, fixes this by
+            splitting the multiplier into digits:
+          </p>
+
+          <p class="eqn">
+            726 × 25 &nbsp;=&nbsp; 726×5 &nbsp;+&nbsp; 726×2 × 10
+          </p>
+
+          <p>
+            Now the work depends on how many digits the multiplier has, not how
+            large it is. But it leaves two things a processor without a
+            multiplier cannot do:
+          </p>
+
+          <ol>
+            <li>
+              Work out <code>726×5</code> and <code>726×2</code>. Sections 3
+              handles this.
+            </li>
+            <li>Apply the factor of ten. Section 4 handles this.</li>
+          </ol>
+
+          <p>
+            We could store a ten-by-ten times table and look the answers up. We
+            deliberately do not, because the interesting question is what
+            structure the multiples have when you are forced to work them out.
+            The answer turns out to be something mathematicians already have a
+            name for.
+          </p>
+        </section>
+
+        <!-- 3 -->
+        <section id="chain">
+          <h2>Building the multiples</h2>
+          <span class="snum">Section 03</span>
+
+          <p>
+            We build the multiples of the whole number being multiplied, not of
+            single digits. This removes the inner digit-by-digit loop
+            completely. Writing <code>x</code> for that number, we want
+            <code>t[k] = k × x</code> for every <code>k</code> from 0 to 9. Each
+            one is built from ones already finished:
+          </p>
+
+          <table class="data">
+            <thead>
+              <tr>
+                <th>k</th>
+                <th>How it is made</th>
+                <th>Additions</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>fill with zeros</td>
+                <td class="num">0</td>
+                <td class="mut">memory, not arithmetic</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>copy of x</td>
+                <td class="num">0</td>
+                <td class="mut">memory, not arithmetic</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>t[1] + t[1]</td>
+                <td class="num">1</td>
+                <td class="mut">a doubling</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>t[1] + t[2]</td>
+                <td class="num">1</td>
+                <td class="mut"></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>t[2] + t[2]</td>
+                <td class="num">1</td>
+                <td class="mut">a doubling</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>t[1] + t[4]</td>
+                <td class="num">1</td>
+                <td class="mut"></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>t[3] + t[3]</td>
+                <td class="num">1</td>
+                <td class="mut">a doubling</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>t[1] + t[6]</td>
+                <td class="num">1</td>
+                <td class="gap">missing from our first draft</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>t[4] + t[4]</td>
+                <td class="num">1</td>
+                <td class="mut">a doubling</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>t[3] + t[6]</td>
+                <td class="num">1</td>
+                <td class="mut"></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            Nine additions for the whole table. Every value a row needs is
+            finished before that row is reached, so the table can be filled from
+            top to bottom with no reordering.
+          </p>
+
+          <div class="callout warn">
+            <span class="tag">A correction to our first version</span>
+            <p>
+              Our first draft built the table in the order 2, 4, 8, 3, 5, 6, 9
+              and never produced a rule for <strong>seven</strong>, which stayed
+              blank in every worked example. It went unnoticed because seven is
+              the only digit below ten that cannot be reached by doubling
+              something or adding one to something already in that order.
+              <code>t[7] = t[1] + t[6]</code> fixes it at the same cost as every
+              other row.
+            </p>
+          </div>
+
+          <h3>Nine additions is the best possible</h3>
+
+          <p>
+            Eight of the rows do not exist until something creates them, and one
+            addition creates at most one value. So eight additions is a floor.
+            One extra is spent because row 7 has to be built on top of row 6
+            rather than sharing a doubling with something else. Nine is not just
+            good, it is the least that will work.
+          </p>
+
+          <h3>What this pattern is called</h3>
+
+          <p>
+            A sequence that starts at 1 where every later number is the sum of
+            two earlier ones is called an <strong>addition chain</strong>.
+            Mathematicians have studied these since the 1930s. Alfred Brauer
+            wrote about them in 1939 <a href="#r-brauer">[3]</a>, and Knuth
+            gives the standard summary <a href="#r-knuth">[4]</a>. Our table is
+            a small collection of such chains growing out of 1.
+          </p>
+
+          <p>
+            This is worth knowing for two reasons. It confirms our table is a
+            known object rather than a lucky arrangement, and it means the
+            general problem is harder than our small case suggests. Finding the
+            shortest chain for a large number is difficult, and one question
+            about them, the Scholz–Brauer conjecture from 1937, is still
+            unanswered.
+          </p>
+        </section>
+
+        <!-- 4 -->
+        <section id="shift">
+          <h2>Removing place value</h2>
+          <span class="snum">Section 04</span>
+
+          <p>
+            Adding a zero to the end of a number is free only when the way you
+            count matches the way you store. That one condition settles the
+            whole design:
+          </p>
+
+          <table class="data wide">
+            <thead>
+              <tr>
+                <th>Storage</th>
+                <th>Base</th>
+                <th>Cost of one place</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>digits in memory</td>
+                <td>10</td>
+                <td class="num">nothing</td>
+                <td>it is just a position</td>
+              </tr>
+              <tr>
+                <td>packed binary word</td>
+                <td>2, 4, 8…</td>
+                <td class="num">a few adds</td>
+                <td>a doubling per bit</td>
+              </tr>
+              <tr>
+                <td>packed binary word</td>
+                <td>10</td>
+                <td class="num">4 adds</td>
+                <td class="gap">easy to overlook</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            Our processor is the first row, so we never move a number at all.
+            Each partial result is added into the running total starting at the
+            slot matching its digit's position:
+          </p>
+
+          <pre><span class="c">/* j is where the multiplier digit sits, and also the place value */</span>
+<span class="k">for</span> (j = 0; j &lt; yn; j++) {
+    d = y[j];
+    <span class="k">if</span> (d == 0) <span class="k">continue</span>;
+    add_at(out, xn + yn, t[d], tn, <span class="k">j</span>);
+}</pre>
+
+          <p>
+            That <code>j</code> in the last argument <em>is</em> the
+            multiplication by ten, hundred, or thousand. There is no arithmetic,
+            no shift instruction, no appended zero. Long multiplication on paper
+            has always worked this way - the indentation of each row is exactly
+            this position - but naming it turns a rule we would otherwise have
+            to justify into a property of how memory is addressed.
+          </p>
+
+          <h3>Why we do not build a ten times entry</h3>
+
+          <p>
+            If we did want <code>10 × x</code>, the cheapest way is
+            <code>t[5] + t[5]</code>: one addition, and a doubling, so it reads
+            one value rather than two. Built from scratch it would take four
+            additions, so this is a real saving.
+          </p>
+
+          <p>
+            We do not build it, because nothing would use it.
+            <code>t[10]</code> holds ten times the
+            <em>number being multiplied</em>, but the only thing that ever needs
+            scaling is the <em>running total</em>, and that holds a different
+            value at every step. No table computed once can supply it.
+          </p>
+
+          <p>
+            We tested the strongest version of this idea, in which the whole
+            table is kept scaled and moved along one place at a time using
+            <code>t[5] + t[5]</code>. There the trick is genuinely used, and it
+            still loses: 52.2 additions on average, against 48.9 for the simpler
+            approach and 42.5 for base four. Rebuilding the table after each
+            move costs more than it saves. We note the construction here in case
+            anyone ports this to a binary processor, where it would be the right
+            choice.
+          </p>
+        </section>
+
+        <!-- 5 -->
+        <section id="algo">
+          <h2>The method</h2>
+          <span class="snum">Section 05</span>
+
+          <p>
+            The inputs are two lists of digits, <code>x</code> with
+            <code>m</code> digits and <code>y</code> with <code>n</code> digits,
+            ones digit first. The answer needs <code>m + n</code> slots.
+          </p>
+
+          <ol>
+            <li>
+              <strong>Start.</strong> Copy <code>x</code> into
+              <code>t[1]</code>, with one extra zero slot at the end so the
+              larger multiples fit.
+            </li>
+            <li>
+              <strong>Build.</strong> For <code>k</code> from 2 to 9, copy one
+              earlier row into <code>t[k]</code> and add another into it,
+              following the table in Section 3.
+            </li>
+            <li>
+              <strong>Total up.</strong> For each digit position
+              <code>j</code> in <code>y</code>, if that digit is not zero, add
+              <code>t[digit]</code> into the answer starting at slot
+              <code>j</code>.
+            </li>
+          </ol>
+
+          <p>
+            Both loops have a known length, so the program contains no recursion
+            when it runs. Section 8 explains why that matters.
+          </p>
+
+          <h3>Only building what is used</h3>
+
+          <p>
+            Building all nine rows is wasteful when the multiplier uses only a
+            few digits. Instead, mark the digits that actually appear in
+            <code>y</code>, then work backwards through the table marking the
+            rows those rows depend on. Build only what is marked.
+          </p>
+
+          <p>
+            For <code>726 × 25</code> this marks rows 5, 4 and 2, so three rows
+            are built instead of eight, and the cost drops from 40 additions to
+            20. The saving is largest exactly where the full table is hardest to
+            justify, namely short multipliers.
+          </p>
+        </section>
+
+        <!-- 6 -->
+        <section id="demo">
+          <h2>Try it</h2>
+          <span class="snum">Section 06</span>
+
+          <p>
+            Type two numbers and press Step. The left panel builds the multiples
+            one addition at a time. The right panel writes each partial result
+            into the running total at its position. The counters below track
+            every digit addition performed.
+          </p>
+
+          <div class="machine">
+            <div class="machine-hd">
+              <span>Decimal add-only multiplier</span>
+              <span class="phase" id="phase">idle</span>
+            </div>
+
+            <div class="controls">
+              <div class="field">
+                <label for="inA">First number</label>
+                <input
+                  id="inA"
+                  type="text"
+                  inputmode="numeric"
+                  value="726"
+                  maxlength="9"
+                />
+              </div>
+              <div class="field">
+                <label for="inB">Second number</label>
+                <input
+                  id="inB"
+                  type="text"
+                  inputmode="numeric"
+                  value="25"
+                  maxlength="9"
+                />
+              </div>
+              <div class="field">
+                <label for="lazy">Multiples table</label>
+                <select id="lazy">
+                  <option value="1">build only what is used</option>
+                  <option value="0">build all nine rows</option>
+                </select>
+              </div>
+              <button class="btn" id="bStep">Step</button>
+              <button class="btn ghost" id="bRun">Run all</button>
+              <button class="btn ghost" id="bReset">Reset</button>
+            </div>
+
+            <div class="stage">
+              <div class="chainpane">
+                <p class="panetitle">Multiples</p>
+                <div id="chain"></div>
+              </div>
+              <div class="accpane">
+                <p class="panetitle">Running total</p>
+                <div id="acc"></div>
+              </div>
+            </div>
+
+            <div class="meters">
+              <div class="meter">
+                <span class="mk">Digit additions</span>
+                <span class="mv hi" id="mAdds">0</span>
+              </div>
+              <div class="meter">
+                <span class="mk">Shift operations</span>
+                <span class="mv hi" id="mShift">0</span>
+              </div>
+              <div class="meter">
+                <span class="mk">Swapped, it would cost</span>
+                <span class="mv" id="mSwap">-</span>
+              </div>
+              <div class="meter">
+                <span class="mk">Repeated adding would cost</span>
+                <span class="mv lo" id="mNaive">0</span>
+              </div>
+              <div class="meter">
+                <span class="mk">Answer</span>
+                <span class="mv" id="mProd">-</span>
+              </div>
+            </div>
+
+            <p class="log" id="log" role="status" aria-live="polite">
+              Press Step to begin.
+            </p>
+          </div>
+
+          <p>
+            The shift counter stays at zero whatever you type, which is the
+            claim of Section 4 shown rather than asserted. The swap counter
+            shows what the same answer would cost with the two numbers
+            exchanged; Section 7 explains why they differ. Try
+            <code>1234 × 5678</code> or <code>10 × 999999999</code>.
+          </p>
+        </section>
+
+        <!-- 7 -->
+        <section id="cost">
+          <h2>How much it costs</h2>
+          <span class="snum">Section 07</span>
+
+          <p>
+            Let <code>m</code> and <code>n</code> be the number of digits in
+            each input, and <code>z</code> the count of non-zero digits in the
+            multiplier. Costs are measured in digit additions, since that is the
+            only arithmetic the processor can do.
+          </p>
+
+          <table class="data wide">
+            <thead>
+              <tr>
+                <th>Stage</th>
+                <th>Cost</th>
+                <th>Depends on</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Building all nine rows</td>
+                <td class="num">9(m+1)</td>
+                <td class="mut">first number's length</td>
+              </tr>
+              <tr>
+                <td>Building only what is used</td>
+                <td class="num">at most 9(m+1)</td>
+                <td class="mut">which digits appear</td>
+              </tr>
+              <tr>
+                <td>Adding up</td>
+                <td class="num">z(m+1) plus carries</td>
+                <td class="mut">both lengths</td>
+              </tr>
+              <tr>
+                <td>Moving places</td>
+                <td class="num">0</td>
+                <td class="mut">nothing</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            The total grows as <code>m × n</code>. Repeated adding grows with
+            the value of the multiplier instead, which is the difference between
+            a program that finishes and one that does not. Measured figures:
+          </p>
+
+          <table class="data wide">
+            <thead>
+              <tr>
+                <th>Sum</th>
+                <th>All rows</th>
+                <th>Only what is used</th>
+                <th>Plus better order</th>
+                <th>Repeated adding</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>726 × 25</td>
+                <td class="num">40</td>
+                <td class="num">20</td>
+                <td class="num">20</td>
+                <td class="num">75</td>
+              </tr>
+              <tr>
+                <td>305 × 407</td>
+                <td class="num">40</td>
+                <td class="num">28</td>
+                <td class="num">24</td>
+                <td class="num">1 221</td>
+              </tr>
+              <tr>
+                <td>99999 × 99999</td>
+                <td class="num">78</td>
+                <td class="num">54</td>
+                <td class="num">54</td>
+                <td class="num">499 995</td>
+              </tr>
+              <tr>
+                <td>123456 × 987654</td>
+                <td class="num">98</td>
+                <td class="num">98</td>
+                <td class="num">77</td>
+                <td class="num">5 925 924</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            The last row shows both effects. A multiplier that uses every digit
+            gains nothing from building fewer rows, but still drops from 98 to
+            77 simply by swapping the two numbers around. That is the next
+            subsection.
+          </p>
+
+          <h3>Which number goes where</h3>
+
+          <p>
+            Since <code>a × b</code> and <code>b × a</code> give the same
+            answer, either number can play either role. The two choices do not
+            cost the same. Building the table depends on the <em>length</em> of
+            the first number, while adding up depends on <em>which digits</em>
+            the second number contains. These pull in different directions.
+          </p>
+
+          <p>
+            Across 117,117 pairs, comparing each arrangement with its reverse:
+          </p>
+
+          <table class="data">
+            <tbody>
+              <tr>
+                <td>Swapping is cheaper</td>
+                <td class="num">43.9% of pairs</td>
+              </tr>
+              <tr>
+                <td>Average saving when it helps</td>
+                <td class="num">9.7 additions</td>
+              </tr>
+              <tr>
+                <td>Largest single saving</td>
+                <td class="num">45 additions, on 1010 × 1597</td>
+              </tr>
+              <tr>
+                <td>Overall saving from always choosing</td>
+                <td class="num">12.3%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            Some individual cases are dramatic. <code>1234 × 5678</code> costs
+            55 additions one way and 35 the other.
+            <code>10 × 999999999</code> costs 39 one way and 10 the other.
+          </p>
+
+          <p>
+            Choosing correctly does not require trying both. The cost of an
+            arrangement is predicted by
+          </p>
+
+          <p class="eqn">
+            cost &nbsp;≈&nbsp; (rows needed + non-zero digits) × (length of
+            first number + 1)
+          </p>
+
+          <p>
+            Work this out both ways and take the smaller. Across the sweep it
+            picked the cheaper arrangement on
+            <strong>104,642 of 104,642</strong> pairs where the two differed -
+            every one. It is also cheap enough to run on the target processor:
+            both quantities are below twenty, so the one multiplication it
+            appears to need is itself a table entry.
+          </p>
+
+          <div class="callout">
+            <span class="tag">Where swapping helps and where it does not</span>
+            <p>
+              A full ten-by-ten times table can be halved, from 100 entries to
+              55, because
+              <code>6×4</code> and <code>4×6</code> are the same. That saving
+              does not apply here and is not needed: building the multiples from
+              the whole number in Section 3 already reduced the table to nine
+              rows. The useful form of that symmetry is not inside the table but
+              in the choice of which number feeds it.
+            </p>
+          </div>
+
+          <h3>When the table stops being worth it</h3>
+
+          <p>
+            The table is a fixed cost spread over the digits of the multiplier.
+            For a one-digit multiplier it is a loss. Building only what is used
+            recovers most of that, and choosing the better arrangement puts the
+            shorter number into the multiplier position, which helps again.
+            Below about three digits the honest answer is to build the single
+            multiple needed and skip the table.
+          </p>
+        </section>
+
+        <!-- 8 -->
+        <section id="code">
+          <h2>The program</h2>
+          <span class="snum">Section 08</span>
+
+          <div class="callout">
+            <span class="tag"
+              >Recursion is for working it out, not for running it</span
+            >
+            <p>
+              The multiples are worked out recursively, each from earlier ones,
+              but the program must not actually call itself. The sequence is
+              known in advance, so it becomes nine plain statements in a row.
+              Real recursion would use a stack frame per call, and stack traffic
+              is memory traffic, which is the scarce resource on this processor.
+            </p>
+          </div>
+
+          <pre><span class="c">/* Add src into acc starting at slot off. No subtraction anywhere. */</span>
+<span class="k">static void</span> add_at(uint8_t *acc, <span class="k">int</span> alen,
+                   <span class="k">const</span> uint8_t *src, <span class="k">int</span> slen, <span class="k">int</span> off)
+{
+    <span class="k">int</span> i, s, carry = 0;
+
+    <span class="k">for</span> (i = 0; i &lt; slen &amp;&amp; off + i &lt; alen; i++) {
+        s = acc[off + i] + src[i] + carry;
+        g_digit_adds++;
+        carry = (s &gt; 9);
+        acc[off + i] = carry ? ((s + 6) &amp; 0x0F) : s;   <span class="c">/* add 6, not minus 10 */</span>
+    }
+    <span class="k">while</span> (carry &amp;&amp; off + i &lt; alen) {          <span class="c">/* let the carry run on */</span>
+        s = acc[off + i] + 1;
+        g_digit_adds++;
+        carry = (s &gt; 9);
+        acc[off + i] = carry ? ((s + 6) &amp; 0x0F) : s;
+        i++;
+    }
+}
+
+<span class="c">/* CHAIN[k] = {a,b} means row k is row a plus row b, with a and b below k. */</span>
+<span class="k">static const</span> uint8_t CHAIN[10][2] = {
+    {0,0}, {0,0}, {1,1}, {1,2}, {2,2},
+    {1,4}, {3,3}, {1,6}, {4,4}, {3,6}
+};
+
+<span class="k">void</span> dec_mul(<span class="k">const</span> uint8_t *x, <span class="k">int</span> xn,
+             <span class="k">const</span> uint8_t *y, <span class="k">int</span> yn, uint8_t *out)
+{
+    uint8_t t[10][MAXD];
+    <span class="k">int</span> tn = xn + 1, k, j;
+
+    memset(t, 0, <span class="k">sizeof</span> t);
+    memcpy(t[1], x, xn);
+
+    <span class="k">for</span> (k = 2; k &lt;= 9; k++) {                  <span class="c">/* nine additions */</span>
+        memcpy(t[k], t[CHAIN[k][0]], tn);
+        add_at(t[k], tn, t[CHAIN[k][1]], tn, 0);
+    }
+
+    memset(out, 0, xn + yn);
+    <span class="k">for</span> (j = 0; j &lt; yn; j++) {                  <span class="c">/* no shift exists */</span>
+        uint8_t d = y[j];
+        <span class="k">if</span> (d == 0) <span class="k">continue</span>;
+        add_at(out, xn + yn, t[d], tn, j);
+    }
+}</pre>
+
+          <p>
+            Choosing the better arrangement of the two inputs is small enough to
+            sit alongside it:
+          </p>
+
+          <pre><span class="c">/* Both factors are under 20, so the product below is itself a table
+   entry on this machine. No real multiplication is needed here. */</span>
+<span class="k">static int</span> order_cost(<span class="k">int</span> xn, <span class="k">const</span> uint8_t *y, <span class="k">int</span> yn)
+{
+    <span class="k">int</span> need[10], k, j, rows = 0, nonzero = 0;
+
+    mark_needed(y, yn, need);
+    <span class="k">for</span> (k = 2; k &lt;= 9; k++) rows += need[k];
+    <span class="k">for</span> (j = 0; j &lt; yn; j++) <span class="k">if</span> (y[j] != 0) nonzero++;
+
+    <span class="k">return</span> (rows + nonzero) * (xn + 1);
+}
+
+<span class="k">void</span> dec_mul_auto(<span class="k">const</span> uint8_t *x, <span class="k">int</span> xn,
+                  <span class="k">const</span> uint8_t *y, <span class="k">int</span> yn, uint8_t *out)
+{
+    <span class="k">if</span> (order_cost(yn, x, xn) &lt; order_cost(xn, y, yn))
+        dec_mul(y, yn, x, xn, out, 1);      <span class="c">/* swapped */</span>
+    <span class="k">else</span>
+        dec_mul(x, xn, y, yn, out, 1);
+}</pre>
+
+          <h3>Three notes on the code</h3>
+
+          <ul>
+            <li>
+              The <code>register</code> keyword does nothing in modern C. What
+              this code actually provides is more useful: no heap, no recursion
+              while running, a fixed working set, and a bounded stack.
+            </li>
+            <li>
+              Rows 1, 2, 3, 4 and 6 all have to exist at the same time to finish
+              the table. That is five stored values plus the running total,
+              which is worth checking against the real processor before
+              committing to this design.
+            </li>
+            <li>
+              Negative numbers are out of scope. Negating a decimal number needs
+              an operation this processor does not have, so the method handles
+              positive whole numbers only. Section 9 describes how hardware
+              designers get around this.
+            </li>
+          </ul>
+        </section>
+
+        <!-- 9 -->
+        <section id="lit">
+          <h2>Related work</h2>
+          <span class="snum">Section 09</span>
+
+          <p>
+            Both problems from Section 2 have been studied for decades, and the
+            combination has been built in hardware many times. This section
+            places our work against that background.
+          </p>
+
+          <h3>A. Decimal multiplier hardware</h3>
+
+          <p>
+            This is the closest match. Engineers building decimal multiplying
+            circuits face exactly the question of Section 3, and they divide the
+            multiples into <strong>easy</strong> and <strong>hard</strong> ones.
+            Easy multiples can be produced by rewiring; hard ones need a carry
+            to travel along the number, which takes time.
+          </p>
+
+          <p>
+            Erle and Schulte's 2003 design <a href="#r-erle03">[1]</a> stores a
+            reduced set of multiples, much as we do, and their follow-up
+            produces them as needed instead of storing them. Vázquez, Antelo and
+            Montuschi <a href="#r-vaz">[2]</a> note that in their circuit,
+            producing four times and eight times a number takes two and three
+            times as long as doubling it, so they switch to a scheme using five
+            times and ten times instead.
+          </p>
+
+          <p>
+            That difference is worth dwelling on. In our software version every
+            row costs exactly one addition, so the order barely matters. In
+            hardware, three times a number is awkward, because it cannot be
+            produced by rewiring alone, while zero, one, two, four and five
+            times are quick.
+            <strong
+              >The same method gives different answers depending on what you are
+              counting.</strong
+            >
+          </p>
+
+          <h3>B. Addition chains</h3>
+
+          <p>
+            As Section 3 noted, our table is a Brauer chain
+            <a href="#r-brauer">[3]</a>, and Knuth
+            <a href="#r-knuth">[4]</a> gives the standard treatment. The usual
+            modern application is cryptography, where raising a number to a
+            large fixed power quickly depends on finding a short chain for that
+            power. Our use, minimising additions rather than multiplications, is
+            the same problem with the operations relabelled.
+          </p>
+
+          <h3>C. Multiplying by fixed constants</h3>
+
+          <p>
+            Engineers who design signal-processing circuits solve a very similar
+            problem, which they call
+            <strong>multiple constant multiplication</strong>: multiply an input
+            by a known set of fixed numbers using as few adders as possible,
+            because a full multiplier circuit is expensive
+            <a href="#r-mcm">[5]</a>.
+          </p>
+
+          <p>
+            Our Section 3 table is an instance of it - produce 2 through 9 times
+            a number using as few additions as possible. Their version differs
+            in two ways: it works in binary, where shifting is free, and it
+            allows subtraction, which opens up shortcuts such as writing 23
+            times a number as 32 times minus 9 times. Their general problem has
+            no efficient solution, which is why our small ten-target case being
+            solvable by hand is a matter of scale rather than cleverness.
+          </p>
+
+          <h3>D. Rewriting digits, and the improvement we have not made</h3>
+
+          <p>
+            Booth's 1951 method <a href="#r-booth">[6]</a> allows digits to be
+            negative, so a long run of digits can be replaced by one addition
+            and one subtraction. The decimal version rewrites each digit as a
+            value between −5 and 5.
+          </p>
+
+          <p>
+            Applied here this is the largest improvement still available. Digits
+            6 through 9 become "ten minus four" through "ten minus one", so the
+            multiples table only needs rows 1 to 5, which take four additions
+            instead of nine. That is a 55% cut in table cost.
+          </p>
+
+          <p>
+            The obstacle is precise. Negative digits require negating a number,
+            which our processor cannot do. Hardware designers avoid this by
+            storing digits in a code where negating is just flipping bits. On
+            our processor it would mean adding a new instruction or a small
+            lookup, and that cost should be measured before the change is made.
+          </p>
+
+          <h3>E. Real decimal machines, past and present</h3>
+
+          <p>
+            The processor described in Section 1 is not imaginary. The IBM 1620,
+            announced in 1959, was a decimal computer that performed addition,
+            subtraction and multiplication by looking values up in tables held
+            in memory rather than computing them in circuits
+            <a href="#r-1620">[7]</a>. Addition used a 100-digit table and
+            multiplication a 200-digit one. It had no adding circuit at all. The
+            tables were loaded when the machine started, so changing them
+            changed how it counted, and corrupting a colleague's tables was
+            reportedly a common prank. Users nicknamed it CADET, for "Can't Add,
+            Doesn't Even Try."
+          </p>
+
+          <p>
+            Our design is its exact opposite. The 1620 had memory and no adder,
+            so it bought arithmetic with tables. Our processor has an adder and
+            no table, so it buys the table with arithmetic. This also explains
+            why storing a ten-by-ten times table, which we rejected in Section
+            2, was the right choice for that machine.
+          </p>
+
+          <p>
+            Decimal arithmetic is not only history. It returned to importance
+            because binary cannot store decimal fractions exactly, which is
+            unacceptable when handling money. Decimal formats were added to the
+            IEEE 754 standard in 2008, and IBM ships decimal arithmetic hardware
+            in its POWER and mainframe processors.
+          </p>
+        </section>
+
+        <!-- 10 -->
+        <section id="assess">
+          <h2>What is new</h2>
+          <span class="snum">Section 10</span>
+
+          <p>An honest accounting, part by part.</p>
+
+          <table class="data wide">
+            <thead>
+              <tr>
+                <th>Part</th>
+                <th>Status</th>
+                <th>Already known from</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Adding at an offset instead of shifting</td>
+                <td>Standard</td>
+                <td class="mut">
+                  Long multiplication; every decimal multiplier
+                </td>
+              </tr>
+              <tr>
+                <td>A table of multiples of the whole number</td>
+                <td>Standard</td>
+                <td class="mut">Erle and Schulte, 2003</td>
+              </tr>
+              <tr>
+                <td>The nine-addition sequence</td>
+                <td>Known object</td>
+                <td class="mut">
+                  Brauer chains; ours is the shortest possible
+                </td>
+              </tr>
+              <tr>
+                <td>Building only the rows used</td>
+                <td>Sensible, seldom written down</td>
+                <td class="mut">
+                  Implied by the constant-multiplication literature
+                </td>
+              </tr>
+              <tr>
+                <td>Choosing which number goes where</td>
+                <td>Worth 12.3%, rarely measured</td>
+                <td class="mut">Common practice in big-number libraries</td>
+              </tr>
+              <tr>
+                <td>Showing decimal storage is required</td>
+                <td>Supporting evidence</td>
+                <td class="mut">Implicit in decimal hardware papers</td>
+              </tr>
+              <tr>
+                <td>Rewriting digits to shrink the table</td>
+                <td class="gap">Not attempted here</td>
+                <td class="mut">Booth, 1951</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            Nothing in the result is new, and that was never the goal. What the
+            work does have is something the published literature mostly leaves
+            out: it reaches the standard answer from the requirements alone,
+            without assuming the reader already knows what a partial result is.
+            The sequence in Section 3 was found by asking which multiples could
+            be reached from which, which is the same question Brauer asked in
+            1939. Arriving at a known best answer by the intended route seems to
+            us a better outcome than copying it.
+          </p>
+
+          <p>
+            The missing seventh row is instructive rather than embarrassing. It
+            survived because we generated rows in the order the doublings
+            suggested, and seven is the one digit below ten with no convenient
+            route in that order. It is the kind of gap a systematic search finds
+            immediately and an intuitive derivation does not.
+          </p>
+
+          <h3>What we would do next</h3>
+
+          <ol>
+            <li>
+              <strong>Measure the cost of negating a number.</strong> If it can
+              be added cheaply, rewriting digits cuts the table from nine
+              additions to four. This is by far the largest improvement left.
+            </li>
+            <li>
+              <strong>Skip the table for short multipliers.</strong> The
+              crossover point can be measured with the counters already in the
+              code.
+            </li>
+            <li>
+              <strong>Delay the carries.</strong> Allowing slots to hold values
+              above nine during the additions and correcting once at the end
+              would take the carry out of the inner loop. This is the software
+              equivalent of a technique every hardware design in Section 9A
+              uses.
+            </li>
+            <li>
+              <strong>Handle negative numbers</strong>, or state clearly that
+              the method is for positive whole numbers only.
+            </li>
+          </ol>
+        </section>
+
+        <!-- 11 -->
+        <section id="verify">
+          <h2>Check it yourself</h2>
+          <span class="snum">Section 11</span>
+
+          <p>
+            Every number in this paper can be reproduced on your own machine.
+            The archive contains the C program, two test scripts, and a short
+            guide saying which file checks which claim.
+          </p>
+
+          <div class="dlbox">
+            <p>
+              <a class="dl" href="verify.zip" download
+                >Download verify.zip · 12 KB</a
+              >
+            </p>
+            <p
+              style="
+                font-family: var(--mono);
+                font-size: 13px;
+                color: var(--dim);
+                margin-bottom: 0;
+              "
+            >
+              unzip verify.zip &amp;&amp; cd verify &amp;&amp; make check
+            </p>
+          </div>
+
+          <p>
+            You will need a C compiler and Node.js. There are no libraries to
+            install. The random sampling uses a fixed starting value, so the
+            figures print identically on every machine.
+          </p>
+
+          <table class="data wide">
+            <thead>
+              <tr>
+                <th>Claim</th>
+                <th>Where</th>
+                <th>Checked by</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>The method gives correct answers</td>
+                <td>Section 5</td>
+                <td class="mut">
+                  both programs multiply every pair from 0×0 to 399×399
+                </td>
+              </tr>
+              <tr>
+                <td>The table costs nine additions</td>
+                <td>Section 3</td>
+                <td class="mut">the CHAIN table in decmul.c</td>
+              </tr>
+              <tr>
+                <td>No shift ever happens</td>
+                <td>Section 4</td>
+                <td class="mut">the j argument in decmul.c</td>
+              </tr>
+              <tr>
+                <td>726 × 25 costs 20 additions</td>
+                <td>Section 7</td>
+                <td class="mut">./decmul, first line of output</td>
+              </tr>
+              <tr>
+                <td>Base ten is worst on binary storage</td>
+                <td>Section 1</td>
+                <td class="mut">node radix.js</td>
+              </tr>
+              <tr>
+                <td>A ten times entry still loses</td>
+                <td>Section 4</td>
+                <td class="mut">node radix.js</td>
+              </tr>
+              <tr>
+                <td>Swapping helps 43.9% of the time</td>
+                <td>Section 7</td>
+                <td class="mut">node ordering.js</td>
+              </tr>
+              <tr>
+                <td>The predictor is never wrong</td>
+                <td>Section 7</td>
+                <td class="mut">node ordering.js, 104,642 pairs</td>
+              </tr>
+              <tr>
+                <td>Choosing well saves 12.3%</td>
+                <td>Section 7</td>
+                <td class="mut">node ordering.js</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            The C program and the JavaScript test are separate implementations
+            of the same method, written independently. They agree on every
+            answer and on every addition count. The interactive panel in Section
+            6 is a third. If all three agree, the method is probably right.
+          </p>
+        </section>
+
+        <!-- 12 -->
+        <section id="refs">
+          <h2>References</h2>
+          <span class="snum">Section 12</span>
+
+          <div class="refs">
+            <div class="ref" id="r-erle03">
+              <span class="rn">01</span>
+              <span>
+                <span class="rt"
+                  >Decimal multiplication via carry-save addition</span
+                >
+                <span class="rm"
+                  >M. A. Erle and M. J. Schulte. IEEE Conference on
+                  Application-Specific Systems, Architectures and Processors,
+                  pages 348–358, June 2003.</span
+                >
+                <span class="rc"
+                  >Two decimal multiplier designs. The first stores a reduced
+                  set of multiples, much as Section 3 does; the second produces
+                  them without storing them.</span
+                >
+              </span>
+            </div>
+            <div class="ref" id="r-vaz">
+              <span class="rn">02</span>
+              <span>
+                <span class="rt"
+                  >A new family of high-performance parallel decimal
+                  multipliers</span
+                >
+                <span class="rm"
+                  >Á. Vázquez, E. Antelo and P. Montuschi. 18th IEEE Symposium
+                  on Computer Arithmetic, 2007.</span
+                >
+                <span class="rc"
+                  >Compares two ways of grouping digits and records the timing
+                  differences between multiples that lead them to prefer five
+                  and ten times over four and eight times.</span
+                >
+              </span>
+            </div>
+            <div class="ref" id="r-brauer">
+              <span class="rn">03</span>
+              <span>
+                <span class="rt">On addition chains</span>
+                <span class="rm"
+                  >A. Brauer. Bulletin of the American Mathematical Society,
+                  volume 45, pages 736–739, 1939.</span
+                >
+                <span class="rc"
+                  >Introduces the kind of chain where each value is built on the
+                  one before it. This is the pattern our multiples table turns
+                  out to follow.</span
+                >
+              </span>
+            </div>
+            <div class="ref" id="r-knuth">
+              <span class="rn">04</span>
+              <span>
+                <span class="rt"
+                  >The Art of Computer Programming, Volume 2: Seminumerical
+                  Algorithms, section 4.6.3</span
+                >
+                <span class="rm">D. E. Knuth. Addison-Wesley.</span>
+                <span class="rc"
+                  >The standard summary of addition chains. Explains why finding
+                  the shortest one is hard in general and lists the questions
+                  still open.</span
+                >
+              </span>
+            </div>
+            <div class="ref" id="r-mcm">
+              <span class="rn">05</span>
+              <span>
+                <span class="rt"
+                  >Multiplierless multiple constant multiplication</span
+                >
+                <span class="rm"
+                  >Y. Voronenko and M. Püschel. ACM Transactions on Algorithms,
+                  2007.</span
+                >
+                <span class="rc"
+                  >A unified treatment of producing several fixed multiples with
+                  as few adders as possible, and the algorithms used to search
+                  for them.</span
+                >
+              </span>
+            </div>
+            <div class="ref" id="r-booth">
+              <span class="rn">06</span>
+              <span>
+                <span class="rt">A signed binary multiplication technique</span>
+                <span class="rm"
+                  >A. D. Booth. Quarterly Journal of Mechanics and Applied
+                  Mathematics, volume 4, issue 2, 1951.</span
+                >
+                <span class="rc"
+                  >The original digit-rewriting result, and the basis for the
+                  decimal versions that would shrink our table from nine rows to
+                  four.</span
+                >
+              </span>
+            </div>
+            <div class="ref" id="r-1620">
+              <span class="rn">07</span>
+              <span>
+                <span class="rt">IBM 1620 Data Processing System</span>
+                <span class="rm"
+                  >IBM, announced October 1959. Described at Columbia University
+                  Computing History and in IBM manuals of the period.</span
+                >
+                <span class="rc"
+                  >A production decimal computer with no arithmetic circuits,
+                  which added and multiplied by looking values up in memory. The
+                  historical opposite of the design in this paper.</span
+                >
+              </span>
+            </div>
+            <div class="ref" id="r-erle05">
+              <span class="rn">08</span>
+              <span>
+                <span class="rt"
+                  >Decimal multiplication with efficient partial product
+                  generation</span
+                >
+                <span class="rm"
+                  >M. A. Erle, E. M. Schwarz and M. J. Schulte. 17th IEEE
+                  Symposium on Computer Arithmetic, pages 21–28, June
+                  2005.</span
+                >
+                <span class="rc"
+                  >Rewrites the digits of both inputs to simplify producing
+                  partial results, working from the smallest digit
+                  upwards.</span
+                >
+              </span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      Recursion in Multiplication · A decimal processor that can only add
+    </footer>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var CHAIN = [
+          [0, 0],
+          [0, 0],
+          [1, 1],
+          [1, 2],
+          [2, 2],
+          [1, 4],
+          [3, 3],
+          [1, 6],
+          [4, 4],
+          [3, 6],
+        ];
+
+        var el = function (id) {
+          return document.getElementById(id);
+        };
+        var inA = el("inA"),
+          inB = el("inB"),
+          lazySel = el("lazy");
+        var chainBox = el("chain"),
+          accBox = el("acc"),
+          logBox = el("log"),
+          phaseBox = el("phase");
+        var mAdds = el("mAdds"),
+          mShift = el("mShift"),
+          mNaive = el("mNaive"),
+          mProd = el("mProd");
+        var mSwap = el("mSwap");
+
+        var S = null;
+
+        function digits(str) {
+          var d = [],
+            i;
+          str = String(str).replace(/\D/g, "");
+          if (!str) str = "0";
+          str = str.replace(/^0+(?=\d)/, "");
+          for (i = str.length - 1; i >= 0; i--) d.push(str.charCodeAt(i) - 48);
+          return d;
+        }
+        function show(arr) {
+          var s = "",
+            i;
+          for (i = arr.length - 1; i >= 0; i--) s += arr[i];
+          s = s.replace(/^0+(?=\d)/, "");
+          return s;
+        }
+
+        function addAt(acc, src, off, st) {
+          var i = 0,
+            s,
+            carry = 0;
+          for (i = 0; i < src.length && off + i < acc.length; i++) {
+            s = acc[off + i] + src[i] + carry;
+            st.adds++;
+            carry = s > 9 ? 1 : 0;
+            acc[off + i] = carry ? (s + 6) & 0x0f : s;
+          }
+          while (carry && off + i < acc.length) {
+            s = acc[off + i] + 1;
+            st.adds++;
+            carry = s > 9 ? 1 : 0;
+            acc[off + i] = carry ? (s + 6) & 0x0f : s;
+            i++;
+          }
+        }
+
+        function needed(y, lazy) {
+          var need = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            k,
+            j;
+          if (!lazy) {
+            for (k = 2; k <= 9; k++) need[k] = 1;
+            return need;
+          }
+          for (j = 0; j < y.length; j++) if (y[j] > 1) need[y[j]] = 1;
+          for (k = 9; k >= 2; k--)
+            if (need[k]) {
+              need[CHAIN[k][0]] = 1;
+              need[CHAIN[k][1]] = 1;
+            }
+          need[0] = 0;
+          need[1] = 0;
+          return need;
+        }
+
+        function build() {
+          var x = digits(inA.value),
+            y = digits(inB.value);
+          var lazy = lazySel.value === "1";
+          var tn = x.length + 1,
+            k,
+            i;
+          var t = [];
+          for (k = 0; k < 10; k++) {
+            t.push(new Array(tn));
+            for (i = 0; i < tn; i++) t[k][i] = 0;
+          }
+          for (i = 0; i < x.length; i++) t[1][i] = x[i];
+
+          var steps = [],
+            need = needed(y, lazy);
+          for (k = 2; k <= 9; k++)
+            if (need[k]) steps.push({ type: "chain", k: k });
+          for (k = 0; k < y.length; k++)
+            if (y[k] !== 0) steps.push({ type: "place", j: k, d: y[k] });
+
+          var acc = new Array(x.length + y.length);
+          for (i = 0; i < acc.length; i++) acc[i] = 0;
+
+          var naive = 0,
+            val = 0;
+          for (i = y.length - 1; i >= 0; i--) val = val * 10 + y[i];
+          naive = val * x.length;
+
+          return {
+            x: x,
+            y: y,
+            t: t,
+            tn: tn,
+            need: need,
+            steps: steps,
+            acc: acc,
+            at: 0,
+            adds: 0,
+            naive: naive,
+            placed: [],
+            built: {},
+            done: false,
+            swapCost: fullCost(y, x, lazy),
+          };
+        }
+
+        /* Run the whole algorithm silently, just to count additions. */
+        function fullCost(x, y, lazy) {
+          var tn = x.length + 1,
+            t = [],
+            k,
+            i,
+            st = { adds: 0 };
+          for (k = 0; k < 10; k++) {
+            t.push(new Array(tn));
+            for (i = 0; i < tn; i++) t[k][i] = 0;
+          }
+          for (i = 0; i < x.length; i++) t[1][i] = x[i];
+          var need = needed(y, lazy);
+          for (k = 2; k <= 9; k++) {
+            if (!need[k]) continue;
+            for (i = 0; i < tn; i++) t[k][i] = t[CHAIN[k][0]][i];
+            addAt(t[k], t[CHAIN[k][1]], 0, st);
+          }
+          var acc = new Array(x.length + y.length);
+          for (i = 0; i < acc.length; i++) acc[i] = 0;
+          for (k = 0; k < y.length; k++) {
+            if (y[k] === 0) continue;
+            addAt(acc, t[y[k]], k, st);
+          }
+          return st.adds;
+        }
+
+        function reset() {
+          S = build();
+          render("Press Step to build the first table entry.", null);
+        }
+
+        function step() {
+          if (!S) reset();
+          if (S.at >= S.steps.length) {
+            S.done = true;
+            render("Complete. Shift operations used: 0.", null);
+            return;
+          }
+          var st = S.steps[S.at],
+            msg;
+          if (st.type === "chain") {
+            var a = CHAIN[st.k][0],
+              b = CHAIN[st.k][1],
+              i;
+            for (i = 0; i < S.tn; i++) S.t[st.k][i] = S.t[a][i];
+            addAt(S.t[st.k], S.t[b], 0, S);
+            S.built[st.k] = true;
+            msg =
+              "Chain: t[" +
+              st.k +
+              "] = t[" +
+              a +
+              "] + t[" +
+              b +
+              "] = <b>" +
+              show(S.t[st.k]) +
+              "</b>";
+          } else {
+            addAt(S.acc, S.t[st.d], st.j, S);
+            S.placed.push({ j: st.j, d: st.d, val: S.t[st.d].slice() });
+            msg =
+              "Place: t[" +
+              st.d +
+              "] written at index <b>" +
+              st.j +
+              "</b> - the shift, at no cost";
+          }
+          S.at++;
+          if (S.at >= S.steps.length) S.done = true;
+          render(msg, st);
+        }
+
+        function runAll() {
+          if (!S) reset();
+          var guard = 0;
+          // Until done, not while steps remain: a zero multiplier has no
+          // steps, and step() is what declares the run complete.
+          while (!S.done && guard++ < 200) step();
+        }
+
+        function render(msg, active) {
+          var k,
+            html = "";
+          for (k = 2; k <= 9; k++) {
+            var cls = "chainrow";
+            if (!S.need[k]) cls += " skip";
+            else if (S.built[k]) cls += " done";
+            if (active && active.type === "chain" && active.k === k)
+              cls += " active";
+            var val = S.built[k] ? show(S.t[k]) : "-";
+            html +=
+              '<div class="' +
+              cls +
+              '"><span class="ck">' +
+              k +
+              "</span>" +
+              '<span class="cr">' +
+              CHAIN[k][0] +
+              "+" +
+              CHAIN[k][1] +
+              "</span>" +
+              '<span class="cv">' +
+              val +
+              "</span></div>";
+          }
+          chainBox.innerHTML = html;
+
+          var w = S.acc.length,
+            rows = "",
+            p,
+            i;
+          for (p = 0; p < S.placed.length; p++) {
+            var pl = S.placed[p];
+            rows +=
+              '<p class="acclabel">' +
+              show(S.x) +
+              " × " +
+              pl.d +
+              " → index " +
+              pl.j +
+              '</p><div class="accrow">';
+            for (i = w - 1; i >= 0; i--) {
+              var idx = i - pl.j;
+              if (idx >= 0 && idx < pl.val.length)
+                rows += '<span class="cell pp">' + pl.val[idx] + "</span>";
+              else rows += '<span class="cell blank"></span>';
+            }
+            rows += "</div>";
+          }
+          if (S.placed.length) {
+            rows += '<div class="accrule"></div>';
+            rows += '<p class="acclabel">accumulator</p><div class="accrow">';
+            for (i = w - 1; i >= 0; i--)
+              rows += '<span class="cell sum">' + S.acc[i] + "</span>";
+            rows += "</div>";
+          } else {
+            rows +=
+              '<p class="acclabel" style="color:var(--faint)">no partial products placed yet</p>';
+          }
+          accBox.innerHTML = rows;
+
+          mAdds.textContent = S.adds;
+          mShift.textContent = "0";
+          var total = S.done ? S.adds : null;
+          if (total === null) {
+            mSwap.textContent = S.swapCost;
+            mSwap.className = "mv";
+          } else if (S.swapCost < total) {
+            mSwap.textContent = S.swapCost + " ↓";
+            mSwap.className = "mv lo";
+          } else if (S.swapCost > total) {
+            mSwap.textContent = S.swapCost;
+            mSwap.className = "mv hi";
+          } else {
+            mSwap.textContent = S.swapCost;
+            mSwap.className = "mv";
+          }
+          mNaive.textContent = S.naive.toLocaleString("en-US");
+          mProd.textContent = S.done ? show(S.acc) : "-";
+          phaseBox.textContent = S.done
+            ? "complete"
+            : S.at === 0
+              ? "idle"
+              : S.steps[S.at] && S.steps[S.at].type === "chain"
+                ? "building table"
+                : "accumulating";
+          logBox.innerHTML = msg || "";
+          el("bStep").disabled = S.done;
+          el("bRun").disabled = S.done;
+        }
+
+        el("bStep").addEventListener("click", step);
+        el("bRun").addEventListener("click", runAll);
+        el("bReset").addEventListener("click", reset);
+        inA.addEventListener("change", reset);
+        inB.addEventListener("change", reset);
+        lazySel.addEventListener("change", reset);
+
+        reset();
+      })();
+    </script>
+  </body>
+</html>

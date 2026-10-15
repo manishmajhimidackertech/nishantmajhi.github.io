@@ -1,0 +1,164 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  font-size: 2.5em;
+  font-family: "Dancing Script", cursive;
+  display: flex;
+  align-items: center;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin-top: 22vh;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+@media (orientation: landscape) {
+  .icon {
+    width: 12vw;
+  }
+  #question {
+    font-size: 3em;
+  }
+  #answer,
+  button {
+    font-size: 1.5em;
+  }
+  #user-input {
+    width: 60vw;
+  }
+}
+@media (orientation: portrait) {
+  .icon {
+    width: 25vw;
+    margin-bottom: 0.5em;
+  }
+  #question {
+    font-size: 2.5em;
+  }
+  #answer,
+  button {
+    font-size: 1em;
+  }
+  #user-input {
+    width: 80vw;
+  }
+}
+
+#logo {
+  height: 2.5em;
+}
+#user-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#score {
+  font-size: 2em;
+}
+
+input[type="number"],
+button {
+  border: none;
+  padding: 0.6em 1em;
+  font-size: 1em;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+input[type="number"] {
+  flex-grow: 1;
+  outline: none;
+  border-radius: 0.8em 0 0 0.8em;
+}
+
+button {
+  border-radius: 0 0.8em 0.8em 0;
+  color: white;
+  background-color: teal;
+  transition: background-color 0.5s;
+}
+button:hover {
+  background-color: salmon;
+}
+
+#notification {
+  padding: 1.2em 6ch;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+#notification.show {
+  opacity: 1;
+}
+#notification.correct {
+  color: darkgreen;
+  background-color: rgba(76, 175, 80, 0.4);
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(76, 175, 80, 0.4) 10%,
+    rgba(76, 175, 80, 0.4) 90%,
+    transparent 100%
+  );
+}
+#notification.incorrect {
+  color: darkred;
+  background-color: rgba(250, 128, 114, 0.4);
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(250, 128, 114, 0.4) 10%,
+    rgba(240, 128, 114, 0.4) 90%,
+    transparent 100%
+  );
+}
+
+.happy-animation {
+  animation: jump 0.5s ease-in-out;
+}
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-1em);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.sad-animation {
+  animation: sink 1s ease-in-out;
+}
+@keyframes sink {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(1em);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}

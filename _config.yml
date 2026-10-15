@@ -1,0 +1,121 @@
+title: "Projects | Manish Majhi"
+description: "A curated list of projects by Manish Majhi — spanning Python, Java, C#, JavaScript, browser extensions, and more."
+url: "https://nishantmajhi.github.io"
+github_username: nishantmajhi
+
+# Repos to leave out of the Index section (this site, and other meta repos).
+# Display only: the GitHub API still returns them, to anyone who asks.
+hidden_repos:
+  - Blog
+  - Album
+  - Projects
+  - nishantmajhi.github.io
+
+# How the Index labels each repository's language: these four share one
+# heading, the rest are renamed below, and a repo can be given its own.
+combined_label: "JavaScript / HTML / CSS"
+combine_languages:
+  - JavaScript
+  - TypeScript
+  - HTML
+  - CSS
+
+language_labels:
+  Python: "Python"
+  Java: "Java"
+  C#: "C# [.NET]"
+  PHP: "PHP"
+  C++: "C++"
+  C: "C"
+  Shell: "Shell"
+  AutoHotkey: "AutoHotKey"
+
+repo_language_overrides:
+  ADBS: "Browser Extension"
+
+# The Index groups repositories the way the projects are filed on disk
+# (E:\Backups\code): the first folder is the heading, any deeper folders a
+# sub-heading under it. A repo missing from this list falls back to its
+# GitHub language, labelled as below.
+repo_categories:
+  dwaarpaal: "Android/Java"
+  wa-notify-filter: "Android/Kotlin"
+  sayar: "Android/React Native"
+  HorizontalScroll: "AutoHotKey"
+  JAPE: "AutoHotKey"
+  VM-Command-Stepper: "AutoHotKey"
+  ADBS: "Browser Extensions"
+  PDF-Comments: "Browser Extensions"
+  PDF-Page-Capture: "Browser Extensions"
+  PrivatePages: "Browser Extensions"
+  stealthwriter-sessions: "Browser Extensions"
+  clipboard_history: "C"
+  7Seg: "C/GTK"
+  gtree: "C"
+  Intelligent-CopyPaste: "C"
+  LexiGone: "C"
+  Live-Server: "C"
+  mountain_cipher: "C"
+  QuickPush: "C"
+  UnlimitedTetris: "C++/OpenGL"
+  vCard: "C++/Qt"
+  mini-file-explorer: "C++/wxWidgets"
+  FRAS-Algorithm: "FRAS"
+  fras-weight-trainer: "FRAS"
+  wordgit: "Microsoft Word Extensions"
+  budget_tracker: "Python"
+  LANDesk: "Python"
+  library_system: "Python"
+  ReportCard: "QBASIC"
+  QIC: "Quadratic Parser"
+  QIC---Frontend: "Quadratic Parser"
+  llmctx: "Rust"
+  Lipi: "Swing"
+  replace-em-en-dash: "VS Code Extensions"
+  smart-commit: "VS Code Extensions"
+  zip-project-excluding-git: "VS Code Extensions"
+  RoutinePlanner: "Web/.NET"
+  webdlp: "Web/Deno"
+  MedicineRecognitionSystem---Old: "Web/Django"
+  MedicineRecognitionSystem---New: "Web/FastAPI"
+  CodeA4: "Web/Flask"
+  Album: "Web/Frontend/Vanilla"
+  DSA: "Web/Frontend/Vanilla"
+  Home: "Web/Frontend/Vanilla"
+  manishmajhimidackertech.github.io: "Web/Frontend/Vanilla"
+  docxDiff: "Web/Frontend/With Libraries"
+  Magic_ReWrite: "Web/Frontend/With Libraries"
+  MDview: "Web/Frontend/With Libraries"
+  ReFlow: "Web/Frontend/With Libraries"
+  The-Majhi-Family: "Web/Frontend/With Libraries"
+  suGen: "Web/Go"
+  Blog: "Web/Hugo"
+  nishantmajhi.github.io: "Web/Jekyll"
+  3D-Periodic-Table: "Web/Next.js"
+  KhaataGaata: "Web/Next.js"
+  Crepuscule-Slog: "Web/Node"
+  MIWIM: "Web/Node"
+  to-png: "Web/Node"
+  consultancy: "Web/PHP"
+  cscli: "Web/PHP"
+  cscli-api: "Web/PHP"
+  eRAS: "Web/PHP"
+  FraGenesis: "Web/PHP"
+  assignmentwizard: "Web/PWA"
+  Translucent-Kanban: "Web/React"
+  Icon-Forge: "Web/Svelte"
+  PDF-Splice: "Web/Vue"
+  OfficeMetadataEditor: "WPF"
+
+markdown: kramdown
+plugins:
+  - jekyll-seo-tag
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - package.json
+  - tests
+  - review.md

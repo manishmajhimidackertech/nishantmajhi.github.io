@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <title>BetterHome</title>
+
+    <link rel="stylesheet" href="./css/colors.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <main>
+      <nav>
+        <span id="brave" class="search_engines" title="Brave Search">
+          <input type="radio" name="company" value="brave" checked />
+          <picture>
+            <source
+              srcset="./img/Brave.svg"
+              media="(prefers-color-scheme: dark)"
+            />
+            <source
+              srcset="./img/Brave%20-%20Light.svg"
+              media="(prefers-color-scheme: light)"
+            />
+            <img src="./img/Brave.svg" alt="Brave Logo" />
+          </picture>
+        </span>
+        <span id="duckduckgo" class="search_engines" title="DuckDuckGo">
+          <input type="radio" name="company" value="duckduckgo" />
+          <picture>
+            <source
+              srcset="./img/DuckDuckGo.svg"
+              media="(prefers-color-scheme: dark)"
+            />
+            <source
+              srcset="./img/DuckDuckGo%20-%20Light.svg"
+              media="(prefers-color-scheme: light)"
+            />
+            <img src="./img/DuckDuckGo.svg" alt="DuckDuckGo Logo" />
+          </picture>
+        </span>
+        <span id="mojeek" class="search_engines" title="Mojeek">
+          <input type="radio" name="company" value="mojeek" />
+          <picture>
+            <source
+              srcset="./img/Mojeek.svg"
+              media="(prefers-color-scheme: dark)"
+            />
+            <source
+              srcset="./img/Mojeek%20-%20Light.svg"
+              media="(prefers-color-scheme: light)"
+            />
+            <img src="./img/Mojeek.svg" alt="Mojeek Logo" />
+          </picture>
+        </span>
+      </nav>
+      <form>
+        <input
+          type="text"
+          placeholder="Enter a query to search"
+          aria-label="Search Bar"
+          id="query_string"
+          autofocus
+        />
+        <input type="submit" id="search-button" value="Search" />
+      </form>
+    </main>
+  </body>
+</html>

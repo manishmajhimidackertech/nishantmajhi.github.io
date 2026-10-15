@@ -1,0 +1,452 @@
+/* ── Reset & base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --blue: #2563eb;
+  --blue-dark: #1d4ed8;
+  --blue-light: #eff6ff;
+  --green: #16a34a;
+  --green-bg: #f0fdf4;
+  --green-bd: #bbf7d0;
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --red-bd: #fecaca;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-400: #9ca3af;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-900: #111827;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "Fira Code", "Cascadia Code", "Consolas", monospace;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--gray-50);
+  color: var(--gray-900);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Header ── */
+header {
+  display: inline-block;
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  margin: 0 auto;
+  padding: 1.25rem 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--gray-900);
+}
+
+.tagline {
+  font-size: 0.8125rem;
+  color: var(--gray-600);
+  margin-top: 2px;
+}
+
+/* ── Main ── */
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 2rem 3rem;
+  width: 100%;
+  flex: 1;
+}
+
+/* ── Input section ── */
+.input-section {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
+}
+
+.input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 0.625rem 0.875rem;
+  font-size: 1rem;
+  font-family: var(--mono);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius);
+  background: var(--gray-50);
+  color: var(--gray-900);
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background 0.15s;
+}
+
+input[type="text"]:hover {
+  border-color: var(--gray-400);
+}
+
+input[type="text"]:focus {
+  border-color: var(--blue);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+button#check-btn {
+  padding: 0.625rem 1.375rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: var(--font);
+  color: white;
+  background: var(--blue);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+  white-space: nowrap;
+}
+
+button#check-btn:hover {
+  background: var(--blue-dark);
+}
+button#check-btn:active {
+  transform: scale(0.97);
+}
+button#check-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+}
+
+.hint {
+  font-size: 0.78rem;
+  color: var(--gray-400);
+  margin-top: 0.6rem;
+  line-height: 1.6;
+}
+
+.hint code {
+  font-family: var(--mono);
+  background: var(--gray-100);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.76rem;
+  color: var(--gray-700);
+}
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--gray-400);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 1rem;
+  color: var(--gray-200);
+}
+
+.empty-title {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  margin-bottom: 0.4rem;
+}
+
+.empty-desc {
+  font-size: 0.875rem;
+  color: var(--gray-400);
+  max-width: 380px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.empty-desc strong {
+  color: var(--gray-600);
+  font-weight: 600;
+}
+
+/* ── Summary banner ── */
+.summary-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.125rem;
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  margin-bottom: 1.25rem;
+  border: 1px solid transparent;
+}
+
+.summary-banner.pass {
+  background: var(--green-bg);
+  border-color: var(--green-bd);
+  color: var(--green);
+}
+
+.summary-banner.fail {
+  background: var(--red-bg);
+  border-color: var(--red-bd);
+  color: var(--red);
+}
+
+.summary-icon {
+  font-size: 1.2rem;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1.5px solid var(--gray-200);
+  margin-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.5rem 1rem 0.6rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: var(--font);
+  color: var(--gray-600);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1.5px;
+  cursor: pointer;
+  border-radius: var(--radius) var(--radius) 0 0;
+  transition:
+    color 0.15s,
+    background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tab:hover {
+  color: var(--gray-900);
+  background: var(--gray-100);
+}
+
+.tab.active {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+  font-weight: 600;
+}
+
+.tab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+.tab-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 20px;
+  background: var(--gray-200);
+  color: var(--gray-600);
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.tab.active .tab-badge {
+  background: var(--blue-light);
+  color: var(--blue);
+}
+
+/* ── Tables ── */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.875rem;
+}
+
+thead {
+  background: var(--gray-50);
+}
+
+th {
+  padding: 0.625rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-600);
+  border-bottom: 1.5px solid var(--gray-200);
+  text-align: center;
+}
+
+th:first-child {
+  text-align: left;
+}
+
+td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--gray-100);
+  text-align: center;
+  color: var(--gray-700);
+  font-variant-numeric: tabular-nums;
+}
+
+td:first-child {
+  text-align: left;
+  color: var(--gray-400);
+  font-size: 0.78rem;
+}
+td:nth-child(2) {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--gray-900);
+}
+td:nth-child(3),
+td:nth-child(4) {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--gray-600);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+tbody tr:hover {
+  background: var(--gray-50);
+}
+
+/* Pass/Fail cell */
+.pass-cell {
+  color: var(--green);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+.fail-cell {
+  color: var(--red);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+/* Error cell */
+.error-cell {
+  color: var(--gray-400);
+  font-style: italic;
+  font-size: 0.78rem;
+}
+
+/* ── Footer ── */
+footer {
+  text-align: center;
+  padding: 1.25rem;
+  font-size: 0.78rem;
+  color: var(--gray-400);
+  border-top: 1px solid var(--gray-200);
+  background: white;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  main {
+    padding: 1.25rem 1rem 2rem;
+  }
+  header {
+    padding: 1rem;
+  }
+  .header-inner {
+    gap: 0.75rem;
+  }
+  .logo-mark {
+    font-size: 2rem;
+  }
+  h1 {
+    font-size: 1.25rem;
+  }
+  .input-row {
+    flex-direction: column;
+  }
+  button#check-btn {
+    width: 100%;
+  }
+  td,
+  th {
+    padding: 0.5rem 0.625rem;
+  }
+  td:nth-child(2),
+  td:nth-child(3),
+  td:nth-child(4) {
+    font-size: 0.72rem;
+  }
+}
+
+/* ── Animations ── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.results-section {
+  animation: fadeIn 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .results-section {
+    animation: none;
+  }
+}

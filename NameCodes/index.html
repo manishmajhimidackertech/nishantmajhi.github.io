@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Name Codes</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💄</text></svg>"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap");
+
+      :root {
+        /* Barbie glass palette */
+        --bg-1: #ffd7ec;
+        --bg-2: #ffb8dd;
+        --bg-3: #e3bbff;
+        --bg-4: #fff0f8;
+
+        --hot-pink: #ff2d95;
+        --hot-pink-deep: #d6127a;
+        --magenta: #c2186b;
+        --plum: #6b0f45;
+        --plum-soft: #a3527a;
+
+        --glass: rgba(255, 255, 255, 0.42);
+        --glass-strong: rgba(255, 255, 255, 0.62);
+        --glass-border: rgba(255, 255, 255, 0.75);
+        --glass-shadow: rgba(214, 18, 122, 0.18);
+
+        --pink-chip: rgba(255, 45, 149, 0.14);
+        --pink-chip-border: rgba(255, 45, 149, 0.38);
+
+        --gold: #ffcf6e;
+        --good: #35b871;
+        --good-soft: rgba(53, 184, 113, 0.16);
+        --bad: #ff2f6d;
+        --bad-soft: rgba(255, 47, 109, 0.14);
+        --dropped: #c98bb0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        position: relative;
+        background: linear-gradient(
+          160deg,
+          var(--bg-4) 0%,
+          var(--bg-1) 38%,
+          var(--bg-2) 68%,
+          var(--bg-3) 100%
+        );
+        color: var(--plum);
+        font-family:
+          "Quicksand",
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        min-height: 100vh;
+        padding: clamp(28px, 6vw, 64px) clamp(16px, 5vw, 24px) 64px;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* floating glass blobs for depth */
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(60px);
+        z-index: 0;
+        pointer-events: none;
+      }
+      body::before {
+        width: 380px;
+        height: 380px;
+        top: -120px;
+        right: -100px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.9),
+          var(--hot-pink) 70%
+        );
+        opacity: 0.35;
+      }
+      body::after {
+        width: 320px;
+        height: 320px;
+        bottom: -80px;
+        left: -100px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.9),
+          var(--bg-3) 70%
+        );
+        opacity: 0.5;
+      }
+
+      .wrap {
+        max-width: 620px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      .eyebrow {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--hot-pink-deep);
+        margin-bottom: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--glass-strong);
+        border: 1px solid var(--glass-border);
+        padding: 6px 14px 6px 10px;
+        border-radius: 999px;
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        box-shadow: 0 6px 18px -10px var(--glass-shadow);
+      }
+      h1 {
+        font-family: "Baloo 2", sans-serif;
+        font-weight: 700;
+        font-size: clamp(2.1rem, 6vw, 3rem);
+        line-height: 1.1;
+        margin: 0 0 12px;
+        color: var(--magenta);
+        letter-spacing: -0.01em;
+        text-shadow: 0 2px 0 rgba(255, 255, 255, 0.6);
+      }
+      h1 .sparkle {
+        color: var(--gold);
+        -webkit-text-stroke: 0;
+      }
+      .rule {
+        width: 60px;
+        height: 5px;
+        background: linear-gradient(90deg, var(--hot-pink), var(--gold));
+        border: none;
+        margin: 0 0 18px;
+        border-radius: 999px;
+      }
+      .lede {
+        color: var(--plum-soft);
+        font-size: 0.98rem;
+        line-height: 1.65;
+        max-width: 48ch;
+        margin: 0 0 32px;
+        font-weight: 500;
+      }
+
+      .card {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 26px;
+        padding: clamp(22px, 4vw, 32px);
+        backdrop-filter: blur(22px) saturate(180%);
+        -webkit-backdrop-filter: blur(22px) saturate(180%);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.8),
+          0 24px 50px -22px var(--glass-shadow),
+          0 2px 8px rgba(214, 18, 122, 0.08);
+        position: relative;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 12%;
+        right: 12%;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.95),
+          transparent
+        );
+      }
+
+      .field {
+        margin-bottom: 22px;
+      }
+      .field label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--magenta);
+        margin-bottom: 8px;
+      }
+      .field input {
+        width: 100%;
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.55);
+        font-family: "Baloo 2", sans-serif;
+        font-weight: 600;
+        font-size: clamp(1.3rem, 4vw, 1.6rem);
+        padding: 13px 16px;
+        color: var(--plum);
+        outline: none;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s,
+          background 0.15s;
+      }
+      .field input:focus {
+        border-color: var(--hot-pink);
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: 0 0 0 4px var(--pink-chip);
+      }
+      .field input::placeholder {
+        color: #e4a9c9;
+        font-weight: 500;
+      }
+
+      hr.divider {
+        border: none;
+        border-top: 1px dashed rgba(214, 18, 122, 0.25);
+        margin: 6px 0 22px;
+      }
+
+      .section-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--magenta);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .strip {
+        display: flex;
+        align-items: flex-end;
+        gap: 6px;
+        min-height: 48px;
+        flex-wrap: wrap;
+        margin-bottom: 26px;
+      }
+      .tile {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.1rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.7rem;
+        height: 2.2rem;
+        border-radius: 10px;
+        padding: 0 4px;
+        position: relative;
+        transition:
+          transform 0.18s ease,
+          opacity 0.18s ease;
+      }
+      .tile.kept {
+        color: var(--hot-pink-deep);
+        background: var(--pink-chip);
+        border: 1px solid var(--pink-chip-border);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      }
+      .tile.kept::after {
+        content: "";
+        position: absolute;
+        left: 22%;
+        right: 22%;
+        bottom: 4px;
+        height: 2px;
+        background: var(--hot-pink);
+        border-radius: 2px;
+        opacity: 0.55;
+      }
+      .tile.dropped {
+        color: var(--dropped);
+        text-decoration: line-through;
+        opacity: 0.55;
+      }
+      .tile.merged {
+        font-size: 0.68rem;
+        opacity: 0.55;
+        color: var(--plum-soft);
+        height: auto;
+        align-self: center;
+        text-decoration: line-through;
+        margin-left: -3px;
+      }
+      .empty-hint {
+        color: #e4a9c9;
+        font-size: 0.92rem;
+        font-style: italic;
+        font-weight: 500;
+      }
+
+      .output-grid {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+      }
+      .code-card {
+        flex: 1 1 170px;
+        border: 1px solid var(--glass-border);
+        border-radius: 18px;
+        padding: 16px 18px;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+      .code-card.is-primary {
+        background: linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.75),
+          var(--pink-chip)
+        );
+        border-color: var(--pink-chip-border);
+        box-shadow: 0 12px 26px -14px var(--glass-shadow);
+      }
+      .code-card .label {
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--plum-soft);
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .code-card .code {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        font-size: 1.7rem;
+        color: var(--plum);
+      }
+      .code-card.is-primary .code {
+        color: var(--hot-pink-deep);
+        font-size: 2rem;
+      }
+      .code-card .status {
+        font-size: 0.64rem;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 999px;
+      }
+      .code-card .status.available {
+        background: var(--good-soft);
+        color: var(--good);
+      }
+      .code-card .status.taken {
+        background: var(--bad-soft);
+        color: var(--bad);
+      }
+      .use-btn {
+        margin-top: 12px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 999px;
+        padding: 8px 14px;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--hot-pink), var(--gold));
+        color: #4a0026;
+        transition:
+          opacity 0.15s,
+          transform 0.12s;
+        font-family: "Quicksand", sans-serif;
+        box-shadow: 0 8px 18px -10px rgba(255, 45, 149, 0.55);
+      }
+      .use-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+      .use-btn:disabled {
+        background: rgba(214, 18, 122, 0.14);
+        color: var(--plum-soft);
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .hint {
+        display: none;
+        align-items: flex-start;
+        gap: 9px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--magenta);
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid var(--pink-chip-border);
+        border-radius: 14px;
+        padding: 11px 14px;
+        margin-top: 16px;
+      }
+      .hint.show {
+        display: flex;
+      }
+
+      .directory {
+        margin-top: 28px;
+      }
+      .directory .card {
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.8),
+          0 14px 34px -20px var(--glass-shadow);
+      }
+      .dir-add {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .dir-add input {
+        flex: 1;
+        border: 1px solid var(--glass-border);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.55);
+        padding: 10px 13px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+        outline: none;
+        color: var(--plum);
+      }
+      .dir-add input:focus {
+        border-color: var(--hot-pink);
+      }
+      .dir-add button {
+        background: linear-gradient(135deg, var(--magenta), var(--hot-pink));
+        color: #fff;
+        border: none;
+        border-radius: 14px;
+        padding: 10px 20px;
+        font-weight: 700;
+        font-size: 0.82rem;
+        cursor: pointer;
+        font-family: "Quicksand", sans-serif;
+        box-shadow: 0 8px 18px -10px rgba(214, 18, 122, 0.5);
+      }
+      .dir-add button:hover {
+        opacity: 0.92;
+      }
+      .chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid var(--pink-chip-border);
+        color: var(--plum);
+        padding: 6px 8px 6px 13px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .chip button {
+        background: none;
+        border: none;
+        color: var(--plum-soft);
+        cursor: pointer;
+        font-size: 0.9rem;
+        padding: 0;
+        line-height: 1;
+      }
+      .chip button:hover {
+        color: var(--bad);
+      }
+      .chips-empty {
+        color: var(--plum-soft);
+        font-size: 0.82rem;
+        font-weight: 500;
+      }
+
+      details {
+        margin-top: 26px;
+        color: var(--plum-soft);
+        font-size: 0.88rem;
+        line-height: 1.65;
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 18px;
+        padding: 16px 20px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      summary {
+        cursor: pointer;
+        color: var(--magenta);
+        font-weight: 700;
+        font-size: 0.84rem;
+        font-family: "Baloo 2", sans-serif;
+      }
+      details p {
+        margin: 11px 0 0;
+        font-weight: 500;
+      }
+      details code {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--pink-chip-border);
+        padding: 1px 6px;
+        border-radius: 6px;
+        color: var(--hot-pink-deep);
+        font-size: 0.82em;
+      }
+
+      footer {
+        margin-top: 30px;
+        color: var(--plum-soft);
+        font-size: 0.78rem;
+        opacity: 0.85;
+        text-align: center;
+        font-weight: 500;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+      :focus-visible {
+        outline: 2px solid var(--hot-pink);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="eyebrow">💗 Consonant skeleton generator</div>
+      <h1>
+        Every name has a<br />glam little skeleton<span class="sparkle">.</span>
+      </h1>
+      <hr class="rule" />
+      <p class="lede">
+        Consonants stay, internal vowels go, and aspirated pairs like sh, kh,
+        and th count as one sound. The result is capped at 4 letters — short
+        enough to use, sparkly enough to still recognize.
+      </p>
+
+      <div class="card">
+        <div class="field">
+          <label>First name</label>
+          <input
+            id="firstName"
+            type="text"
+            placeholder="e.g. Govinda"
+            autocomplete="off"
+          />
+        </div>
+
+        <hr class="divider" />
+
+        <div class="section-label">✨ Letter map</div>
+        <div class="strip" id="strip">
+          <span class="empty-hint">Start typing a name above…</span>
+        </div>
+
+        <div class="section-label">💎 Generated code</div>
+        <div class="output-grid" id="output"></div>
+        <div class="hint" id="hint">
+          <span>💡</span
+          ><span
+            >This code has no vowels at all - the alternate below restores one
+            if it reads too dense.</span
+          >
+        </div>
+      </div>
+
+      <div class="directory">
+        <div class="section-label">🎀 Already assigned codes</div>
+        <div class="card">
+          <div class="dir-add">
+            <input
+              id="dirInput"
+              type="text"
+              placeholder="Add a code already in use, e.g. GVND"
+            />
+            <button id="dirAdd">Add</button>
+          </div>
+          <div class="chips" id="chips">
+            <span class="chips-empty"
+              >No codes registered yet. Codes you mark "Use" below will appear
+              here automatically.</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <details>
+        <summary>How the code is generated</summary>
+        <p>
+          The first letter is always kept, consonant or vowel - it anchors the
+          code. Every consonant in the name is kept. An internal vowel (anything
+          not at the very start or very end of the name) is dropped.
+        </p>
+        <p>
+          Paired letters that represent a single sound in Romanized spelling -
+          <code>sh kh th dh gh ph bh jh ch chh ksh gy ny</code> - are merged
+          into one letter before the drop step runs, so the second letter of the
+          pair isn't counted as a separate deletion.
+        </p>
+        <p>
+          The result is capped at 4 letters. If the natural result is longer,
+          it's trimmed from the right and the untrimmed version is offered as a
+          fallback for resolving collisions.
+        </p>
+      </details>
+
+      <footer>
+        Heuristic, not a linguistic parser. Adjust the letter-pair list in the
+        script if a particular spelling keeps coming out wrong.
+      </footer>
+    </div>
+
+    <script src="codes.js"></script>
+    <script>
+      const usedCodes = new Set();
+
+      function renderStrip(units, decided) {
+        const strip = document.getElementById("strip");
+        strip.innerHTML = "";
+        if (!units.length) {
+          strip.innerHTML =
+            '<span class="empty-hint">Start typing a name above…</span>';
+          return;
+        }
+        decided.forEach((u) => {
+          const head = document.createElement("span");
+          head.className = "tile " + (u.keep ? "kept" : "dropped");
+          head.textContent = u.raw[0];
+          strip.appendChild(head);
+          if (u.raw.length > 1) {
+            const tail = document.createElement("span");
+            tail.className = "tile merged";
+            tail.textContent = u.raw.slice(1);
+            strip.appendChild(tail);
+          }
+        });
+      }
+
+      function codeCardHTML(code, label, isPrimary) {
+        const taken = usedCodes.has(code);
+        return `
+    <div class="code-card ${isPrimary ? "is-primary" : ""}">
+      <div class="label"><span>${label}</span><span class="status ${taken ? "taken" : "available"}">${taken ? "Taken" : "Available"}</span></div>
+      <div class="code">${code}</div>
+      <button class="use-btn" data-code="${code}" ${taken ? "disabled" : ""}>${taken ? "Already assigned" : "Use this code"}</button>
+    </div>`;
+      }
+
+      function renderOutput(primary, secondary) {
+        const out = document.getElementById("output");
+        out.innerHTML =
+          codeCardHTML(primary, "Suggested", true) +
+          (secondary ? codeCardHTML(secondary, "Alternate", false) : "");
+        out.querySelectorAll(".use-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            usedCodes.add(btn.dataset.code);
+            renderDirectory();
+            compute();
+          });
+        });
+        document
+          .getElementById("hint")
+          .classList.toggle("show", !/[AEIOU]/.test(primary));
+      }
+
+      function renderDirectory() {
+        const chips = document.getElementById("chips");
+        chips.innerHTML = "";
+        if (!usedCodes.size) {
+          chips.innerHTML =
+            '<span class="chips-empty">No codes registered yet. Codes you mark "Use" below will appear here automatically.</span>';
+          return;
+        }
+        [...usedCodes].sort().forEach((code) => {
+          const chip = document.createElement("span");
+          chip.className = "chip";
+          const label = document.createElement("span");
+          label.textContent = code;
+          chip.appendChild(label);
+          const x = document.createElement("button");
+          x.textContent = "×";
+          x.title = "Remove";
+          x.addEventListener("click", () => {
+            usedCodes.delete(code);
+            renderDirectory();
+            compute();
+          });
+          chip.appendChild(x);
+          chips.appendChild(chip);
+        });
+      }
+
+      function compute() {
+        const first = document.getElementById("firstName").value.trim();
+        const { units, decided, primary, secondary } = buildCandidates(first);
+        renderStrip(units, decided);
+
+        if (!units.length) {
+          document.getElementById("output").innerHTML = "";
+          document.getElementById("hint").classList.remove("show");
+          return;
+        }
+
+        renderOutput(primary, secondary);
+      }
+
+      document.getElementById("firstName").addEventListener("input", compute);
+
+      document.getElementById("dirAdd").addEventListener("click", addDirCode);
+      document.getElementById("dirInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addDirCode();
+      });
+      function addDirCode() {
+        const input = document.getElementById("dirInput");
+        const raw = input.value.trim();
+        if (!raw) return;
+        raw
+          .split(/[,\s]+/)
+          .filter(Boolean)
+          .forEach((code) => usedCodes.add(code.toUpperCase()));
+        input.value = "";
+        renderDirectory();
+        compute();
+      }
+
+      renderDirectory();
+      compute();
+    </script>
+  </body>
+</html>

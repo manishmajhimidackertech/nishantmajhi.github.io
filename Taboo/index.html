@@ -1,0 +1,1588 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taboo</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📐</text></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0d0f14;
+        --bg2: #13161e;
+        --bg3: #1a1e2a;
+        --bg4: #222739;
+        --amber: #e8a838;
+        --amber-dim: #a87420;
+        --amber-glow: #e8a83822;
+        --teal: #3ec9a7;
+        --teal-dim: #1a6e5a;
+        --teal-glow: #3ec9a722;
+        --text: #e8e6e0;
+        --text-2: #9b9890;
+        --text-3: #5a5854;
+        --border: #2a2e3d;
+        --border-2: #3a3f52;
+        --mono: "JetBrains Mono", monospace;
+        --serif: "Playfair Display", serif;
+        --sans: "Inter", sans-serif;
+        --radius: 10px;
+        --radius-lg: 16px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.6;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── Header ── */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(13, 15, 20, 0.92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 clamp(1rem, 4vw, 3rem);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+      }
+
+      .logo {
+        font-family: var(--serif);
+        font-size: 1.5rem;
+        letter-spacing: 0.08em;
+        color: var(--amber);
+        user-select: none;
+      }
+
+      .pi-badge {
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        color: var(--text-3);
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 4px 12px;
+        letter-spacing: 0.05em;
+      }
+
+      /* ── Hero ── */
+      .hero {
+        padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 4vw, 3rem)
+          clamp(1.5rem, 4vw, 3rem);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "pi";
+        position: absolute;
+        font-family: var(--serif);
+        font-size: clamp(8rem, 22vw, 14rem);
+        color: rgba(232, 168, 56, 0.04);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        user-select: none;
+        line-height: 1;
+      }
+
+      .hero-eyebrow {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--amber-dim);
+        margin-bottom: 1rem;
+      }
+
+      .hero h1 {
+        font-family: var(--serif);
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.15;
+        color: var(--text);
+        margin-bottom: 1rem;
+      }
+
+      .hero h1 em {
+        font-style: italic;
+        color: var(--amber);
+      }
+
+      .hero-sub {
+        color: var(--text-2);
+        font-size: clamp(0.9rem, 2vw, 1.05rem);
+        max-width: 560px;
+        margin: 0 auto 2rem;
+        font-weight: 300;
+      }
+
+      /* ── Tabs ── */
+      .tabs-wrapper {
+        padding: 0 clamp(1rem, 4vw, 3rem);
+        margin-bottom: 2rem;
+      }
+
+      .tabs-nav {
+        display: flex;
+        gap: 4px;
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 4px;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 10px 20px;
+        border: none;
+        border-radius: calc(var(--radius-lg) - 4px);
+        background: transparent;
+        color: var(--text-2);
+        font-family: var(--sans);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.25s;
+        white-space: nowrap;
+        position: relative;
+      }
+
+      .tab-btn.active {
+        background: var(--bg4);
+        color: var(--text);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      }
+
+      .tab-btn .tab-icon {
+        display: inline-block;
+        margin-right: 6px;
+        font-size: 1em;
+      }
+
+      /* ── Tab panels ── */
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+
+      /* ── Layout: side by side ── */
+      .main-grid {
+        padding: 0 clamp(1rem, 4vw, 3rem) 3rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      @media (max-width: 900px) {
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ── Panels ── */
+      .panel {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .panel-header {
+        padding: 18px 22px 14px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .panel-title {
+        font-family: var(--serif);
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .panel-sub {
+        font-size: 0.78rem;
+        color: var(--text-3);
+        font-family: var(--mono);
+        margin-top: 2px;
+      }
+
+      .panel-badge {
+        font-size: 0.7rem;
+        font-family: var(--mono);
+        letter-spacing: 0.08em;
+        padding: 3px 10px;
+        border-radius: 20px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .badge-amber {
+        background: var(--amber-glow);
+        color: var(--amber);
+        border: 1px solid var(--amber-dim);
+      }
+
+      .badge-teal {
+        background: var(--teal-glow);
+        color: var(--teal);
+        border: 1px solid var(--teal-dim);
+      }
+
+      .panel-body {
+        padding: 20px 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      /* ── Metrics row ── */
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      @media (max-width: 480px) {
+        .metrics {
+          grid-template-columns: 1fr 1fr;
+        }
+        .metrics .metric:last-child {
+          grid-column: 1/-1;
+        }
+      }
+
+      .metric {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+      }
+
+      .metric-label {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-3);
+        font-family: var(--mono);
+        margin-bottom: 5px;
+      }
+
+      .metric-value {
+        font-family: var(--mono);
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: var(--text);
+        line-height: 1;
+      }
+
+      .metric-value.amber {
+        color: var(--amber);
+      }
+      .metric-value.teal {
+        color: var(--teal);
+      }
+
+      .metric-hint {
+        font-size: 0.65rem;
+        color: var(--text-3);
+        margin-top: 4px;
+        font-family: var(--mono);
+      }
+
+      /* ── Controls ── */
+      .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .control-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .control-label {
+        font-size: 0.78rem;
+        color: var(--text-2);
+        min-width: 90px;
+        flex-shrink: 0;
+      }
+
+      input[type="range"] {
+        flex: 1;
+        height: 4px;
+        -webkit-appearance: none;
+        appearance: none;
+        background: var(--bg4);
+        border-radius: 4px;
+        outline: none;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .range-amber::-webkit-slider-thumb {
+        background: var(--amber);
+      }
+      .range-teal::-webkit-slider-thumb {
+        background: var(--teal);
+      }
+      .range-amber::-moz-range-thumb {
+        background: var(--amber);
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+      }
+      .range-teal::-moz-range-thumb {
+        background: var(--teal);
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+      }
+
+      .range-val {
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        color: var(--text-2);
+        min-width: 36px;
+        text-align: right;
+      }
+
+      /* ── Buttons ── */
+      .btn-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: var(--radius);
+        font-size: 0.8rem;
+        font-family: var(--sans);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.18s;
+        border: 1px solid var(--border-2);
+        background: var(--bg3);
+        color: var(--text-2);
+      }
+
+      .btn:hover {
+        background: var(--bg4);
+        color: var(--text);
+        border-color: var(--border-2);
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+
+      .btn-primary-amber {
+        background: var(--amber-glow);
+        color: var(--amber);
+        border-color: var(--amber-dim);
+      }
+      .btn-primary-amber:hover {
+        background: rgba(232, 168, 56, 0.2);
+        color: var(--amber);
+      }
+
+      .btn-primary-teal {
+        background: var(--teal-glow);
+        color: var(--teal);
+        border-color: var(--teal-dim);
+      }
+      .btn-primary-teal:hover {
+        background: rgba(62, 201, 167, 0.2);
+        color: var(--teal);
+      }
+
+      select {
+        background: var(--bg3);
+        border: 1px solid var(--border-2);
+        color: var(--text-2);
+        border-radius: var(--radius);
+        padding: 6px 10px;
+        font-size: 0.78rem;
+        font-family: var(--mono);
+        cursor: pointer;
+        outline: none;
+      }
+      select:hover {
+        border-color: var(--border-2);
+        color: var(--text);
+      }
+
+      /* ── Canvas ── */
+      .canvas-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1;
+        background: var(--bg);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        overflow: hidden;
+      }
+
+      .canvas-wrap canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .canvas-label {
+        position: absolute;
+        bottom: 10px;
+        right: 12px;
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        color: var(--text-3);
+        letter-spacing: 0.08em;
+      }
+
+      /* ── Chart ── */
+      .chart-wrap {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+
+      .chart-wrap canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      /* ── Formula box ── */
+      .formula {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-left: 3px solid;
+        border-radius: 0 var(--radius) var(--radius) 0;
+        padding: 12px 16px;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        color: var(--text-2);
+        line-height: 2;
+      }
+      .formula.amber {
+        border-left-color: var(--amber-dim);
+      }
+      .formula.teal {
+        border-left-color: var(--teal-dim);
+      }
+      .formula em {
+        color: var(--text);
+        font-style: normal;
+        font-weight: 500;
+      }
+      .formula small {
+        color: var(--text-3);
+        font-size: 0.7rem;
+      }
+
+      /* ── Table ── */
+      .table-wrap {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.78rem;
+      }
+
+      thead th {
+        background: var(--bg3);
+        padding: 9px 12px;
+        text-align: left;
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+
+      tbody td {
+        padding: 8px 12px;
+        font-family: var(--mono);
+        color: var(--text-2);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+      tbody tr:hover td {
+        background: var(--bg3);
+      }
+      tbody tr.highlight td {
+        background: rgba(232, 168, 56, 0.06);
+      }
+
+      td.val-amber {
+        color: var(--amber);
+      }
+      td.val-teal {
+        color: var(--teal);
+      }
+      td.val-err {
+        color: #e05a4e;
+      }
+
+      /* ── Progress bar ── */
+      .prog-wrap {
+        height: 3px;
+        background: var(--bg4);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+      .prog-bar {
+        height: 100%;
+        border-radius: 2px;
+        transition: width 0.3s ease;
+        background: var(--amber);
+      }
+      .prog-bar.teal {
+        background: var(--teal);
+      }
+
+      /* ── Footer ── */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 1.5rem clamp(1rem, 4vw, 3rem);
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--text-3);
+        font-family: var(--mono);
+      }
+
+      footer a {
+        color: var(--amber-dim);
+        text-decoration: none;
+      }
+      footer a:hover {
+        color: var(--amber);
+      }
+
+      /* ── Divider ── */
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 4px 0;
+      }
+
+      /* ── Info tooltip ── */
+      .info-chip {
+        font-size: 0.68rem;
+        font-family: var(--mono);
+        color: var(--text-3);
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 2px 8px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+
+      /* speed pills */
+      .speed-pills {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .speed-pill {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-family: var(--mono);
+        border: 1px solid var(--border-2);
+        background: var(--bg3);
+        color: var(--text-3);
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .speed-pill.active {
+        background: var(--teal-glow);
+        color: var(--teal);
+        border-color: var(--teal-dim);
+      }
+
+      /* convergence indicator */
+      .conv-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.75rem;
+        color: var(--text-3);
+        font-family: var(--mono);
+      }
+      .conv-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--text-3);
+        flex-shrink: 0;
+        transition: background 0.4s;
+      }
+      .conv-dot.good {
+        background: var(--teal);
+        box-shadow: 0 0 6px var(--teal);
+      }
+      .conv-dot.ok {
+        background: var(--amber);
+        box-shadow: 0 0 6px var(--amber);
+      }
+      .conv-dot.bad {
+        background: #e05a4e;
+        box-shadow: 0 0 6px #e05a4e;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">Taboo</div>
+      <div class="pi-badge" id="header-pi">π ≈ -</div>
+    </header>
+
+    <div class="hero">
+      <div class="hero-eyebrow">Mathematical simulation</div>
+      <h1>Two ways to find <em>π</em></h1>
+      <p class="hero-sub">
+        An ancient geometric secret meets a modern probabilistic gamble. Choose
+        your method and watch a constant reveal itself.
+      </p>
+    </div>
+
+    <!-- TABS NAV -->
+    <div class="tabs-wrapper">
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('geo')" id="tab-geo">
+          <span class="tab-icon">◈</span> Polygon Convergence
+        </button>
+        <button class="tab-btn" onclick="switchTab('mc')" id="tab-mc">
+          <span class="tab-icon">⊙</span> Monte Carlo
+        </button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ GEO TAB ══════════════════════════════ -->
+    <div class="tab-panel active" id="panel-geo">
+      <div class="main-grid">
+        <!-- LEFT: Visual -->
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Polygon → Cone</div>
+              <div class="panel-sub">n-gon base area → π as n → ∞</div>
+            </div>
+            <span class="panel-badge badge-amber">Archimedes, 250 BCE</span>
+          </div>
+          <div class="panel-body">
+            <div class="metrics">
+              <div class="metric">
+                <div class="metric-label">Current sides</div>
+                <div class="metric-value amber" id="g-sides-val">3</div>
+                <div class="metric-hint">polygon</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">π estimate</div>
+                <div class="metric-value amber" id="g-pi-val">-</div>
+                <div class="metric-hint" id="g-err-hint">error: -</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Error</div>
+                <div
+                  class="metric-value"
+                  id="g-err-val"
+                  style="font-size: 1.1rem"
+                >
+                  -
+                </div>
+                <div class="prog-wrap">
+                  <div
+                    class="prog-bar"
+                    id="g-err-bar"
+                    style="width: 100%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="canvas-wrap">
+              <canvas id="geo-canvas"></canvas>
+              <div class="canvas-label" id="geo-label">n = 3</div>
+            </div>
+
+            <div class="controls">
+              <div class="control-row">
+                <span class="control-label">Sides (n)</span>
+                <input
+                  type="range"
+                  class="range-amber"
+                  id="g-sides"
+                  min="3"
+                  max="200"
+                  value="3"
+                  step="1"
+                  oninput="updateGeo()"
+                />
+                <span class="range-val" id="g-sides-out">3</span>
+              </div>
+              <div class="control-row">
+                <span class="control-label">Animation</span>
+                <button
+                  class="btn btn-primary-amber"
+                  id="g-play-btn"
+                  onclick="toggleGeoAnim()"
+                >
+                  ▶ Auto-play
+                </button>
+                <button class="btn" onclick="resetGeo()">↺ Reset</button>
+              </div>
+            </div>
+
+            <div class="formula amber">
+              Volume of pyramid = <em>(1/3) × base_area × height</em><br />
+              base_area(n) = <em>n · r² · sin(2π/n) / 2</em>
+              <small>← n-gon, r=1</small><br />
+              As n → ∞: base_area → <em>π</em>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Data -->
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Convergence Table</div>
+              <div class="panel-sub">base area per number of sides</div>
+            </div>
+            <span class="info-chip" id="g-total-sides">showing 3 → 200</span>
+          </div>
+          <div class="panel-body">
+            <div class="chart-wrap">
+              <canvas
+                id="geo-chart"
+                role="img"
+                aria-label="Line chart of polygon area converging to pi"
+              ></canvas>
+            </div>
+
+            <div class="conv-row">
+              <div class="conv-dot" id="g-conv-dot"></div>
+              <span id="g-conv-text">adjust the slider to begin</span>
+            </div>
+
+            <div class="table-wrap" style="max-height: 280px; overflow-y: auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Shape</th>
+                    <th>Sides</th>
+                    <th>Base area (≈ π)</th>
+                    <th>Error |Δπ|</th>
+                  </tr>
+                </thead>
+                <tbody id="g-tbody"></tbody>
+              </table>
+            </div>
+
+            <div
+              class="formula amber"
+              style="font-size: 0.72rem; line-height: 1.9"
+            >
+              <small>Why does this give π?</small><br />
+              The n-gon base has area <em>n·sin(2π/n)/2</em>. As n→∞,<br />
+              sin(2π/n) → 2π/n, so area → <em>n · (2π/n) / 2 = π</em>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ MC TAB ══════════════════════════════ -->
+    <div class="tab-panel" id="panel-mc">
+      <div class="main-grid">
+        <!-- LEFT: Dart board -->
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">The Dart Board</div>
+              <div class="panel-sub">unit circle inscribed in 2×2 square</div>
+            </div>
+            <span class="panel-badge badge-teal">Monte Carlo</span>
+          </div>
+          <div class="panel-body">
+            <div class="metrics">
+              <div class="metric">
+                <div class="metric-label">π estimate</div>
+                <div class="metric-value teal" id="mc-pi-val">-</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Darts thrown</div>
+                <div class="metric-value" id="mc-total-val">0</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Inside circle</div>
+                <div class="metric-value teal" id="mc-inside-val">0</div>
+                <div class="metric-hint" id="mc-ratio-hint">ratio: -</div>
+              </div>
+            </div>
+
+            <div class="canvas-wrap" style="aspect-ratio: 1">
+              <canvas id="mc-canvas"></canvas>
+              <div class="canvas-label" id="mc-canvas-label">0 darts</div>
+            </div>
+
+            <div class="controls">
+              <div class="btn-row">
+                <button
+                  class="btn btn-primary-teal"
+                  id="mc-play-btn"
+                  onclick="toggleMC()"
+                >
+                  ▶ Start
+                </button>
+                <button class="btn" onclick="resetMC()">↺ Reset</button>
+              </div>
+              <div class="control-row">
+                <span class="control-label">Speed</span>
+                <div class="speed-pills">
+                  <button class="speed-pill" onclick="setSpeed(20, this)">
+                    slow
+                  </button>
+                  <button
+                    class="speed-pill active"
+                    onclick="setSpeed(150, this)"
+                  >
+                    normal
+                  </button>
+                  <button class="speed-pill" onclick="setSpeed(600, this)">
+                    fast
+                  </button>
+                  <button class="speed-pill" onclick="setSpeed(3000, this)">
+                    turbo
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="formula teal">
+              P(inside circle) = <em>π·r² / (2r)² = π/4</em><br />
+              Estimate: <em>π ≈ 4 × (inside / total)</em><br />
+              <small>Converges as O(1/√n) - slow but elegant</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Convergence chart -->
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">π Convergence</div>
+              <div class="panel-sub">estimate over time</div>
+            </div>
+            <span class="info-chip" id="mc-status-chip">waiting</span>
+          </div>
+          <div class="panel-body">
+            <div class="chart-wrap" style="height: 240px">
+              <canvas
+                id="mc-chart"
+                role="img"
+                aria-label="Line chart showing Monte Carlo pi estimate converging over time"
+              ></canvas>
+            </div>
+
+            <div class="conv-row">
+              <div class="conv-dot" id="mc-conv-dot"></div>
+              <span id="mc-conv-text">throw some darts to begin</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="metrics" style="grid-template-columns: 1fr 1fr">
+              <div class="metric">
+                <div class="metric-label">Best estimate</div>
+                <div class="metric-value teal" id="mc-best-val">-</div>
+                <div class="metric-hint" id="mc-best-at">at - darts</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Error</div>
+                <div class="metric-value" id="mc-err-val">-</div>
+                <div class="prog-wrap">
+                  <div
+                    class="prog-bar teal"
+                    id="mc-err-bar"
+                    style="width: 100%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="formula teal"
+              style="font-size: 0.72rem; line-height: 1.9"
+            >
+              <small>Why is Monte Carlo slow?</small><br />
+              Error ∝ <em>1/√n</em> - to gain 1 decimal place,<br />
+              you need <em>100×</em> more darts. But it needs<br />
+              no geometry - just randomness.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>Built by Claude to cure the curiosity of Manish Majhi</footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script>
+      const PI = Math.PI;
+
+      /* ── Tab switching ── */
+      function switchTab(name) {
+        document
+          .querySelectorAll(".tab-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("panel-" + name).classList.add("active");
+        document.getElementById("tab-" + name).classList.add("active");
+        if (name === "mc" && !mcChartInst) initMCChart();
+        if (name === "geo" && !geoChartInst) initGeoChart();
+      }
+
+      /* ══════════════════ POLYGON / GEO ══════════════════ */
+      let geoChartInst = null;
+      let geoAnim = null;
+      let geoPlaying = false;
+      let gCurrentN = 3;
+
+      function polyArea(n) {
+        return (n * Math.sin((2 * PI) / n)) / 2;
+      }
+
+      function updateGeo(n) {
+        if (n === undefined)
+          n = parseInt(document.getElementById("g-sides").value);
+        else document.getElementById("g-sides").value = n;
+        gCurrentN = n;
+
+        document.getElementById("g-sides-out").textContent = n;
+        document.getElementById("g-sides-val").textContent = n;
+        document.getElementById("geo-label").textContent =
+          "n = " + n + " sides";
+
+        const est = polyArea(n);
+        const err = Math.abs(est - PI);
+        document.getElementById("g-pi-val").textContent = est.toFixed(6);
+        document.getElementById("g-err-val").textContent = err.toFixed(6);
+        document.getElementById("g-err-hint").textContent = "vs π = 3.141593";
+        document.getElementById("header-pi").textContent =
+          "π ≈ " + est.toFixed(5);
+
+        const errPct = Math.min(100, (err / PI) * 100 * 20);
+        document.getElementById("g-err-bar").style.width = errPct + "%";
+
+        const dot = document.getElementById("g-conv-dot");
+        const txt = document.getElementById("g-conv-text");
+        if (err < 0.0001) {
+          dot.className = "conv-dot good";
+          txt.textContent = "excellent convergence - π accurate to 4+ decimals";
+        } else if (err < 0.01) {
+          dot.className = "conv-dot ok";
+          txt.textContent = "good convergence - within 0.01 of π";
+        } else {
+          dot.className = "conv-dot bad";
+          txt.textContent = "converging - add more sides";
+        }
+
+        drawPolygon(n);
+        updateGeoTable(n);
+        if (geoChartInst) updateGeoChart(n);
+      }
+
+      function drawPolygon(n) {
+        const cvs = document.getElementById("geo-canvas");
+        const size = cvs.offsetWidth || 300;
+        cvs.width = size * window.devicePixelRatio;
+        cvs.height = size * window.devicePixelRatio;
+        const ctx = cvs.getContext("2d");
+        const dpr = window.devicePixelRatio;
+        ctx.scale(dpr, dpr);
+        const W = size,
+          H = size;
+        const cx = W / 2,
+          cy = H / 2;
+        const r = Math.min(W, H) * 0.42;
+
+        ctx.clearRect(0, 0, W, H);
+
+        // grid lines subtle
+        ctx.strokeStyle = "rgba(42,46,61,0.8)";
+        ctx.lineWidth = 0.5;
+        for (let i = 1; i < 4; i++) {
+          ctx.beginPath();
+          ctx.moveTo((W * i) / 4, 0);
+          ctx.lineTo((W * i) / 4, H);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, (H * i) / 4);
+          ctx.lineTo(W, (H * i) / 4);
+          ctx.stroke();
+        }
+
+        // circle (target)
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, 2 * PI);
+        ctx.strokeStyle = "rgba(62,201,167,0.25)";
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // polygon fill
+        const pts = [];
+        for (let i = 0; i < n; i++) {
+          const a = (2 * PI * i) / n - PI / 2;
+          pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+        }
+        ctx.beginPath();
+        ctx.moveTo(pts[0][0], pts[0][1]);
+        for (let i = 1; i < n; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(232,168,56,0.12)";
+        ctx.fill();
+        ctx.strokeStyle = "#e8a838";
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+
+        // vertices
+        if (n <= 24) {
+          pts.forEach(([x, y]) => {
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, 2 * PI);
+            ctx.fillStyle = "#e8a838";
+            ctx.fill();
+          });
+        }
+
+        // center dot
+        ctx.beginPath();
+        ctx.arc(cx, cy, 3, 0, 2 * PI);
+        ctx.fillStyle = "rgba(232,168,56,0.6)";
+        ctx.fill();
+
+        // radius line
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(pts[0][0], pts[0][1]);
+        ctx.strokeStyle = "rgba(232,168,56,0.3)";
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // label
+        if (n <= 12) {
+          ctx.font = `${Math.max(10, 14 - n / 2)}px "JetBrains Mono"`;
+          ctx.fillStyle = "rgba(232,168,56,0.5)";
+          ctx.textAlign = "center";
+          ctx.fillText("n=" + n, cx, cy + r + 20);
+        }
+      }
+
+      const GEO_ROWS = [3, 4, 5, 6, 8, 10, 12, 16, 20, 30, 50, 100, 150, 200];
+      const SHAPE_NAMES = {
+        3: "triangle",
+        4: "square",
+        5: "pentagon",
+        6: "hexagon",
+        8: "octagon",
+        10: "decagon",
+        12: "dodecagon",
+        16: "hexadecagon",
+      };
+
+      function updateGeoTable(n) {
+        const rows = [...new Set([...GEO_ROWS.filter((x) => x <= n), n])].sort(
+          (a, b) => a - b,
+        );
+        const tbody = document.getElementById("g-tbody");
+        tbody.innerHTML = rows
+          .map((k) => {
+            const a = polyArea(k);
+            const e = Math.abs(a - PI);
+            const name = SHAPE_NAMES[k] || k + "-gon";
+            const hl = k === n ? ' class="highlight"' : "";
+            return `<tr${hl}>
+      <td>${name}</td>
+      <td class="val-amber">${k}</td>
+      <td class="val-amber">${a.toFixed(7)}</td>
+      <td class="val-err">${e.toFixed(7)}</td>
+    </tr>`;
+          })
+          .join("");
+      }
+
+      function initGeoChart() {
+        const ctx = document.getElementById("geo-chart");
+        geoChartInst = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "polygon base area",
+                data: [],
+                borderColor: "#e8a838",
+                backgroundColor: "rgba(232,168,56,0.06)",
+                tension: 0.4,
+                pointRadius: 0,
+                borderWidth: 2,
+                fill: true,
+              },
+              {
+                label: "π",
+                data: [],
+                borderColor: "rgba(62,201,167,0.5)",
+                borderDash: [5, 4],
+                pointRadius: 0,
+                borderWidth: 1.2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: {
+                ticks: {
+                  color: "#5a5854",
+                  font: { family: "JetBrains Mono", size: 10 },
+                  maxTicksLimit: 8,
+                },
+                grid: { color: "rgba(42,46,61,0.8)" },
+                title: {
+                  display: true,
+                  text: "sides (n)",
+                  color: "#5a5854",
+                  font: { size: 10 },
+                },
+              },
+              y: {
+                min: 2.7,
+                max: 3.3,
+                ticks: {
+                  color: "#5a5854",
+                  font: { family: "JetBrains Mono", size: 10 },
+                },
+                grid: { color: "rgba(42,46,61,0.8)" },
+              },
+            },
+          },
+        });
+        updateGeoChart(gCurrentN);
+      }
+
+      function updateGeoChart(n) {
+        const pts = [];
+        for (let i = 3; i <= Math.min(n, 120); i++)
+          pts.push({ x: i, y: polyArea(i) });
+        geoChartInst.data.labels = pts.map((p) => p.x);
+        geoChartInst.data.datasets[0].data = pts.map((p) => p.y);
+        geoChartInst.data.datasets[1].data = pts.map(() => PI);
+        geoChartInst.update("none");
+      }
+
+      function toggleGeoAnim() {
+        geoPlaying = !geoPlaying;
+        const btn = document.getElementById("g-play-btn");
+        if (geoPlaying) {
+          btn.textContent = "⏸ Pause";
+          btn.className = "btn";
+          let n = Math.max(3, gCurrentN);
+          if (n >= 200) n = 3;
+          function step() {
+            if (!geoPlaying) return;
+            updateGeo(n);
+            n = n < 20 ? n + 1 : n < 50 ? n + 2 : n < 100 ? n + 5 : n + 10;
+            if (n > 200) {
+              geoPlaying = false;
+              btn.textContent = "▶ Auto-play";
+              btn.className = "btn btn-primary-amber";
+              return;
+            }
+            geoAnim = setTimeout(step, 120);
+          }
+          step();
+        } else {
+          clearTimeout(geoAnim);
+          btn.textContent = "▶ Auto-play";
+          btn.className = "btn btn-primary-amber";
+        }
+      }
+
+      function resetGeo() {
+        geoPlaying = false;
+        clearTimeout(geoAnim);
+        document.getElementById("g-play-btn").textContent = "▶ Auto-play";
+        document.getElementById("g-play-btn").className =
+          "btn btn-primary-amber";
+        updateGeo(3);
+      }
+
+      /* ══════════════════ MONTE CARLO ══════════════════ */
+      let mcChartInst = null,
+        mcRunning = false,
+        mcRaf = null;
+      let mcTotal = 0,
+        mcInside = 0,
+        mcSpeed = 150;
+      let mcHistX = [],
+        mcHistY = [];
+      let mcBest = null,
+        mcBestAt = 0;
+      let mcMaxDots = 10000;
+      let mcDotList = [];
+
+      function setSpeed(s, el) {
+        mcSpeed = s;
+        document
+          .querySelectorAll(".speed-pill")
+          .forEach((p) => p.classList.remove("active"));
+        el.classList.add("active");
+      }
+
+      function initMCChart() {
+        const ctx = document.getElementById("mc-chart");
+        mcChartInst = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "π estimate",
+                data: [],
+                borderColor: "#3ec9a7",
+                backgroundColor: "rgba(62,201,167,0.06)",
+                tension: 0.2,
+                pointRadius: 0,
+                borderWidth: 2,
+                fill: true,
+              },
+              {
+                label: "π",
+                data: [],
+                borderColor: "rgba(232,168,56,0.5)",
+                borderDash: [5, 4],
+                pointRadius: 0,
+                borderWidth: 1.2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: {
+                ticks: {
+                  color: "#5a5854",
+                  font: { family: "JetBrains Mono", size: 10 },
+                  maxTicksLimit: 8,
+                },
+                grid: { color: "rgba(42,46,61,0.8)" },
+                title: {
+                  display: true,
+                  text: "darts thrown",
+                  color: "#5a5854",
+                  font: { size: 10 },
+                },
+              },
+              y: {
+                min: 2.6,
+                max: 3.7,
+                ticks: {
+                  color: "#5a5854",
+                  font: { family: "JetBrains Mono", size: 10 },
+                },
+                grid: { color: "rgba(42,46,61,0.8)" },
+              },
+            },
+          },
+        });
+      }
+
+      function drawMCCanvas() {
+        const cvs = document.getElementById("mc-canvas");
+        const size = cvs.offsetWidth || 280;
+        cvs.width = size * window.devicePixelRatio;
+        cvs.height = size * window.devicePixelRatio;
+        const ctx = cvs.getContext("2d");
+        const dpr = window.devicePixelRatio;
+        ctx.scale(dpr, dpr);
+        const W = size,
+          H = size;
+        ctx.clearRect(0, 0, W, H);
+
+        // square border
+        ctx.strokeStyle = "rgba(90,88,84,0.4)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(1, 1, W - 2, H - 2);
+
+        // circle
+        ctx.beginPath();
+        ctx.arc(W / 2, H / 2, W / 2 - 1, 0, 2 * PI);
+        ctx.strokeStyle = "rgba(62,201,167,0.5)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // dots
+        mcDotList.forEach((d) => {
+          ctx.beginPath();
+          ctx.arc(d.px, d.py, 1.5, 0, 2 * PI);
+          ctx.fillStyle = d.inside
+            ? "rgba(62,201,167,0.65)"
+            : "rgba(90,88,84,0.45)";
+          ctx.fill();
+        });
+      }
+
+      function mcStep() {
+        const cvs = document.getElementById("mc-canvas");
+        const size = cvs.offsetWidth || 280;
+        const ctx = cvs.getContext("2d");
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+        for (let i = 0; i < mcSpeed; i++) {
+          const rx = Math.random() * 2 - 1;
+          const ry = Math.random() * 2 - 1;
+          const inside = rx * rx + ry * ry <= 1;
+          if (inside) mcInside++;
+          mcTotal++;
+
+          if (mcDotList.length < mcMaxDots) {
+            const px = ((rx + 1) / 2) * (size - 4) + 2;
+            const py = ((ry + 1) / 2) * (size - 4) + 2;
+            mcDotList.push({ px, py, inside });
+          }
+        }
+
+        const est = (4 * mcInside) / mcTotal;
+        const err = Math.abs(est - PI);
+
+        if (!mcBest || err < Math.abs(mcBest - PI)) {
+          mcBest = est;
+          mcBestAt = mcTotal;
+        }
+
+        document.getElementById("mc-pi-val").textContent = est.toFixed(5);
+        document.getElementById("mc-total-val").textContent =
+          mcTotal.toLocaleString();
+        document.getElementById("mc-inside-val").textContent =
+          mcInside.toLocaleString();
+        document.getElementById("mc-ratio-hint").textContent =
+          "ratio: " + (mcInside / mcTotal).toFixed(4);
+        document.getElementById("mc-canvas-label").textContent =
+          mcTotal.toLocaleString() + " darts";
+        document.getElementById("mc-status-chip").textContent =
+          mcTotal.toLocaleString() + " thrown";
+        document.getElementById("header-pi").textContent =
+          "π ≈ " + est.toFixed(5);
+        document.getElementById("mc-best-val").textContent = mcBest
+          ? mcBest.toFixed(6)
+          : "-";
+        document.getElementById("mc-best-at").textContent =
+          "at " + mcBestAt.toLocaleString() + " darts";
+        document.getElementById("mc-err-val").textContent = err.toFixed(5);
+        const errPct = Math.min(100, err * 200);
+        document.getElementById("mc-err-bar").style.width = errPct + "%";
+
+        const dot = document.getElementById("mc-conv-dot");
+        const txt = document.getElementById("mc-conv-text");
+        if (err < 0.001) {
+          dot.className = "conv-dot good";
+          txt.textContent = "strong convergence - 3 decimals of π correct";
+        } else if (err < 0.01) {
+          dot.className = "conv-dot ok";
+          txt.textContent = "converging - keep throwing darts";
+        } else {
+          dot.className = "conv-dot bad";
+          txt.textContent = "high variance - needs more samples";
+        }
+
+        if (mcTotal % 500 === 0 || mcTotal < 300) {
+          mcHistX.push(mcTotal);
+          mcHistY.push(est);
+          if (mcChartInst) {
+            mcChartInst.data.labels = mcHistX;
+            mcChartInst.data.datasets[0].data = mcHistY;
+            mcChartInst.data.datasets[1].data = mcHistX.map(() => PI);
+            mcChartInst.update("none");
+          }
+        }
+
+        // redraw canvas every ~10 frames
+        if (mcTotal % 10 === 0 || mcSpeed < 50) drawMCCanvas();
+
+        if (mcRunning && mcTotal < 500000) {
+          mcRaf = requestAnimationFrame(mcStep);
+        } else if (mcTotal >= 500000) {
+          mcRunning = false;
+          document.getElementById("mc-play-btn").textContent = "▶ Restart";
+          drawMCCanvas();
+        }
+      }
+
+      function toggleMC() {
+        if (!mcChartInst) initMCChart();
+        mcRunning = !mcRunning;
+        const btn = document.getElementById("mc-play-btn");
+        if (mcRunning) {
+          btn.textContent = "⏸ Pause";
+          btn.className = "btn";
+          drawMCCanvas();
+          mcRaf = requestAnimationFrame(mcStep);
+        } else {
+          cancelAnimationFrame(mcRaf);
+          btn.textContent = "▶ Resume";
+          btn.className = "btn btn-primary-teal";
+        }
+      }
+
+      function resetMC() {
+        mcRunning = false;
+        cancelAnimationFrame(mcRaf);
+        mcTotal = 0;
+        mcInside = 0;
+        mcHistX = [];
+        mcHistY = [];
+        mcBest = null;
+        mcBestAt = 0;
+        mcDotList = [];
+        document.getElementById("mc-pi-val").textContent = "-";
+        document.getElementById("mc-total-val").textContent = "0";
+        document.getElementById("mc-inside-val").textContent = "0";
+        document.getElementById("mc-ratio-hint").textContent = "ratio: -";
+        document.getElementById("mc-canvas-label").textContent = "0 darts";
+        document.getElementById("mc-status-chip").textContent = "waiting";
+        document.getElementById("mc-best-val").textContent = "-";
+        document.getElementById("mc-best-at").textContent = "at - darts";
+        document.getElementById("mc-err-val").textContent = "-";
+        document.getElementById("mc-err-bar").style.width = "100%";
+        document.getElementById("mc-conv-dot").className = "conv-dot";
+        document.getElementById("mc-conv-text").textContent =
+          "throw some darts to begin";
+        document.getElementById("mc-play-btn").textContent = "▶ Start";
+        document.getElementById("mc-play-btn").className =
+          "btn btn-primary-teal";
+        document.getElementById("header-pi").textContent = "π ≈ -";
+        if (mcChartInst) {
+          mcChartInst.data.labels = [];
+          mcChartInst.data.datasets.forEach((d) => (d.data = []));
+          mcChartInst.update();
+        }
+        const cvs = document.getElementById("mc-canvas");
+        const size = cvs.offsetWidth || 280;
+        cvs.width = size * window.devicePixelRatio;
+        cvs.height = size * window.devicePixelRatio;
+        const ctx = cvs.getContext("2d");
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        drawMCCanvas();
+      }
+
+      /* ── Init ── */
+      window.addEventListener("load", () => {
+        initGeoChart();
+        updateGeo(3);
+        drawMCCanvas();
+      });
+
+      window.addEventListener("resize", () => {
+        updateGeo(gCurrentN);
+        drawMCCanvas();
+      });
+    </script>
+  </body>
+</html>

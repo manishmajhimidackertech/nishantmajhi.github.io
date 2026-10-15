@@ -1,0 +1,115 @@
+@media (prefers-color-scheme: light) {
+  :root {
+    accent-color: hsl(120, 100%, 25%);
+    --input-color: hsl(0, 0%, 25%);
+    --foreground-color: hsl(0, 0%, 0%);
+  }
+
+  body {
+    color: var(--foreground-color);
+    background-color: hsl(0, 0%, 90%);
+  }
+
+  main {
+    border: 4px solid hsl(120, 100%, 15%);
+    background-color: hsl(0, 0%, 100%);
+  }
+
+  h1 {
+    border-bottom: 2px solid var(--foreground-color);
+    color: hsl(120, 100%, 25%);
+  }
+
+  button {
+    color: hsl(0, 0%, 100%);
+  }
+
+  #first_num > input,
+  #second_num > input {
+    border: 2px solid var(--foreground-color);
+  }
+  #first_num > input:not(:placeholder-shown):valid,
+  #second_num > input:not(:placeholder-shown):valid {
+    border: 2px solid green;
+  }
+  #first_num > input:focus:not(:placeholder-shown):invalid,
+  #second_num > input:focus:not(:placeholder-shown):invalid {
+    border: 2px solid orange;
+  }
+  #first_num > input:not(:placeholder-shown):invalid,
+  #second_num > input:not(:placeholder-shown):invalid {
+    border: 2px solid red;
+  }
+
+  #operations button {
+    background-color: hsl(147, 100%, 39%);
+  }
+  #operations button:hover {
+    background-color: hsl(123, 100%, 34%);
+  }
+  #operations button:active {
+    background-color: hsl(120, 61%, 34%);
+  }
+
+  #calculation_result {
+    color: var(--foreground-color);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    accent-color: hsl(120, 50%, 40%);
+    --input-color: hsl(0, 0%, 75%);
+    --foreground-color: hsl(0, 0%, 85%);
+  }
+
+  body {
+    color: var(--foreground-color);
+    background-color: hsl(0, 0%, 4%);
+  }
+
+  main {
+    border: 4px solid hsl(120, 50%, 20%);
+    background-color: hsl(0, 0%, 10%);
+  }
+
+  h1 {
+    border-bottom: 2px solid var(--foreground-color);
+    color: hsl(120, 50%, 50%);
+  }
+
+  button,
+  select {
+    color: var(--foreground-color);
+  }
+
+  #first_num > input,
+  #second_num > input {
+    border: 2px solid var(--foreground-color);
+  }
+  #first_num > input:not(:placeholder-shown):valid,
+  #second_num > input:not(:placeholder-shown):valid {
+    border: 2px solid green;
+  }
+  #first_num > input:focus:not(:placeholder-shown):invalid,
+  #second_num > input:focus:not(:placeholder-shown):invalid {
+    border: 2px solid orange;
+  }
+  #first_num > input:not(:placeholder-shown):invalid,
+  #second_num > input:not(:placeholder-shown):invalid {
+    border: 2px solid red;
+  }
+  #operations button {
+    color: var(--foreground-color);
+    background-color: hsl(147, 100%, 25%);
+  }
+  #operations button:hover {
+    background-color: hsl(123, 100%, 20%);
+  }
+  #operations button:active {
+    background-color: hsl(120, 61%, 20%);
+  }
+  #calculation_result {
+    color: var(--foreground-color);
+  }
+}

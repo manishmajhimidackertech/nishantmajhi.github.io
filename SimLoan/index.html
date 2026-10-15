@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <title>SimLoan</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="tabler-icons.min.css" />
+    <script src="chart.umd.min.js"></script>
+  </head>
+  <body>
+    <!-- ── Top Navigation Bar ─────────────────────────────────── -->
+    <header class="topbar">
+      <div class="logo">
+        <span>Loan Payment Simulation</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#calculator" class="nav-link active">Calculator</a>
+        <a href="#schedule" class="nav-link">Schedule</a>
+        <a href="#about" class="nav-link">About</a>
+      </nav>
+    </header>
+
+    <!-- ── Main Content ──────────────────────────────────────── -->
+    <main class="main" id="calculator">
+      <!-- Loan Inputs -->
+      <section class="card" aria-labelledby="inputsTitle">
+        <div class="card-title-row">
+          <h2 class="card-title" id="inputsTitle">Loan Details</h2>
+          <div class="mode-toggle" role="group" aria-label="Calculation mode">
+            <button
+              class="mode-btn active"
+              id="modeTenure"
+              onclick="setMode('tenure')"
+            >
+              Find Tenure
+            </button>
+            <button class="mode-btn" id="modeEMI" onclick="setMode('emi')">
+              Find EMI
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="loanAmt">Loan Amount</label>
+          <div class="currency-wrap">
+            <span class="currency-symbol">रू</span>
+            <input
+              type="number"
+              id="loanAmt"
+              value="500000"
+              min="1000"
+              max="5000000"
+              step="1000"
+              oninput="compute()"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-header">
+            <label for="rateSlider">Annual Interest Rate</label>
+            <span class="field-val"><span id="rateDisplay">12.0</span>%</span>
+          </div>
+          <input
+            type="range"
+            id="rateSlider"
+            min="1"
+            max="36"
+            step="0.1"
+            value="12"
+            oninput="
+              document.getElementById('rateDisplay').textContent = parseFloat(
+                this.value,
+              ).toFixed(1);
+              compute();
+            "
+            class="slider"
+          />
+          <div class="range-labels"><span>1%</span><span>36%</span></div>
+        </div>
+
+        <div class="field" id="tenureField">
+          <div class="field-header">
+            <label for="tenureDial">Loan Tenure</label>
+          </div>
+          <div class="dial-wrap">
+            <div class="dial-circle">
+              <svg
+                id="tenureDial"
+                class="dial"
+                viewBox="0 0 200 200"
+                tabindex="0"
+                role="slider"
+                aria-labelledby="tenureField"
+                aria-valuemin="1"
+                aria-valuemax="360"
+                aria-valuenow="60"
+                aria-valuetext="60 months"
+              >
+                <path id="dialTrack" class="dial-track" fill="none" />
+                <path id="dialProgress" class="dial-progress" fill="none" />
+                <circle id="dialThumb" class="dial-thumb" r="9" />
+              </svg>
+              <div class="dial-center" id="dialCenter">
+                <span class="dial-value" id="tenureDisplay">60</span>
+                <span class="dial-unit">months</span>
+              </div>
+            </div>
+            <div class="dial-endlabels">
+              <span>1 mo</span><span>360 mo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field" id="emiInputField" style="display: none">
+          <label for="emiAmt">Monthly EMI</label>
+          <div class="currency-wrap">
+            <span class="currency-symbol">रू</span>
+            <input
+              type="number"
+              id="emiAmt"
+              value="12000"
+              min="100"
+              step="100"
+              oninput="compute()"
+            />
+          </div>
+          <p class="emi-hint" id="emiHint"></p>
+        </div>
+      </section>
+
+      <!-- Summary Metrics -->
+      <section class="metrics" aria-label="Loan summary">
+        <div class="metric" id="mEMICard">
+          <div class="metric-label">Monthly EMI</div>
+          <div class="metric-value green" id="mEMI">-</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Total Interest</div>
+          <div class="metric-value amber" id="mInt">-</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Total Payable</div>
+          <div class="metric-value blue" id="mTotal">-</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Interest / Principal</div>
+          <div class="metric-value" id="mRatio">-</div>
+        </div>
+        <div class="metric" id="mTenureCard" style="display: none">
+          <div class="metric-label">Loan Tenure</div>
+          <div
+            class="metric-value"
+            id="mTenure"
+            style="color: var(--brand-dark)"
+          >
+            -
+          </div>
+        </div>
+      </section>
+
+      <!-- Chart -->
+      <section class="card" aria-labelledby="chartTitle">
+        <h2 class="card-title" id="chartTitle">
+          Principal vs Interest Breakdown
+        </h2>
+        <div class="chart-wrap">
+          <canvas
+            id="loanChart"
+            role="img"
+            aria-label="Stacked bar chart showing principal and interest paid per payment"
+          ></canvas>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item"
+            ><span class="legend-dot" style="background: #1d9e75"></span
+            >Principal repaid</span
+          >
+          <span class="legend-item"
+            ><span class="legend-dot" style="background: #185fa5"></span
+            >Interest paid</span
+          >
+        </div>
+      </section>
+
+      <!-- Amortization Table -->
+      <section class="card" id="schedule" aria-labelledby="schedTitle">
+        <div class="card-title-row">
+          <h2 class="card-title" id="schedTitle">Amortization Schedule</h2>
+          <span class="row-count" id="rowCount"></span>
+        </div>
+        <div class="table-wrap">
+          <table id="schedTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>EMI</th>
+                <th>Interest paid</th>
+                <th>Principal paid</th>
+                <th>Balance</th>
+                <th>Progress</th>
+              </tr>
+            </thead>
+            <tbody id="schedBody">
+              <tr>
+                <td colspan="6" class="empty-cell">
+                  <i class="ti ti-calculator" aria-hidden="true"></i>
+                  Adjust the values above to generate your schedule
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="card" id="about" aria-labelledby="aboutTitle">
+        <h2 class="card-title" id="aboutTitle">About Calculation</h2>
+        <p class="about-text">
+          SimLoan uses the standard
+          <strong>Equated Monthly Installment (EMI)</strong> formula:
+        </p>
+        <div class="formula-box">
+          EMI = P * r * (1 + r)<sup>n</sup> ÷ ((1 + r)<sup>n</sup> − 1)
+        </div>
+        <p class="about-text">
+          Where, <br />
+          <strong>P</strong> = principal,<br />
+          <strong>r</strong> = monthly interest rate (annual ÷ 12 ÷ 100),
+          <br />
+          <strong>n</strong> = number of months.
+        </p>
+      </section>
+    </main>
+
+    <!-- ── Floating Theme Toggle ──────────────────────────────── -->
+    <button class="fab-theme" onclick="toggleTheme()" aria-label="Toggle theme">
+      <i id="themeIcon" class="ti ti-moon"></i>
+    </button>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1899 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bank vs. Relative</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏦</text></svg>"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap");
+
+      :root {
+        color-scheme: dark;
+        /* Material 3 dynamic color roles - indigo primary, teal secondary */
+        --md-primary: #aac3ff;
+        --md-on-primary: #062e6f;
+        --md-primary-container: #1c4694;
+        --md-on-primary-container: #d8e2ff;
+
+        --md-secondary: #86d6c4;
+        --md-on-secondary: #003730;
+        --md-secondary-container: #005045;
+        --md-on-secondary-container: #a2f2de;
+
+        --md-tertiary: #ffb4a8;
+        --md-error: #ffb4ab;
+
+        --md-surface: #0e1116;
+        --md-surface-dim: #0a0c10;
+        --md-surface-bright: #34383f;
+        --md-surface-container-lowest: #08090c;
+        --md-surface-container-low: #16191f;
+        --md-surface-container: #1a1e24;
+        --md-surface-container-high: #21252c;
+        --md-surface-container-highest: #2c3037;
+
+        --md-on-surface: #e3e2e6;
+        --md-on-surface-variant: #c4c6cf;
+        --md-outline: #8e9099;
+        --md-outline-variant: #43474f;
+
+        --font-display: "Google Sans", "Roboto", sans-serif;
+        --font-body: "Roboto", sans-serif;
+        --font-mono: "Roboto Mono", monospace;
+
+        /* M3 Expressive shape scale */
+        --shape-xs: 8px;
+        --shape-sm: 12px;
+        --shape-md: 16px;
+        --shape-lg: 24px;
+        --shape-xl: 32px;
+        --shape-full: 999px;
+
+        /* M3 Expressive motion (spring-like emphasized easing) */
+        --motion-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        --motion-standard: cubic-bezier(0.2, 0, 0, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(
+            1100px 600px at 8% -8%,
+            rgba(170, 195, 255, 0.1),
+            transparent 55%
+          ),
+          radial-gradient(
+            900px 700px at 100% 8%,
+            rgba(134, 214, 196, 0.08),
+            transparent 55%
+          ),
+          var(--md-surface-dim);
+        color: var(--md-on-surface);
+        font-family: var(--font-body);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+
+      /* ---------- Top app bar ---------- */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 24px;
+        background: rgba(14, 17, 22, 0.78);
+        backdrop-filter: blur(16px) saturate(140%);
+        border-bottom: 1px solid var(--md-outline-variant);
+      }
+      .topbar .logo {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--shape-md);
+        background: linear-gradient(
+          135deg,
+          var(--md-primary-container),
+          var(--md-secondary-container)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+        transition:
+          border-radius 0.5s cubic-bezier(0.45, 0, 0.2, 1),
+          transform 0.5s cubic-bezier(0.45, 0, 0.2, 1);
+        will-change: border-radius, transform;
+      }
+      .topbar:hover .logo {
+        border-radius: var(--shape-full);
+        transform: rotate(8deg) scale(1.06);
+      }
+      .topbar .titles {
+        flex: 1;
+        min-width: 0;
+      }
+      .topbar .titles .t1 {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 16px;
+        color: var(--md-on-surface);
+      }
+      .topbar .titles .t2 {
+        font-size: 12px;
+        color: var(--md-on-surface-variant);
+      }
+      .md-icon-btn {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--shape-full);
+        border: none;
+        background: transparent;
+        color: var(--md-on-surface-variant);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background 0.2s var(--motion-standard);
+        flex-shrink: 0;
+      }
+      .md-icon-btn:hover {
+        background: var(--md-surface-container-high);
+      }
+
+      /* ---------- Layout ---------- */
+      .wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 36px 24px 140px;
+      }
+
+      .hero {
+        margin-bottom: 32px;
+        padding: 36px 36px 32px;
+        border-radius: var(--shape-xl);
+        background:
+          radial-gradient(
+            600px 240px at 0% 0%,
+            rgba(170, 195, 255, 0.16),
+            transparent 70%
+          ),
+          linear-gradient(
+            165deg,
+            var(--md-surface-container) 0%,
+            var(--md-surface-container-low) 100%
+          );
+        border: 1px solid var(--md-outline-variant);
+        position: relative;
+        overflow: hidden;
+        animation: rise 0.5s var(--motion-spring) both;
+      }
+      .hero .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 11px;
+        color: var(--md-secondary);
+        background: rgba(134, 214, 196, 0.12);
+        border: 1px solid rgba(134, 214, 196, 0.3);
+        padding: 6px 14px;
+        border-radius: var(--shape-full);
+        margin-bottom: 18px;
+      }
+      .hero .eyebrow::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--md-secondary);
+        box-shadow: 0 0 8px var(--md-secondary);
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(30px, 4vw, 46px);
+        line-height: 1.06;
+        letter-spacing: -0.02em;
+        margin: 0 0 16px;
+        max-width: 760px;
+        background: linear-gradient(
+          135deg,
+          #f4f5f7 25%,
+          var(--md-primary) 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero p {
+        max-width: 680px;
+        color: var(--md-on-surface-variant);
+        font-size: 15.5px;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .stagger {
+        animation: rise 0.5s var(--motion-spring) both;
+      }
+      .s1 {
+        animation-delay: 0.04s;
+      }
+      .s2 {
+        animation-delay: 0.09s;
+      }
+      .s3 {
+        animation-delay: 0.14s;
+      }
+      .s4 {
+        animation-delay: 0.19s;
+      }
+      .s5 {
+        animation-delay: 0.24s;
+      }
+
+      .ledger {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+      @media (max-width: 980px) {
+        .ledger {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ---------- Control rail (panel) ---------- */
+      .panel {
+        background: var(--md-surface-container);
+        border: 1px solid var(--md-outline-variant);
+        border-radius: var(--shape-xl);
+        padding: 8px;
+        position: sticky;
+        top: 84px;
+      }
+      @media (max-width: 980px) {
+        .panel {
+          position: static;
+        }
+      }
+
+      .panel-section {
+        padding: 20px 18px;
+      }
+      .panel-section + .panel-section {
+        border-top: 1px solid var(--md-outline-variant);
+      }
+      .panel-section h2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 0 0 18px;
+        color: var(--md-on-surface-variant);
+      }
+      .panel-section h2 .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--md-primary);
+      }
+      .panel-section.relative h2 .dot {
+        background: var(--md-secondary);
+      }
+
+      .field {
+        margin-bottom: 20px;
+      }
+      .field:last-child {
+        margin-bottom: 0;
+      }
+      .field label {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: 13.5px;
+        margin-bottom: 10px;
+        color: var(--md-on-surface-variant);
+      }
+      .field label .val {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 13.5px;
+        color: var(--md-on-surface);
+        background: var(--md-surface-container-highest);
+        padding: 2px 10px;
+        border-radius: var(--shape-full);
+      }
+      .note {
+        font-size: 11.5px;
+        color: var(--md-outline);
+        margin-top: 8px;
+        line-height: 1.5;
+      }
+
+      /* ---------- M3 Expressive slider ---------- */
+      .wiggly-slider {
+        position: relative;
+        height: 34px;
+        margin: 4px 0 2px;
+      }
+      .wiggly-slider svg {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        height: 18px;
+        display: block;
+        pointer-events: none;
+      }
+      .wiggly-slider svg path.track-bg {
+        fill: none;
+        stroke: var(--md-surface-container-highest);
+        stroke-width: 5;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+      }
+      .wiggly-slider svg path.track-fill {
+        fill: none;
+        stroke: var(--md-primary);
+        stroke-width: 5;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+        filter: drop-shadow(0 0 5px rgba(170, 195, 255, 0.5));
+      }
+      .wiggly-thumb {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--md-primary);
+        border: 3px solid var(--md-surface-dim);
+        box-shadow:
+          0 0 0 5px rgba(170, 195, 255, 0.14),
+          0 2px 6px rgba(0, 0, 0, 0.5);
+        transform: translate(-50%, -50%) scale(1);
+        pointer-events: none;
+        transition:
+          box-shadow 0.18s var(--motion-standard),
+          transform 0.22s var(--motion-spring),
+          border-radius 0.2s var(--motion-spring);
+      }
+      /* Only ease "left" when not actively dragging (e.g. preset chips,
+         reset), so the thumb snaps to the value on every pointermove
+         instead of visibly trailing the cursor and catching up. */
+      .wiggly-slider:not(.active) .wiggly-thumb {
+        transition:
+          box-shadow 0.18s var(--motion-standard),
+          transform 0.22s var(--motion-spring),
+          border-radius 0.2s var(--motion-spring),
+          left 0.15s var(--motion-standard);
+      }
+      .wiggly-slider.active .wiggly-thumb {
+        box-shadow:
+          0 0 0 9px rgba(170, 195, 255, 0.22),
+          0 2px 10px rgba(0, 0, 0, 0.55);
+        transform: translate(-50%, -50%) scale(1.3);
+        border-radius: 30%;
+      }
+      .wiggly-bubble {
+        position: absolute;
+        bottom: 24px;
+        left: 0;
+        transform: translateX(-50%) translateY(6px) scale(0.7);
+        background: var(--md-primary);
+        color: var(--md-on-primary);
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 11.5px;
+        padding: 5px 11px;
+        border-radius: var(--shape-sm) var(--shape-sm) var(--shape-sm) 4px;
+        opacity: 0;
+        pointer-events: none;
+        white-space: nowrap;
+        transition:
+          opacity 0.18s var(--motion-standard),
+          transform 0.22s var(--motion-spring);
+      }
+      .wiggly-slider.active .wiggly-bubble {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+      }
+      .wiggly-slider input[type="range"] {
+        position: absolute;
+        inset: -8px 0;
+        width: 100%;
+        height: 34px;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
+        -webkit-appearance: none;
+        background: transparent;
+      }
+
+      /* ---------- M3 filled text field ---------- */
+      .tf-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: 13.5px;
+        margin-bottom: 10px;
+        color: var(--md-on-surface-variant);
+      }
+      .md-textfield {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--md-surface-container-highest);
+        border: 1px solid var(--md-outline-variant);
+        border-radius: var(--shape-sm);
+        padding: 13px 16px;
+        transition:
+          border-color 0.2s var(--motion-standard),
+          border-width 0.05s,
+          padding 0.05s,
+          border-radius 0.25s var(--motion-spring);
+      }
+      .md-textfield:hover {
+        border-color: var(--md-outline);
+      }
+      .md-textfield:focus-within {
+        border-color: var(--md-primary);
+        border-width: 2px;
+        padding: 12px 15px;
+        border-radius: var(--shape-md);
+      }
+      .md-textfield.accent-secondary:focus-within {
+        border-color: var(--md-secondary);
+      }
+      .md-textfield .tf-prefix {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 14.5px;
+        color: var(--md-on-surface-variant);
+        flex-shrink: 0;
+      }
+      .md-textfield input {
+        flex: 1;
+        min-width: 0;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 16.5px;
+        letter-spacing: 0.01em;
+        color: var(--md-on-surface);
+      }
+      .md-textfield input::selection {
+        background: rgba(170, 195, 255, 0.35);
+      }
+
+      /* ---------- Circular dial ---------- */
+      .dial-field {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .dial {
+        position: relative;
+        width: 172px;
+        height: 172px;
+        margin: 6px auto 2px;
+        touch-action: none;
+        cursor: pointer;
+        user-select: none;
+      }
+      .dial svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+      .dial-track {
+        fill: none;
+        stroke: var(--md-surface-container-highest);
+        stroke-width: 13;
+        stroke-linecap: round;
+      }
+      .dial-progress {
+        fill: none;
+        stroke: var(--md-secondary);
+        stroke-width: 13;
+        stroke-linecap: round;
+        filter: drop-shadow(0 0 6px rgba(134, 214, 196, 0.45));
+      }
+      .dial-tick {
+        stroke: var(--md-outline-variant);
+        stroke-width: 2;
+        stroke-linecap: round;
+      }
+      .dial-knob {
+        fill: var(--md-secondary);
+        stroke: var(--md-surface-dim);
+        stroke-width: 3;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+        transition: r 0.18s var(--motion-spring);
+      }
+      .dial.active .dial-knob {
+        r: 11;
+      }
+      .dial-center {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+      .dial-value {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 36px;
+        color: var(--md-on-surface);
+        font-variant-numeric: tabular-nums;
+        transition: transform 0.2s var(--motion-spring);
+      }
+      .dial.active .dial-value {
+        transform: scale(1.08);
+      }
+      .dial-unit {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--md-outline);
+        margin-top: 2px;
+      }
+
+      /* ---------- M3 switch ---------- */
+      .switch-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: -8px 0 20px;
+      }
+      .m3-switch {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
+      .m3-switch-track {
+        display: block;
+        width: 46px;
+        height: 26px;
+        border-radius: var(--shape-full);
+        background: var(--md-surface-container-highest);
+        border: 2px solid var(--md-outline);
+        position: relative;
+        transition:
+          background 0.25s var(--motion-standard),
+          border-color 0.25s var(--motion-standard);
+      }
+      .m3-switch-thumb {
+        position: absolute;
+        top: 50%;
+        left: 4px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--md-outline);
+        transform: translate(0, -50%);
+        transition:
+          left 0.3s var(--motion-spring),
+          width 0.2s var(--motion-spring),
+          height 0.2s var(--motion-spring),
+          background 0.25s var(--motion-standard);
+      }
+      .m3-switch[aria-checked="true"] .m3-switch-track {
+        background: var(--md-primary);
+        border-color: var(--md-primary);
+      }
+      .m3-switch[aria-checked="true"] .m3-switch-thumb {
+        left: 24px;
+        width: 18px;
+        height: 18px;
+        background: var(--md-on-primary);
+      }
+      .switch-label {
+        font-size: 12.5px;
+        color: var(--md-on-surface-variant);
+      }
+
+      /* ---------- Chips ---------- */
+      .chip-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        padding: 8px 16px;
+        font-size: 12.5px;
+        font-weight: 500;
+        border-radius: var(--shape-sm);
+        background: var(--md-surface-container-high);
+        color: var(--md-on-surface-variant);
+        border: 1px solid var(--md-outline-variant);
+        cursor: pointer;
+        transition:
+          transform 0.25s var(--motion-spring),
+          background 0.15s var(--motion-standard),
+          color 0.15s var(--motion-standard),
+          border-radius 0.2s var(--motion-spring);
+      }
+      .chip:hover {
+        transform: translateY(-1px);
+        border-color: var(--md-primary);
+        color: var(--md-on-surface);
+        border-radius: var(--shape-full);
+      }
+      .chip:active {
+        transform: scale(0.92);
+      }
+      .chip.picked {
+        background: var(--md-primary-container);
+        color: var(--md-on-primary-container);
+        border-color: transparent;
+        border-radius: var(--shape-full);
+      }
+
+      /* ---------- Buttons ---------- */
+      .btn-stack {
+        display: grid;
+        gap: 10px;
+        margin-top: 6px;
+      }
+      .md-btn {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 14px;
+        padding: 14px 20px;
+        border-radius: var(--shape-lg);
+        background: var(--md-primary);
+        color: var(--md-on-primary);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        transition:
+          transform 0.3s var(--motion-spring),
+          border-radius 0.3s var(--motion-spring),
+          box-shadow 0.2s var(--motion-standard),
+          filter 0.15s;
+      }
+      .md-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(170, 195, 255, 0.25);
+        border-radius: 14px;
+      }
+      .md-btn:active {
+        transform: translateY(0) scale(0.96);
+        border-radius: var(--shape-full);
+      }
+      .md-btn.tonal {
+        background: var(--md-secondary-container);
+        color: var(--md-on-secondary-container);
+        box-shadow: none;
+      }
+      .md-btn.tonal:hover {
+        box-shadow: 0 6px 18px rgba(134, 214, 196, 0.18);
+      }
+      .md-btn.outlined {
+        background: transparent;
+        color: var(--md-on-surface-variant);
+        border: 1px solid var(--md-outline);
+        box-shadow: none;
+      }
+      .md-btn.outlined:hover {
+        background: var(--md-surface-container-high);
+        color: var(--md-on-surface);
+        box-shadow: none;
+      }
+      .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(0);
+        animation: ripple-anim 0.55s var(--motion-standard) forwards;
+        pointer-events: none;
+        z-index: 0;
+      }
+      @keyframes ripple-anim {
+        to {
+          transform: scale(2.8);
+          opacity: 0;
+        }
+      }
+
+      /* ---------- Main column ---------- */
+      .main {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .verdict {
+        border-radius: var(--shape-xl);
+        padding: 28px 30px;
+        position: relative;
+        overflow: hidden;
+        background: var(--md-surface-container);
+        border: 1px solid var(--md-outline-variant);
+        transition:
+          border-radius 0.35s var(--motion-spring),
+          background 0.3s var(--motion-standard);
+      }
+      .verdict::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          420px 200px at 0% 0%,
+          rgba(255, 255, 255, 0.05),
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .verdict .headline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--md-on-surface-variant);
+        margin-bottom: 10px;
+      }
+      .verdict .icon-badge {
+        width: 22px;
+        height: 22px;
+        border-radius: var(--shape-xs);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        background: var(--md-surface-container-high);
+      }
+      .verdict .big {
+        font-family: var(--font-display);
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .verdict.good {
+        background: linear-gradient(
+          135deg,
+          var(--md-secondary-container),
+          var(--md-surface-container)
+        );
+      }
+      .verdict.good .big {
+        color: var(--md-secondary);
+      }
+      .verdict.good .icon-badge {
+        background: var(--md-secondary-container);
+      }
+      .verdict.bad {
+        background: linear-gradient(
+          135deg,
+          #4a2422,
+          var(--md-surface-container)
+        );
+      }
+      .verdict.bad .big {
+        color: var(--md-error);
+      }
+      .verdict p {
+        margin: 12px 0 0;
+        font-size: 14.5px;
+        color: var(--md-on-surface-variant);
+        max-width: 760px;
+      }
+
+      @keyframes pop-bounce {
+        0% {
+          transform: scale(1);
+        }
+        35% {
+          transform: scale(1.045);
+        }
+        65% {
+          transform: scale(0.985);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .bounce {
+        animation: pop-bounce 0.42s var(--motion-spring);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      @media (max-width: 680px) {
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+      .stat {
+        border-radius: var(--shape-lg);
+        background: var(--md-surface-container);
+        border: 1px solid var(--md-outline-variant);
+        padding: 18px 20px;
+        transition:
+          transform 0.25s var(--motion-spring),
+          border-radius 0.25s var(--motion-spring);
+      }
+      .stat:hover {
+        transform: translateY(-2px);
+        border-radius: 14px;
+      }
+      .stat .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--md-outline);
+      }
+      .stat .num {
+        font-family: var(--font-mono);
+        font-size: 21px;
+        font-weight: 700;
+        margin-top: 8px;
+        letter-spacing: -0.01em;
+      }
+      .stat .sub {
+        font-size: 12px;
+        color: var(--md-outline);
+        margin-top: 4px;
+      }
+
+      .card {
+        background: var(--md-surface-container);
+        border: 1px solid var(--md-outline-variant);
+        border-radius: var(--shape-xl);
+        padding: 22px 24px 14px;
+      }
+      .card h3 {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 0 0 16px;
+        color: var(--md-on-surface-variant);
+      }
+      svg.chart {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .legend {
+        display: flex;
+        gap: 24px;
+        margin: 14px 0 16px;
+        font-size: 13px;
+        color: var(--md-on-surface-variant);
+      }
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .swatch {
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        border-radius: 50%;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th,
+      td {
+        text-align: right;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--md-outline-variant);
+        font-family: var(--font-mono);
+        color: var(--md-on-surface);
+      }
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+      thead th {
+        color: var(--md-outline);
+        text-transform: uppercase;
+        font-size: 10.5px;
+        letter-spacing: 0.06em;
+        border-bottom: 1px solid var(--md-outline);
+        position: sticky;
+        top: 0;
+        background: var(--md-surface-container);
+      }
+      .scroll {
+        height: 320px;
+        overflow-y: auto;
+        border-radius: var(--shape-md);
+      }
+      .scroll::-webkit-scrollbar {
+        width: 8px;
+      }
+      .scroll::-webkit-scrollbar-thumb {
+        background: var(--md-outline-variant);
+        border-radius: 4px;
+      }
+      tr.markrow td {
+        background: rgba(170, 195, 255, 0.08);
+        font-weight: 700;
+        color: var(--md-primary);
+      }
+      tbody tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      details.assumptions {
+        font-size: 12.5px;
+        color: var(--md-on-surface-variant);
+        background: var(--md-surface-container-low);
+        border: 1px solid var(--md-outline-variant);
+        border-radius: var(--shape-lg);
+        padding: 16px 20px;
+      }
+      details.assumptions summary {
+        cursor: pointer;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        font-size: 11.5px;
+        letter-spacing: 0.1em;
+        color: var(--md-primary);
+      }
+      details.assumptions ul {
+        margin: 12px 0 0;
+        padding-left: 18px;
+      }
+      details.assumptions li {
+        margin-bottom: 8px;
+      }
+
+      /* ---------- Extended FAB ---------- */
+      .fab {
+        position: fixed;
+        right: 28px;
+        bottom: 28px;
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 24px 16px 20px;
+        border-radius: var(--shape-lg);
+        background: var(--md-primary-container);
+        color: var(--md-on-primary-container);
+        border: none;
+        cursor: pointer;
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 14.5px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        transition:
+          transform 0.3s var(--motion-spring),
+          border-radius 0.3s var(--motion-spring),
+          box-shadow 0.2s;
+        isolation: isolate;
+        overflow: hidden;
+      }
+      .fab:hover {
+        transform: translateY(-3px) scale(1.02);
+        border-radius: 18px;
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+      }
+      .fab:active {
+        transform: scale(0.94);
+        border-radius: var(--shape-full);
+      }
+      .fab .fab-icon {
+        font-size: 18px;
+      }
+      @media (max-width: 600px) {
+        .fab span.fab-text {
+          display: none;
+        }
+        .fab {
+          padding: 16px;
+          border-radius: var(--shape-full);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="logo">🏦</div>
+      <div class="titles">
+        <div class="t1">Bank vs. Relative</div>
+        <div class="t2">Loan strategy simulator</div>
+      </div>
+      <button class="md-icon-btn" id="resetIconBtn" title="Reset to defaults">
+        ↺
+      </button>
+    </div>
+
+    <div class="wrap">
+      <div class="hero stagger s1">
+        <div class="eyebrow">Material 3 Expressive</div>
+        <h1>Should you lend to a relative, or just pay the bank?</h1>
+        <p>
+          You owe a bank that charges compound interest. You have a fixed
+          monthly amount to put toward it. One month, instead of paying the bank
+          in full, you lend part of that amount to a relative at simple interest
+          - and pay the bank less that month. When the relative repays
+          (principal + interest), that lump sum goes to the bank along with your
+          usual payment. Does this leave you with a smaller loan balance than if
+          you'd just paid the bank every month? Adjust the controls and find
+          out.
+        </p>
+      </div>
+
+      <div class="ledger">
+        <div class="panel stagger s2">
+          <div class="panel-section">
+            <h2><span class="dot"></span>The bank loan</h2>
+
+            <div class="field">
+              <label class="tf-label" for="principal"
+                >Loan principal (रु)</label
+              >
+              <div class="md-textfield">
+                <span class="tf-prefix">रु</span>
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  id="principal"
+                  value="10,00,000"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label
+                >Bank annual rate, compound
+                <span class="val" id="v_rbank">9.0%</span></label
+              >
+              <input
+                type="range"
+                id="rbank"
+                min="1"
+                max="24"
+                step="0.1"
+                value="9"
+              />
+            </div>
+
+            <div class="field">
+              <label class="tf-label" for="monthly"
+                >Your monthly payment (रु)</label
+              >
+              <div class="md-textfield">
+                <span class="tf-prefix">रु</span>
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  id="monthly"
+                  value="50,000"
+                />
+              </div>
+            </div>
+            <div class="note">
+              Interest compounds monthly on the reducing balance. Each payment
+              first covers interest; the rest reduces principal.
+            </div>
+          </div>
+
+          <div class="panel-section relative">
+            <h2><span class="dot"></span>The relative</h2>
+
+            <div class="field dial-field">
+              <label
+                class="tf-label"
+                style="align-self: flex-start; width: 100%"
+                >Months relative holds it</label
+              >
+              <div class="dial" id="nmonthsDial">
+                <svg viewBox="0 0 180 180">
+                  <path class="dial-track" id="dialTrack"></path>
+                  <g id="dialTicks"></g>
+                  <path class="dial-progress" id="dialProgress"></path>
+                  <circle
+                    class="dial-knob"
+                    id="dialKnob"
+                    r="9"
+                    cx="90"
+                    cy="26"
+                  ></circle>
+                </svg>
+                <div class="dial-center">
+                  <div class="dial-value" id="dialValue">6</div>
+                  <div class="dial-unit">months</div>
+                </div>
+              </div>
+              <input
+                type="range"
+                id="nmonths"
+                min="1"
+                max="36"
+                step="1"
+                value="6"
+                style="display: none"
+              />
+            </div>
+
+            <div class="field">
+              <label
+                >Relative's annual rate, simple
+                <span class="val" id="v_rrel">36.0%</span></label
+              >
+              <input
+                type="range"
+                id="rrel"
+                min="1"
+                max="80"
+                step="0.5"
+                value="36"
+              />
+            </div>
+            <div class="switch-row">
+              <button
+                type="button"
+                class="m3-switch"
+                id="linkToggle"
+                role="switch"
+                aria-checked="true"
+              >
+                <span class="m3-switch-track"
+                  ><span class="m3-switch-thumb"></span
+                ></span>
+              </button>
+              <span class="switch-label">Auto-link to 4× bank rate</span>
+            </div>
+
+            <div class="field">
+              <label class="tf-label" for="lent"
+                >Amount lent to relative (रु)</label
+              >
+              <div class="md-textfield accent-secondary">
+                <span class="tf-prefix">रु</span>
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  id="lent"
+                  value="25,000"
+                />
+              </div>
+            </div>
+            <div class="chip-row" id="lentChips">
+              <button type="button" class="chip" data-frac="0.25">25%</button>
+              <button type="button" class="chip" data-frac="0.5">50%</button>
+              <button type="button" class="chip" data-frac="0.75">75%</button>
+              <button type="button" class="chip" data-frac="1">Max</button>
+            </div>
+            <div class="note">
+              Lent in month 1, in place of (part of) that month's bank payment.
+              Chips set it as a fraction of your monthly payment.
+            </div>
+
+            <div class="btn-stack">
+              <button class="md-btn outlined" id="resetBtn">
+                Reset to defaults
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="main">
+          <div class="verdict stagger s3" id="verdict">
+            <div class="headline">
+              <span class="icon-badge">⚖️</span> Verdict, at the month the
+              relative repays
+            </div>
+            <div class="big" id="verdictBig">-</div>
+            <p id="verdictText">-</p>
+          </div>
+
+          <div class="stats stagger s3">
+            <div class="stat">
+              <div class="lbl">Balance - pay bank only</div>
+              <div class="num" id="statA">-</div>
+              <div class="sub">Scenario A, at month N</div>
+            </div>
+            <div class="stat">
+              <div class="lbl">Balance - lend, then repay</div>
+              <div class="num" id="statB">-</div>
+              <div class="sub">Scenario B, at month N</div>
+            </div>
+            <div class="stat">
+              <div class="lbl">Difference</div>
+              <div class="num" id="statDiff">-</div>
+              <div class="sub" id="statDiffSub">B minus A</div>
+            </div>
+          </div>
+
+          <div class="card stagger s4">
+            <h3>Outstanding principal over time</h3>
+            <div class="legend">
+              <span
+                ><i class="swatch" style="background: var(--md-secondary)"></i>
+                Scenario A - pay bank only</span
+              >
+              <span
+                ><i class="swatch" style="background: var(--md-tertiary)"></i>
+                Scenario B - lend to relative</span
+              >
+            </div>
+            <svg
+              class="chart"
+              id="chart"
+              viewBox="0 0 1000 380"
+              preserveAspectRatio="none"
+            ></svg>
+          </div>
+
+          <div class="card stagger s5">
+            <h3>Month-by-month ledger</h3>
+            <div class="scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <th>A: payment</th>
+                    <th>A: balance</th>
+                    <th>B: payment</th>
+                    <th>B: balance</th>
+                    <th>Note</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <details class="assumptions stagger s5" open>
+            <summary>Assumptions this simulator makes</summary>
+            <ul>
+              <li>
+                Bank interest compounds monthly: monthly rate = annual rate ÷
+                12, charged on the balance before that month's payment.
+              </li>
+              <li>
+                In Scenario A, the full monthly amount is paid to the bank every
+                month, starting month 1.
+              </li>
+              <li>
+                In Scenario B, month 1's bank payment is reduced by the amount
+                lent. Months 2 through N−1 are paid in full as usual. In month
+                N, the relative repays principal + simple interest, and that
+                full sum is added to the normal monthly payment and sent to the
+                bank.
+              </li>
+              <li>
+                Relative's interest is simple interest on the lent amount,
+                accrued for the full N months: interest = lent × annual rate ×
+                (N ÷ 12).
+              </li>
+              <li>
+                If a monthly payment is less than that month's interest charge,
+                the unpaid interest is added to the balance - this is shown
+                rather than hidden.
+              </li>
+              <li>
+                The comparison point is month N, when the relative's repayment
+                lands.
+              </li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <button class="fab" id="solveBtn">
+      <span class="fab-icon">✦</span
+      ><span class="fab-text">Find break-even rate</span>
+    </button>
+
+    <script src="model.js"></script>
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const inr = (n) => "रु " + Math.round(n).toLocaleString("en-IN");
+      const inrSigned = (n) =>
+        (n >= 0 ? "+" : "−") +
+        "रु " +
+        Math.abs(Math.round(n)).toLocaleString("en-IN");
+
+      // ---- Wiggly (Material 3 Expressive) slider rendering ----
+      function wavePathStr(width) {
+        const yMid = 9,
+          amp = 3.4,
+          wl = 9;
+        if (width <= 0) return `M0,${yMid}`;
+        let d = `M0,${yMid}`;
+        let x = 0,
+          dir = 1;
+        while (x < width - 0.001) {
+          const half = wl / 2;
+          const x2 = Math.min(x + half, width);
+          const midX = (x + x2) / 2;
+          const scale = (x2 - x) / half;
+          d += ` Q${midX.toFixed(2)},${(yMid + dir * amp * scale).toFixed(2)} ${x2.toFixed(2)},${yMid}`;
+          dir *= -1;
+          x = x2;
+        }
+        return d;
+      }
+      function setupWiggly() {
+        document
+          .querySelectorAll("input[type=range]:not(#nmonths)")
+          .forEach((inp) => {
+            const wrap = document.createElement("div");
+            wrap.className = "wiggly-slider";
+            inp.parentNode.insertBefore(wrap, inp);
+            wrap.appendChild(inp);
+            const svgEl = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "svg",
+            );
+            svgEl.setAttribute("viewBox", "0 0 100 18");
+            svgEl.setAttribute("preserveAspectRatio", "none");
+            svgEl.innerHTML = `<path class="track-bg"></path><path class="track-fill"></path>`;
+            wrap.appendChild(svgEl);
+            const thumb = document.createElement("div");
+            thumb.className = "wiggly-thumb";
+            wrap.appendChild(thumb);
+            const bubble = document.createElement("div");
+            bubble.className = "wiggly-bubble";
+            wrap.appendChild(bubble);
+            inp._svg = svgEl;
+            inp._thumb = thumb;
+            inp._wrap = wrap;
+            inp._bubble = bubble;
+            inp.addEventListener("pointerdown", () =>
+              wrap.classList.add("active"),
+            );
+            inp.addEventListener("pointerup", () =>
+              wrap.classList.remove("active"),
+            );
+            window.addEventListener("pointerup", () =>
+              wrap.classList.remove("active"),
+            );
+          });
+      }
+      function bubbleText(inp) {
+        if (inp.id === "rbank" || inp.id === "rrel")
+          return (+inp.value).toFixed(1) + "%";
+        if (inp.id === "nmonths") return inp.value + " mo";
+        return inr(+inp.value);
+      }
+      function updateAllWiggly() {
+        document
+          .querySelectorAll("input[type=range]:not(#nmonths)")
+          .forEach((inp) => {
+            if (!inp._svg) return;
+            const min = +inp.min,
+              max = +inp.max,
+              val = +inp.value;
+            const percent =
+              max > min
+                ? Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100))
+                : 0;
+            if (!inp._bgD) inp._bgD = wavePathStr(100);
+            inp._svg.querySelector(".track-bg").setAttribute("d", inp._bgD);
+            inp._svg
+              .querySelector(".track-fill")
+              .setAttribute("d", wavePathStr(percent));
+            inp._thumb.style.left = percent + "%";
+            inp._bubble.style.left = percent + "%";
+            inp._bubble.textContent = bubbleText(inp);
+          });
+      }
+
+      // ---- Ripple effect on all md-btn / fab ----
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest(".md-btn, .fab, .chip, .md-icon-btn");
+        if (!btn) return;
+        const rect = btn.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 1.5;
+        const ripple = document.createElement("span");
+        ripple.className = "ripple";
+        ripple.style.width = ripple.style.height = size + "px";
+        ripple.style.left = e.clientX - rect.left - size / 2 + "px";
+        ripple.style.top = e.clientY - rect.top - size / 2 + "px";
+        btn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+
+      function bounce(el) {
+        el.classList.remove("bounce");
+        void el.offsetWidth;
+        el.classList.add("bounce");
+      }
+
+      const ids = ["principal", "rbank", "monthly", "nmonths", "rrel", "lent"];
+      let linkRrel = true;
+
+      function parseNum(str) {
+        const n = +String(str).replace(/[^0-9.]/g, "");
+        return isFinite(n) ? n : 0;
+      }
+
+      function readInputs() {
+        return {
+          principal: parseNum($("principal").value),
+          rbank: +$("rbank").value / 100,
+          monthly: parseNum($("monthly").value),
+          nmonths: +$("nmonths").value,
+          rrel: +$("rrel").value / 100,
+          lent: Math.min(
+            parseNum($("lent").value),
+            parseNum($("monthly").value),
+          ),
+        };
+      }
+
+      // ---- M3 text fields: format-on-blur, raw digits while editing ----
+      function setupTextFields() {
+        ["principal", "monthly", "lent"].forEach((id) => {
+          const el = $(id);
+          el.addEventListener("focus", () => {
+            el.value = String(parseNum(el.value) || "");
+            el.select();
+          });
+          el.addEventListener("blur", () => {
+            el.value = parseNum(el.value).toLocaleString("en-IN");
+          });
+          el.addEventListener("input", () => {
+            const cleaned = el.value.replace(/[^0-9]/g, "");
+            if (cleaned !== el.value) el.value = cleaned;
+          });
+        });
+      }
+
+      // ---- Circular dial for "Months relative holds it" ----
+      function setupDial() {
+        const dial = $("nmonthsDial");
+        const track = $("dialTrack");
+        const progress = $("dialProgress");
+        const knob = $("dialKnob");
+        const ticksG = $("dialTicks");
+        const valueEl = $("dialValue");
+        const input = $("nmonths");
+        const svgNS = "http://www.w3.org/2000/svg";
+        const cx = 90,
+          cy = 90,
+          r = 64;
+        const startAngle = -150,
+          endAngle = 150;
+        const min = +input.min,
+          max = +input.max;
+
+        function polar(angleDeg, radius) {
+          const a = (angleDeg * Math.PI) / 180;
+          return { x: cx + radius * Math.sin(a), y: cy - radius * Math.cos(a) };
+        }
+
+        // Wavy arc path - ripples the stroke radius in a sine wave as it
+        // sweeps from a0 to a1, the same "jiggly" treatment M3 Expressive
+        // uses on its circular loading indicator, wrapped around the dial.
+        const WAVELEN = 45;
+        function waveArcPath(a0, a1, amp, phase) {
+          const span = a1 - a0;
+          if (Math.abs(span) < 0.01) {
+            const p = polar(a0, r);
+            return `M ${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
+          }
+          const arcLen = Math.abs(span) * (Math.PI / 180) * r;
+          const steps = Math.max(2, Math.round(arcLen / 3));
+          let d = "";
+          for (let i = 0; i <= steps; i++) {
+            const t = i / steps;
+            const ang = a0 + span * t;
+            const dist = t * arcLen;
+            const rr =
+              r + amp * Math.sin((dist / WAVELEN) * Math.PI * 2 + phase);
+            const p = polar(ang, rr);
+            d += (i === 0 ? "M" : "L") + p.x.toFixed(2) + " " + p.y.toFixed(2) + " ";
+          }
+          return d;
+        }
+
+        for (let v = min; v <= max; v += 3) {
+          const ang =
+            startAngle + ((v - min) / (max - min)) * (endAngle - startAngle);
+          const p1 = polar(ang, r + 10),
+            p2 = polar(ang, r + 16);
+          const t = document.createElementNS(svgNS, "line");
+          t.setAttribute("x1", p1.x.toFixed(2));
+          t.setAttribute("y1", p1.y.toFixed(2));
+          t.setAttribute("x2", p2.x.toFixed(2));
+          t.setAttribute("y2", p2.y.toFixed(2));
+          t.setAttribute("class", "dial-tick");
+          ticksG.appendChild(t);
+        }
+
+        function angleForValue(v) {
+          return (
+            startAngle + ((v - min) / (max - min)) * (endAngle - startAngle)
+          );
+        }
+        function valueForAngle(a) {
+          return Math.round(
+            min + ((a - startAngle) / (endAngle - startAngle)) * (max - min),
+          );
+        }
+
+        let phase = 0;
+        const idleAmp = 2.5;
+        let curAmp = idleAmp;
+
+        function renderDial() {
+          const v = +input.value;
+          const ang = angleForValue(v);
+          track.setAttribute(
+            "d",
+            waveArcPath(startAngle, endAngle, curAmp * 0.5, phase),
+          );
+          progress.setAttribute(
+            "d",
+            waveArcPath(startAngle, ang, curAmp, phase),
+          );
+          const arcLen = Math.abs(ang - startAngle) * (Math.PI / 180) * r;
+          const rr =
+            r + curAmp * Math.sin((arcLen / WAVELEN) * Math.PI * 2 + phase);
+          const kp = polar(ang, rr);
+          knob.setAttribute("cx", kp.x.toFixed(2));
+          knob.setAttribute("cy", kp.y.toFixed(2));
+          valueEl.textContent = v;
+        }
+        function syncDial() {
+          renderDial();
+        }
+        syncDial();
+        input.addEventListener("input", syncDial);
+
+        // Keep the wave rippling continuously, like the M3 Expressive
+        // spinner - it jiggles a bit at rest and jiggles more while dragging.
+        (function jiggleLoop() {
+          curAmp = idleAmp;
+          phase += dial.classList.contains("active") ? 0.1 : 0.04;
+          renderDial();
+          requestAnimationFrame(jiggleLoop);
+        })();
+
+        function angleFromEvent(e) {
+          const rect = dial.getBoundingClientRect();
+          const px = e.clientX - rect.left - rect.width / 2;
+          const py = e.clientY - rect.top - rect.height / 2;
+          let ang = (Math.atan2(px, -py) * 180) / Math.PI;
+          if (ang > endAngle && ang <= 180) ang = endAngle;
+          if (ang < startAngle && ang >= -180) ang = startAngle;
+          return ang;
+        }
+
+        function moveTo(e) {
+          const ang = angleFromEvent(e);
+          const v = Math.min(max, Math.max(min, valueForAngle(ang)));
+          if (+input.value !== v) {
+            input.value = v;
+            input.dispatchEvent(new Event("input", { bubbles: true }));
+          }
+        }
+
+        let dragging = false;
+        dial.addEventListener("pointerdown", (e) => {
+          dragging = true;
+          dial.classList.add("active");
+          dial.setPointerCapture(e.pointerId);
+          moveTo(e);
+        });
+        dial.addEventListener("pointermove", (e) => {
+          if (dragging) moveTo(e);
+        });
+        dial.addEventListener("pointerup", () => {
+          dragging = false;
+          dial.classList.remove("active");
+        });
+        dial.addEventListener("pointercancel", () => {
+          dragging = false;
+          dial.classList.remove("active");
+        });
+      }
+
+      function drawChart(A, B, principal) {
+        const W = 1000,
+          H = 380,
+          padL = 70,
+          padR = 20,
+          padT = 20,
+          padB = 40;
+        const months = A.length;
+        const maxBal =
+          Math.max(
+            principal,
+            ...A.map((d) => d.balance),
+            ...B.map((d) => d.balance),
+          ) * 1.05;
+        const x = (m) =>
+          padL + (W - padL - padR) * (months <= 1 ? 0 : (m - 1) / (months - 1));
+        const y = (v) => padT + (H - padT - padB) * (1 - v / maxBal);
+
+        function path(data) {
+          return data
+            .map(
+              (d, idx) =>
+                (idx === 0 ? "M" : "L") +
+                x(d.month).toFixed(1) +
+                "," +
+                y(d.balance).toFixed(1),
+            )
+            .join(" ");
+        }
+
+        let gridlines = "";
+        const gridCount = 5;
+        for (let g = 0; g <= gridCount; g++) {
+          const v = (maxBal * g) / gridCount;
+          const yy = y(v);
+          gridlines += `<line x1="${padL}" y1="${yy}" x2="${W - padR}" y2="${yy}" stroke="#2c3037" stroke-width="1"/>`;
+          gridlines += `<text x="${padL - 10}" y="${yy + 4}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="11" fill="#8e9099">${Math.round(v / 1000)}k</text>`;
+        }
+        let xlabels = "";
+        const step = Math.max(1, Math.ceil(months / 10));
+        for (let m = 1; m <= months; m += step) {
+          xlabels += `<text x="${x(m)}" y="${H - padB + 20}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="11" fill="#8e9099">${m}</text>`;
+        }
+        xlabels += `<text x="${(padL + W - padR) / 2}" y="${H - 4}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="11" fill="#c4c6cf">Month</text>`;
+
+        const svg = `
+    <defs>
+      <linearGradient id="fillA" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#86d6c4" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="#86d6c4" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    ${gridlines}
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H - padB}" stroke="#43474f" stroke-width="1.2"/>
+    <line x1="${padL}" y1="${H - padB}" x2="${W - padR}" y2="${H - padB}" stroke="#43474f" stroke-width="1.2"/>
+    ${xlabels}
+    <path d="${path(A)} L${x(A[A.length - 1].month)},${H - padB} L${x(A[0].month)},${H - padB} Z" fill="url(#fillA)" stroke="none"/>
+    <path d="${path(A)}" fill="none" stroke="#86d6c4" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="${path(B)}" fill="none" stroke="#ffb4a8" stroke-width="2.6" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+    ${A.map((d) => `<circle cx="${x(d.month)}" cy="${y(d.balance)}" r="3" fill="#0e1116" stroke="#86d6c4" stroke-width="1.6"/>`).join("")}
+    ${B.map((d) => `<circle cx="${x(d.month)}" cy="${y(d.balance)}" r="3" fill="#0e1116" stroke="#ffb4a8" stroke-width="1.6"/>`).join("")}
+  `;
+        $("chart").innerHTML = svg;
+      }
+
+      function fillTable(A, B, nmonths) {
+        let rows = "";
+        for (let idx = 0; idx < A.length; idx++) {
+          const a = A[idx],
+            b = B[idx];
+          const mark = a.month === nmonths ? ' class="markrow"' : "";
+          rows += `<tr${mark}>
+      <td>${a.month}</td>
+      <td>${inr(a.payment)}</td>
+      <td>${inr(a.balance)}</td>
+      <td>${inr(b.payment)}</td>
+      <td>${inr(b.balance)}</td>
+      <td style="text-align:left;font-family:Roboto,sans-serif;font-style:italic;color:var(--md-on-surface-variant);">${b.note || ""}</td>
+    </tr>`;
+        }
+        $("tbody").innerHTML = rows;
+      }
+
+      function render() {
+        const p = readInputs();
+
+        $("v_rbank").textContent = (p.rbank * 100).toFixed(1) + "%";
+        $("v_rrel").textContent = (p.rrel * 100).toFixed(1) + "%";
+        if (
+          parseNum($("lent").value) > p.monthly &&
+          document.activeElement !== $("lent")
+        ) {
+          $("lent").value = p.monthly.toLocaleString("en-IN");
+        }
+
+        const { A, B } = simulate(p, p.lent);
+        drawChart(A, B, p.principal);
+        fillTable(A, B, p.nmonths);
+
+        const balA = A[p.nmonths - 1].balance;
+        const balB = B[p.nmonths - 1].balance;
+        const diff = balB - balA;
+
+        $("statA").textContent = inr(balA);
+        $("statB").textContent = inr(balB);
+        $("statDiff").textContent = inrSigned(diff);
+        $("statDiff").style.color =
+          diff < -1
+            ? "var(--md-secondary)"
+            : diff > 1
+              ? "var(--md-error)"
+              : "var(--md-on-surface)";
+        document.querySelectorAll(".stat").forEach(bounce);
+
+        updateAllWiggly();
+
+        const verdict = $("verdict");
+        if (p.lent === 0) {
+          verdict.className = "verdict";
+          $("verdictBig").textContent = "No lending - scenarios are identical";
+          $("verdictText").textContent =
+            'Set "Amount lent to relative" above zero to compare.';
+        } else if (Math.abs(diff) < Math.max(1, p.monthly * 0.001)) {
+          verdict.className = "verdict";
+          $("verdictBig").textContent = "Break-even";
+          $("verdictText").textContent =
+            `Lending रु ${Math.round(p.lent).toLocaleString("en-IN")} for ${p.nmonths} month(s) leaves the bank balance essentially unchanged compared to paying the bank only - the relative's higher rate exactly offsets the compound interest you missed paying down.`;
+        } else if (diff < 0) {
+          verdict.className = "verdict good";
+          $("verdictBig").textContent = `Lending wins by ${inr(-diff)}`;
+          $("verdictText").textContent =
+            `By month ${p.nmonths}, the loan balance is ${inr(-diff)} lower than if you'd paid the bank every month in full. The relative's simple interest more than compensates for the extra compound interest the bank charged while you waited.`;
+        } else {
+          verdict.className = "verdict bad";
+          $("verdictBig").textContent = `Paying the bank wins by ${inr(diff)}`;
+          $("verdictText").textContent =
+            `By month ${p.nmonths}, lending leaves the loan balance ${inr(diff)} higher than if you'd paid the bank every month in full. The compound interest accrued on the unpaid portion outweighed what the relative's simple interest brought back.`;
+        }
+        if (verdict.dataset.last !== $("verdictBig").textContent) {
+          bounce(verdict);
+          verdict.dataset.last = $("verdictBig").textContent;
+        }
+
+        document.querySelectorAll("#lentChips .chip").forEach((chip) => {
+          const frac = +chip.dataset.frac;
+          chip.classList.toggle(
+            "picked",
+            Math.abs(p.lent - p.monthly * frac) < 1,
+          );
+        });
+      }
+
+      ids.forEach((id) => {
+        $(id).addEventListener("input", () => {
+          if (id === "rbank" && linkRrel) {
+            $("rrel").value = Math.min(80, +$("rbank").value * 4);
+          }
+          if (id === "rrel") {
+            linkRrel = false;
+            $("linkToggle").setAttribute("aria-checked", false);
+          }
+          render();
+        });
+      });
+
+      $("linkToggle").addEventListener("click", () => {
+        linkRrel = !linkRrel;
+        $("linkToggle").setAttribute("aria-checked", linkRrel);
+        if (linkRrel) {
+          $("rrel").value = Math.min(80, +$("rbank").value * 4);
+          render();
+        }
+      });
+
+      document.querySelectorAll("#lentChips .chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          const frac = +chip.dataset.frac;
+          const monthly = parseNum($("monthly").value);
+          $("lent").value = Math.round(monthly * frac).toLocaleString("en-IN");
+          bounce(chip);
+          render();
+        });
+      });
+
+      $("solveBtn").addEventListener("click", () => {
+        const p = readInputs();
+        const rel = $("rrel");
+        // Any amount gives the same rate, so with nothing lent yet use the
+        // monthly payment.
+        const result = findBreakevenRate(
+          p,
+          p.lent || p.monthly || 1,
+          +rel.min / 100,
+          +rel.max / 100,
+        );
+        const bankPct = (p.rbank * 100).toFixed(1);
+        if (result.rate === null) {
+          $("verdict").className = "verdict bad";
+          $("verdictBig").textContent = "No break-even rate in range";
+          $("verdictText").textContent =
+            result.winner === "lend"
+              ? `Over ${p.nmonths} month(s) at a bank rate of ${bankPct}%, lending comes out ahead even at ${rel.min}% - the money is back before the bank's interest on it outweighs what the relative pays.`
+              : result.winner === "bank"
+                ? `Over ${p.nmonths} month(s) at a bank rate of ${bankPct}%, paying the bank comes out ahead even at ${rel.max}% - the bank's compound interest on the shortfall outweighs anything the relative pays.`
+                : `The loan is paid off by month ${p.nmonths} either way, so lending makes no difference at any rate.`;
+          bounce($("verdict"));
+        } else {
+          const pct = (result.rate * 100).toFixed(2);
+          rel.value = result.rate * 100;
+          // As if the slider had been dragged: unlinks it from the bank rate
+          // and re-renders.
+          rel.dispatchEvent(new Event("input", { bubbles: true }));
+          $("verdict").className = "verdict";
+          $("verdictBig").textContent = `Break-even relative rate: ${pct}%`;
+          $("verdictText").textContent =
+            `Charging the relative ${pct}% a year for ${p.nmonths} month(s) leaves the same loan balance at month ${p.nmonths} as paying the bank in full every month, whatever amount you lend. Charge more and lending to the relative wins; charge less and paying the bank directly wins. (The slider moves in steps of ${rel.step}%, so it is set to the nearest one.)`;
+          bounce($("verdict"));
+        }
+      });
+
+      function resetAll() {
+        $("principal").value = (1000000).toLocaleString("en-IN");
+        $("rbank").value = 9;
+        $("monthly").value = (50000).toLocaleString("en-IN");
+        $("nmonths").value = 6;
+        $("rrel").value = 36;
+        $("lent").value = (25000).toLocaleString("en-IN");
+        $("nmonths").dispatchEvent(new Event("input", { bubbles: true }));
+        linkRrel = true;
+        $("linkToggle").setAttribute("aria-checked", true);
+        render();
+      }
+      $("resetBtn").addEventListener("click", resetAll);
+      $("resetIconBtn").addEventListener("click", resetAll);
+
+      setupWiggly();
+      setupTextFields();
+      setupDial();
+      render();
+    </script>
+  </body>
+</html>

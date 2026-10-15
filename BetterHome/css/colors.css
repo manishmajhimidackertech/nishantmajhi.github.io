@@ -1,0 +1,33 @@
+@media (prefers-color-scheme: light) {
+  :root {
+    accent-color: hsl(120, 100%, 25%);
+    --input-color: hsl(0, 0%, 25%);
+    --foreground-color: hsl(0, 0%, 0%);
+  }
+  #search-button {
+    color: hsl(0, 0%, 100%);
+    background-color: hsl(122, 39%, 47%);
+  }
+  #search-button:hover {
+    background-color: hsl(0, 78%, 72%);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    accent-color: hsl(120, 50%, 40%);
+    --input-color: hsl(0, 0%, 75%);
+    --foreground-color: hsl(0, 0%, 90%);
+  }
+  body {
+    color: var(--foreground-color);
+    background-color: hsl(0, 0%, 10%);
+  }
+  #search-button {
+    color: var(--foreground-color);
+    background-color: hsl(122, 39%, 30%);
+  }
+  #search-button:hover {
+    background-color: hsl(0, 78%, 60%);
+  }
+}

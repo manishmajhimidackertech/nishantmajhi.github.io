@@ -1,0 +1,61 @@
+---
+layout: default
+title: "Projects | Manish Majhi"
+---
+<header>
+  <h1>Projects</h1>
+  <p class="tagline">A running ledger of things built for the fun of building them − from a grade calculator to a recursive multiplier.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="val">{{ site.data.projects.size }}</div><div class="lbl">Featured builds</div></div>
+  <div class="stat"><div class="val" id="repo-count">−</div><div class="lbl">Repos</div></div>
+  <div class="stat"><div class="val" id="lang-count">−</div><div class="lbl">Categories</div></div>
+</div>
+
+<div class="section-label" id="featured">
+  <span class="num">01</span>
+  <h2>Featured entries</h2>
+  <span class="rest"></span>
+</div>
+
+<div class="grid">
+  {% for project in site.data.projects %}
+  <div class="card">
+    <a href="{{ project.folder }}/" style="display:block;">
+      <div class="thumb">
+        <span class="entry-badge">No. {% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+        <img src="{{ '/assets/thumbs/' | append: project.thumb | relative_url }}" alt="{{ project.title }} preview" loading="lazy" />
+      </div>
+    </a>
+    <div class="card-body">
+      <a class="title-link" href="{{ project.folder }}/"><h3>{{ project.title }}</h3></a>
+      <div class="byline">{{ project.byline }}</div>
+      <p class="desc">{{ project.desc }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="section-label" id="index">
+  <span class="num">02</span>
+  <h2>Index</h2>
+  <span class="rest"></span>
+</div>
+
+<nav id="repo-nav">
+  <div id="repo-list">
+    <div id="loading-msg" style="font-family:var(--mono); font-size:0.85rem; color:var(--faint);">Loading GitHub repos…</div>
+  </div>
+</nav>
+
+<script>
+  const USERNAME = {{ site.github_username | jsonify }};
+  const HIDDEN_REPOS = new Set({{ site.hidden_repos | jsonify }});
+  const COMBINED_LABEL = {{ site.combined_label | jsonify }};
+  const COMBINE_THESE = new Set({{ site.combine_languages | jsonify }});
+  const LANGUAGE_LABEL = {{ site.language_labels | jsonify }};
+  const REPO_LANGUAGE_OVERRIDE = {{ site.repo_language_overrides | jsonify }};
+  const REPO_CATEGORY = {{ site.repo_categories | jsonify }};
+</script>
+<script src="{{ '/assets/js/repo-index.js' | relative_url }}"></script>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="shortcut icon" href="./img/whiteLogo.png" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anticipator</title>
+    
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="./js/script.js"></script>
+  </head>
+  <body>
+    <header>
+      <figure id="banner">
+        <img src="./img/blueLogo.png" alt="School Logo" id="school_logo" />
+        <figcaption id="school_name">
+          Takshashila Progressive English School
+        </figcaption>
+      </figure>
+    </header>
+    <main>
+      <h1 id="about">IX and X - Grade Sheet</h1>
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2">Subject</th>
+            <th colspan="2">Obtained Grade</th>
+            <th rowspan="2">Grade Point</th>
+            <th rowspan="2">Final Grade</th>
+          </tr>
+          <tr>
+            <th>Th.</th>
+            <th>Pr.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="subject">English</td>
+            <td class="theory">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="practical">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="grade-point"></td>
+            <td class="final-grade"></td>
+          </tr>
+          <tr>
+            <td class="subject">Nepali</td>
+            <td class="theory">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="practical">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="grade-point"></td>
+            <td class="final-grade"></td>
+          </tr>
+          <tr>
+            <td class="subject">Samajik</td>
+            <td class="theory">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="practical">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="grade-point"></td>
+            <td class="final-grade"></td>
+          </tr>
+          <tr>
+            <td class="subject">Mathematics</td>
+            <td class="theory">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="practical">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="grade-point"></td>
+            <td class="final-grade"></td>
+          </tr>
+          <tr>
+            <td class="subject">Science</td>
+            <td class="theory">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="practical">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="grade-point"></td>
+            <td class="final-grade"></td>
+          </tr>
+
+          <tr>
+            <td class="subject">Optional I</td>
+            <td class="theory">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="practical">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="grade-point"></td>
+            <td class="final-grade"></td>
+          </tr>
+
+          <tr>
+            <td class="subject">Optional II</td>
+            <td class="theory">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="practical">
+              <input
+                type="number"
+                min="0.01"
+                max="4"
+                step="0.01"
+                value="0"
+                onchange="calculateAverage(this)"
+              />
+            </td>
+            <td class="grade-point"></td>
+            <td class="final-grade"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">Grade Point Average (GPA)</td>
+            <td id="final_gpa"></td>
+            <td id="final_grade"></td>
+          </tr>
+        </tfoot>
+      </table>
+      <button
+        type="button"
+        onclick="populateTableWithRandomGPA()"
+        id="randomButton"
+      >
+        Random
+      </button>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,127 @@
+:root {
+  --takshashila-blue: #134079;
+  accent-color: var(--takshashila-blue);
+}
+
+body,
+input {
+  background-color: aliceblue;
+}
+
+body,
+figure,
+button,
+input[type="number"] {
+  margin: 0;
+  font-family: sans-serif;
+}
+#banner {
+  border-bottom: 2px solid;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100dvw;
+  color: white;
+  background-color: var(--takshashila-blue);
+}
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100dvw;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+table {
+  border-collapse: collapse;
+}
+thead *,
+tbody,
+tfoot * {
+  border: 1px solid;
+}
+thead * {
+  padding: 0.5rem 0.5ch;
+}
+td {
+  border-left: 1px solid;
+  border-right: 1px solid;
+}
+input[type="number"] {
+  outline: transparent;
+  border: none;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  width: 7ch;
+  font-size: 1rem;
+  text-align: end;
+}
+
+#school_name {
+  font-family: serif;
+  font-size: 2.5rem;
+}
+#school_logo {
+  height: 5rem;
+}
+#about {
+  margin: 0.8rem 0 0.6rem 0;
+  text-decoration: underline;
+  font-size: 2rem;
+}
+.grade-point,
+.final-grade {
+  text-align: center;
+}
+.subject {
+  padding-left: 1ch;
+}
+
+#final_gpa,
+#final_grade {
+  text-align: center;
+}
+
+#randomButton {
+  border-radius: 0.4rem;
+  padding: 0.6rem;
+  font-size: 1rem;
+  color: white;
+  background-color: var(--takshashila-blue);
+  transition: transform 0.4s;
+}
+#randomButton:hover {
+  transform: scale(104%);
+}
+#randomButton:active {
+  transform: scale(100%);
+}
+
+tfoot td:first-child {
+  padding: 0.5rem 1rem;
+  text-align: end;
+  font-weight: bold;
+}
+
+@media (orientation: landscape) {
+  table {
+    width: 50%;
+  }
+  .subject {
+    padding-left: 2ch;
+  }
+}
+@media (orientation: portrait) {
+  table {
+    width: 90%;
+  }
+  .subject {
+    padding-left: 0.25ch;
+  }
+}

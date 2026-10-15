@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TERMLINK :: Escape Sequence Trials</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖥️</text></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="crt-frame">
+        <div class="screen-inner">
+          <!-- BOOT SCREEN -->
+          <div id="bootScreen">
+            <div id="bootLines" class="glow"></div>
+            <div id="callsignRow">
+              <span>ENTER OPERATOR CALLSIGN &gt;</span>
+              <input
+                id="callsignInput"
+                maxlength="16"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+            <div id="continueRow">
+              <button class="primary" id="continueBtn"></button>
+              <button id="newOpBtn">START NEW OPERATIVE</button>
+            </div>
+            <div class="hint-key" id="bootHint">
+              press ENTER to confirm callsign
+            </div>
+          </div>
+
+          <!-- GAME SCREEN -->
+          <div id="gameScreen" style="display: none">
+            <div id="hud">
+              <div class="sys display glow">
+                TERMLINK OS
+                <span class="small" style="font-size: 14px">v2.4</span>
+              </div>
+              <div class="meta">
+                OPERATOR: <span id="hudCallsign">-</span><br />
+                CLEARANCE <span id="hudProgress">0/8</span>
+                <div id="progBar"><div id="progFill"></div></div>
+              </div>
+            </div>
+
+            <div id="optionsBar">
+              <label
+                ><input type="checkbox" id="reducedMotionToggle" /> reduced
+                motion</label
+              >
+              <label
+                ><input type="checkbox" id="colorSafeToggle" /> color-safe
+                labels</label
+              >
+              <div class="grp">
+                font size
+                <button id="fontDown">A-</button>
+                <button id="fontUp">A+</button>
+              </div>
+              <button id="howBtn">? HOW THIS WORKS</button>
+              <span id="saveIndicator" class="small"></span>
+            </div>
+
+            <div id="gameGrid">
+              <div id="missionList"></div>
+
+              <div id="content">
+                <div class="panel">
+                  <div id="practiceBanner">
+                    PRACTICE RUN - this mission is already cleared, retrying
+                    won't change your progress.
+                  </div>
+                  <div id="briefing"></div>
+                  <div id="objectiveBox"></div>
+                </div>
+
+                <div class="panel">
+                  <div id="termWrap">
+                    <div id="termGrid"></div>
+                  </div>
+                  <div id="colorLegend"></div>
+
+                  <div id="toolbarRow"></div>
+
+                  <div id="inputRow">
+                    <span id="promptChevron">&gt;</span>
+                    <input
+                      id="codeInput"
+                      autocomplete="off"
+                      spellcheck="false"
+                      placeholder="type your escape sequence here..."
+                    />
+                    <button id="clearInputBtn">CLEAR</button>
+                    <button class="primary" id="executeBtn">EXECUTE</button>
+                  </div>
+                  <div id="feedback"></div>
+                  <div id="diagnostics"></div>
+                  <div id="breakdown"></div>
+                  <div id="hintRow">
+                    <button
+                      id="hintBtn"
+                      style="font-size: 12px; padding: 4px 10px"
+                    >
+                      REQUEST HINT
+                    </button>
+                    <div id="hintText"></div>
+                  </div>
+                  <div class="actions">
+                    <button id="nextBtn" disabled>NEXT MISSION ▸</button>
+                  </div>
+                  <div id="history"></div>
+
+                  <details id="codex">
+                    <summary>
+                      ▸ OPEN REFERENCE CODEX (click a code to insert its
+                      template)
+                    </summary>
+                    <table id="codexTable"></table>
+                    <div class="small" style="margin-top: 6px">
+                      Specific values a mission needs (which index, which RGB)
+                      aren't listed here on purpose.
+                    </div>
+                  </details>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CERTIFICATE -->
+          <div id="certScreen">
+            <div id="certBorder" class="fade-in">
+              <div id="certTitle" class="display glow">
+                CERTIFICATE OF CLEARANCE
+              </div>
+              <div id="certSub">TERMLINK SECURE OPERATIONS DIVISION</div>
+              <div id="certBody">
+                This certifies that operator<br />
+                <div id="certName" class="glow"></div>
+                has demonstrated full command authority over the<br />
+                <strong>ANSI / VT100 escape sequence protocol</strong><br />
+                and successfully cleared all 8 TERMLINK security trials.
+                <div id="certCodes">
+                  MASTERED: SGR color codes · text attributes · attribute
+                  reset<br />
+                  cursor addressing · screen erase · 256-color mode · 24-bit
+                  truecolor
+                </div>
+                <div id="certStats"></div>
+              </div>
+              <div id="certStamp"></div>
+            </div>
+            <div
+              style="
+                margin-top: 20px;
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                flex-wrap: wrap;
+              "
+            >
+              <button id="downloadCertBtn">▾ DOWNLOAD CERTIFICATE</button>
+              <button id="restartBtn">▸ RUN TRIALS AGAIN</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="onboardOverlay">
+        <div id="onboardCard">
+          <h2 class="glow">HOW THIS WORKS</h2>
+          <p>
+            Every mission has an objective that can only be solved by typing a
+            real ANSI/VT100 escape sequence into the input box.
+          </p>
+          <ul>
+            <li>
+              Sequences look like <code>\x1b[31mHELLO\x1b[0m</code> - you can
+              type <code>\x1b</code>, <code>\033</code>, or
+              <code>\u001b</code> for the escape character.
+            </li>
+            <li>
+              The terminal above the input updates <strong>live</strong> as you
+              type, so you can see the effect before submitting.
+            </li>
+            <li>
+              Press <strong>EXECUTE</strong> (or Enter) to check your work
+              against the mission's objective.
+            </li>
+            <li>
+              Stuck after a couple of tries? A hint unlocks automatically - or
+              request one any time.
+            </li>
+          </ul>
+          <p>
+            A short calibration mission comes first with the answer given
+            outright, just to get the mechanics under your fingers.
+          </p>
+          <div style="text-align: right; margin-top: 16px">
+            <button class="primary" id="onboardDismiss">GOT IT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="engine.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

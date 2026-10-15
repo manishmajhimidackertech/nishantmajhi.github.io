@@ -1,0 +1,3533 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conic Sections</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤌</text></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+          displayMath: [
+            ["$$", "$$"],
+            ["\\[", "\\]"],
+          ],
+          tags: "ams",
+        },
+        options: { skipHtmlTags: ["script", "noscript", "style", "textarea"] },
+      };
+    </script>
+    <script
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+    ></script>
+    <style>
+      :root {
+        /* ── GitHub Primer light theme ── */
+        --bg: #ffffff;
+        --bg2: #f6f8fa;
+        --surface: #ffffff;
+        --border: #d0d7de;
+        --border2: #afb8c1;
+        --text: #1f2328;
+        --text2: #59636e;
+        --text3: #6e7781;
+
+        /* primary UI accent — GitHub blue */
+        --accent: #0969da;
+        --accent-light: #ddf4ff;
+
+        /* vibrant secondary hues, used for formula-card variety + diagrams */
+        --secondary: #0969da; /* blue   */
+        --secondary-light: #ddf4ff;
+        --purple: #8250df;
+        --purple-light: #fbefff;
+        --green: #1a7f37;
+        --green-light: #dafbe1;
+        --orange: #bc4c00;
+        --orange-light: #fff1e5;
+        --red: #cf222e;
+        --red-light: #ffebe9;
+
+        --sidebar-w: 280px;
+        --header-h: 52px;
+        --font-body: "STIX Two Text", Georgia, serif;
+        --font-ui: "Inter", system-ui, sans-serif;
+
+        /* custom scrollbar */
+        --scrollbar-track: var(--bg2);
+        --scrollbar-thumb: #afb8c1;
+        --scrollbar-thumb-hover: #8c959f;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          /* ── GitHub Primer dark theme ── */
+          --bg: #0d1117;
+          --bg2: #161b22;
+          --surface: #161b22;
+          --border: #30363d;
+          --border2: #3d444d;
+          --text: #e6edf3;
+          --text2: #9198a1;
+          --text3: #7d8590;
+
+          --accent: #2f81f7;
+          --accent-light: rgba(47, 129, 247, 0.15);
+
+          --secondary: #2f81f7;
+          --secondary-light: rgba(47, 129, 247, 0.15);
+          --purple: #bc8cff;
+          --purple-light: rgba(188, 140, 255, 0.15);
+          --green: #3fb950;
+          --green-light: rgba(63, 185, 80, 0.15);
+          --orange: #ffa657;
+          --orange-light: rgba(255, 166, 87, 0.15);
+          --red: #f85149;
+          --red-light: rgba(248, 81, 73, 0.15);
+
+          --scrollbar-track: var(--bg2);
+          --scrollbar-thumb: #3d444d;
+          --scrollbar-thumb-hover: #4d5560;
+        }
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      /* keep anchor-jump targets (sidebar links) clear of the fixed header too */
+      [id] {
+        scroll-margin-top: calc(var(--header-h) + 18px);
+      }
+
+      /* ── CUSTOM SCROLLBAR — applied everywhere something can scroll ── */
+      html,
+      .sidebar,
+      .eq-block,
+      .table-wrap {
+        scrollbar-width: thin; /* Firefox */
+        scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+      }
+      html::-webkit-scrollbar,
+      .sidebar::-webkit-scrollbar,
+      .eq-block::-webkit-scrollbar,
+      .table-wrap::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      html::-webkit-scrollbar-track,
+      .sidebar::-webkit-scrollbar-track,
+      .eq-block::-webkit-scrollbar-track,
+      .table-wrap::-webkit-scrollbar-track {
+        background: var(--scrollbar-track);
+      }
+      html::-webkit-scrollbar-thumb,
+      .sidebar::-webkit-scrollbar-thumb,
+      .eq-block::-webkit-scrollbar-thumb,
+      .table-wrap::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb);
+        border-radius: 20px;
+        border: 2px solid var(--scrollbar-track);
+      }
+      html::-webkit-scrollbar-thumb:hover,
+      .sidebar::-webkit-scrollbar-thumb:hover,
+      .eq-block::-webkit-scrollbar-thumb:hover,
+      .table-wrap::-webkit-scrollbar-thumb:hover {
+        background-color: var(--scrollbar-thumb-hover);
+      }
+      body {
+        font-family: var(--font-body);
+        background: var(--bg);
+        color: var(--text);
+        font-size: 17px;
+        line-height: 1.75;
+        min-height: 100vh;
+      }
+
+      /* ── HEADER ── */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: var(--header-h);
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 20px;
+      }
+      .header-title {
+        font-family: var(--font-ui);
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: -0.01em;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .header-subtitle {
+        font-family: var(--font-ui);
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--text3);
+        display: none;
+      }
+      @media (min-width: 600px) {
+        .header-subtitle {
+          display: inline;
+        }
+      }
+      .menu-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text2);
+        padding: 6px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+      }
+      .menu-btn:hover {
+        background: var(--bg2);
+      }
+      .menu-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      /* ── LAYOUT ── */
+      .layout {
+        display: flex;
+        padding-top: var(--header-h);
+        min-height: 100vh;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        position: fixed;
+        top: var(--header-h);
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 90;
+        padding: 16px 0 40px;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      @media (min-width: 1080px) {
+        .sidebar {
+          transform: translateX(0);
+        }
+        .sidebar-overlay {
+          display: none !important;
+        }
+      }
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 89;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(2px);
+      }
+      .sidebar-overlay.show {
+        display: block;
+      }
+      .sidebar-section {
+        padding: 8px 16px 4px;
+      }
+      .sidebar-section-label {
+        font-family: var(--font-ui);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text3);
+        padding: 8px 8px 4px;
+      }
+      .nav-item {
+        display: block;
+        padding: 7px 12px;
+        border-radius: 6px;
+        font-family: var(--font-ui);
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text2);
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          background 0.12s,
+          color 0.12s;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+      }
+      .nav-item:hover {
+        background: var(--bg2);
+        color: var(--text);
+      }
+      .nav-item.active {
+        background: var(--accent-light);
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .nav-item.sub {
+        padding-left: 24px;
+        font-size: 12px;
+      }
+
+      /* ── MAIN CONTENT ── */
+      .main {
+        flex: 1;
+        /* the header (var(--header-h)) + 2px progress bar are fixed on top
+           of the page; .layout's padding-top never actually applied since
+           no element with class="layout" wraps sidebar/main in the markup,
+           so account for the sticky header height directly here instead */
+        margin-top: calc(var(--header-h) + 2px);
+        padding: 40px 24px 80px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        transition: margin-left 0.25s;
+      }
+      @media (min-width: 1080px) {
+        .main {
+          margin-left: var(--sidebar-w);
+          max-width: calc(var(--sidebar-w) + 800px);
+        }
+      }
+
+      /* ── TYPOGRAPHY ── */
+      .chapter-eyebrow {
+        font-family: var(--font-ui);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 8px;
+        display: block;
+      }
+      h1 {
+        font-family: var(--font-body);
+        font-size: clamp(26px, 5vw, 38px);
+        font-weight: 600;
+        line-height: 1.2;
+        color: var(--text);
+        margin-bottom: 16px;
+        letter-spacing: -0.02em;
+      }
+      h2 {
+        font-family: var(--font-body);
+        font-size: clamp(20px, 3.5vw, 26px);
+        font-weight: 600;
+        line-height: 1.25;
+        color: var(--text);
+        margin: 52px 0 16px;
+        letter-spacing: -0.015em;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+      }
+      h3 {
+        font-family: var(--font-body);
+        font-size: clamp(16px, 2.5vw, 20px);
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--text);
+        margin: 32px 0 12px;
+      }
+      h4 {
+        font-family: var(--font-ui);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text2);
+        margin: 24px 0 8px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+      p {
+        margin-bottom: 16px;
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      strong {
+        font-weight: 600;
+      }
+      em {
+        font-style: italic;
+      }
+
+      /* ── DERIVATION BLOCK - the active working-out, tinted to read as "in progress" ── */
+      .derivation {
+        margin: 24px 0;
+        padding: 20px 24px;
+        border-left: 3px solid var(--orange);
+        background: var(--orange-light);
+        border-radius: 0 8px 8px 0;
+        position: relative;
+      }
+      .derivation-label {
+        font-family: var(--font-ui);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--orange);
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      /* ── EQUATION BLOCK ── */
+      .eq-block {
+        margin: 20px 0;
+        padding: 16px 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-top: 2px solid var(--accent);
+        border-radius: 8px;
+        overflow-x: auto;
+        font-size: 1.05em;
+      }
+      .eq-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin: 10px 0;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .eq-step:last-child {
+        border-bottom: none;
+      }
+      .eq-reason {
+        font-family: var(--font-ui);
+        font-size: 12px;
+        color: var(--text3);
+        min-width: 140px;
+        padding-top: 2px;
+        font-style: italic;
+      }
+
+      /* ── DEFINITION BOX - the given, kept calm and separate from the math itself ── */
+      .definition {
+        margin: 20px 0;
+        padding: 18px 22px;
+        border: 1px solid var(--purple);
+        border-radius: 8px;
+        background: var(--purple-light);
+      }
+      .definition-label {
+        font-family: var(--font-ui);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--purple);
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      /* ── RESULT BOX - the destination. Quiet by design: a boxed answer, not another wash of color ── */
+      .result {
+        margin: 20px 0;
+        padding: 18px 22px;
+        border: 1px solid var(--border2);
+        border-left: 3px solid var(--green);
+        background: var(--green-light);
+        border-radius: 0 8px 8px 0;
+      }
+      .result-label {
+        font-family: var(--font-ui);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--green);
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      /* ── NOTE BOX ── */
+      .note {
+        margin: 16px 0;
+        padding: 14px 18px;
+        border-left: 2px solid var(--text3);
+        background: var(--bg2);
+        border-radius: 0 6px 6px 0;
+        font-size: 0.92em;
+        color: var(--text2);
+      }
+
+      /* ── SUMMARY TABLE ── */
+      .table-wrap {
+        overflow-x: auto;
+        margin: 20px 0;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-ui);
+        font-size: 13px;
+      }
+      th {
+        background: var(--bg2);
+        padding: 10px 14px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text2);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 9px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        vertical-align: top;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr:nth-child(even) td {
+        background: var(--bg2);
+      }
+
+      /* ── CANVAS GRAPHS ── */
+      .graph-wrap {
+        margin: 28px 0;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .graph-title {
+        font-family: var(--font-ui);
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text3);
+        padding: 10px 16px 0;
+        display: block;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .graph-caption {
+        font-family: var(--font-ui);
+        font-size: 12px;
+        color: var(--text3);
+        padding: 8px 16px 12px;
+        border-top: 1px solid var(--border);
+        margin-top: 2px;
+        font-style: italic;
+      }
+
+      /* ── SECTION SEPARATOR ── */
+      .part-divider {
+        margin: 60px 0 40px;
+        text-align: center;
+        position: relative;
+      }
+      .part-divider::before {
+        content: "";
+        display: block;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--border2),
+          transparent
+        );
+        margin-bottom: 20px;
+      }
+      .part-label {
+        font-family: var(--font-ui);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--text3);
+        background: var(--bg);
+        padding: 0 20px;
+        display: inline-block;
+        position: relative;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 600px) {
+        .main {
+          padding: 24px 16px 60px;
+        }
+        .eq-step {
+          flex-direction: column;
+          gap: 4px;
+        }
+        .eq-reason {
+          min-width: unset;
+        }
+      }
+
+      /* ── PROGRESS BAR ── */
+      .progress-bar {
+        position: fixed;
+        top: var(--header-h);
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--border);
+        z-index: 99;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--accent);
+        width: 0%;
+        transition: width 0.1s;
+      }
+
+      /* ── SCROLL TO TOP ── */
+      .scroll-top {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 50;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        font-size: 18px;
+      }
+      .scroll-top.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+      <span class="header-title"
+        >Conic Sections
+        <span class="header-subtitle">- A Complete Derivation Guide</span></span
+      >
+    </header>
+
+    <!-- PROGRESS -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar" aria-label="Page navigation">
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Foundation</div>
+        <a class="nav-item" href="#part0">The Core Idea</a>
+        <a class="nav-item sub" href="#rotation-derivation">Why x = (X−Y)/√2</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Part I - Parabola</div>
+        <a class="nav-item" href="#parabola-def">Definition</a>
+        <a class="nav-item sub" href="#parabola-standard">Standard equation</a>
+        <a class="nav-item sub" href="#parabola-translate"
+          >Translation: (h, k) form</a
+        >
+        <a class="nav-item sub" href="#parabola-90">90° rotation (opens up)</a>
+        <a class="nav-item sub" href="#parabola-180"
+          >180° rotation (opens left/down)</a
+        >
+        <a class="nav-item sub" href="#parabola-45"
+          >45° rotation (axis y = x)</a
+        >
+        <a class="nav-item sub" href="#parabola-general"
+          >General axis ax+by = c</a
+        >
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Part II - Ellipse & Circle</div>
+        <a class="nav-item" href="#ellipse-def">Definition</a>
+        <a class="nav-item sub" href="#ellipse-standard">Standard equation</a>
+        <a class="nav-item sub" href="#circle-natural"
+          >Circle emerges naturally</a
+        >
+        <a class="nav-item sub" href="#ellipse-translate"
+          >Translation & rotation</a
+        >
+        <a class="nav-item sub" href="#ellipse-45">45° axis</a>
+        <a class="nav-item sub" href="#ellipse-general">General axis</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Part III - Hyperbola</div>
+        <a class="nav-item" href="#hyperbola-def">Definition</a>
+        <a class="nav-item sub" href="#hyperbola-standard">Standard equation</a>
+        <a class="nav-item sub" href="#hyperbola-rotate">Rotations</a>
+        <a class="nav-item sub" href="#hyperbola-rect">Rectangular hyperbola</a>
+        <a class="nav-item sub" href="#hyperbola-general">General axis</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Summary</div>
+        <a class="nav-item" href="#grand-summary">Grand unified picture</a>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- HERO -->
+      <span class="chapter-eyebrow">Class 12 Mathematics</span>
+      <h1>Conics</h1>
+      <p>
+        <em>From definitions to tilted axes</em>
+      </p>
+
+      <!-- ══════════════════════════════════════════ -->
+      <section id="part0">
+        <h2>The Core Idea</h2>
+        <p>
+          Every non-standard conic equation is a standard one with some
+          transformations applied to the plane. There are only two operations we
+          ever use:
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Operation</th>
+              <th>What it does</th>
+              <th>How to apply it</th>
+            </tr>
+            <tr>
+              <td><strong>Translation</strong> by $(h,k)$</td>
+              <td>Moves the origin to $(h,k)$</td>
+              <td>Replace $x \to x-h$, $y \to y-k$</td>
+            </tr>
+            <tr>
+              <td><strong>Rotation</strong> by $\theta$</td>
+              <td>Tilts both axes by angle $\theta$</td>
+              <td>Substitute $x$ and $y$ using rotation formulas</td>
+            </tr>
+          </table>
+        </div>
+        <p>
+          That is the entire toolkit. Everything in this guide is just applying
+          these two operations, one at a time, to a starting equation.
+        </p>
+
+        <!-- ── ROTATION DERIVATION ── -->
+        <section id="rotation-derivation">
+          <h3>Why does rotation by 45° give $x = \dfrac{X-Y}{\sqrt{2}}$?</h3>
+
+          <p>
+            A point $P$ is fixed in the plane. We have two coordinate systems -
+            the <strong>old</strong> axes $(x, y)$ and the
+            <strong>new</strong> axes $(X, Y)$ rotated 45° counterclockwise. The
+            point does not move; only the measuring frame changes.
+          </p>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 1 - Same point P in old and new coordinate systems</span
+            >
+            <canvas id="rotCanvas" width="700" height="420"></canvas>
+            <p class="graph-caption">
+              The orange line is the new X-direction (along $y=x$); the blue line
+              is the new Y-direction (along $y=-x$). The dashed segments are
+              projections of $P$ onto each set of axes.
+            </p>
+          </div>
+
+          <p>
+            The unit vector along the new X-axis (which points along $y = x$)
+            is:
+          </p>
+          <div class="eq-block">
+            $$\hat{X} = (\cos 45°,\ \sin 45°) = \left(\frac{1}{\sqrt{2}},\
+            \frac{1}{\sqrt{2}}\right)$$
+          </div>
+          <p>
+            The unit vector along the new Y-axis (perpendicular, 90° further)
+            is:
+          </p>
+          <div class="eq-block">
+            $$\hat{Y} = (\cos 135°,\ \sin 135°) = \left(\frac{-1}{\sqrt{2}},\
+            \frac{1}{\sqrt{2}}\right)$$
+          </div>
+
+          <p>
+            The coordinate $X$ is the <em>projection</em> of
+            $\overrightarrow{OP}$ onto $\hat{X}$ - that is, the dot product:
+          </p>
+          <div class="derivation">
+            <span class="derivation-label"
+              >Derivation - projection onto rotated axes</span
+            >
+            <div class="eq-block">
+              <div class="eq-step">
+                <div>
+                  $$X = \overrightarrow{OP} \cdot \hat{X} = x \cdot
+                  \frac{1}{\sqrt{2}} + y \cdot \frac{1}{\sqrt{2}}$$
+                </div>
+                <div class="eq-reason">dot product with $\hat{X}$</div>
+              </div>
+              <div class="eq-step">
+                <div>$$\boxed{X = \frac{x+y}{\sqrt{2}}}$$</div>
+                <div class="eq-reason">simplified</div>
+              </div>
+              <div class="eq-step">
+                <div>
+                  $$Y = \overrightarrow{OP} \cdot \hat{Y} = x \cdot
+                  \frac{-1}{\sqrt{2}} + y \cdot \frac{1}{\sqrt{2}}$$
+                </div>
+                <div class="eq-reason">dot product with $\hat{Y}$</div>
+              </div>
+              <div class="eq-step">
+                <div>$$\boxed{Y = \frac{y-x}{\sqrt{2}}}$$</div>
+                <div class="eq-reason">simplified</div>
+              </div>
+            </div>
+          </div>
+
+          <p>Now invert. We have two equations:</p>
+          <div class="eq-block">
+            $$x + y = X\sqrt{2} \tag{1}$$ $$y - x = Y\sqrt{2} \tag{2}$$
+          </div>
+          <p>
+            Add $(1) + (2)$: $\;2y = (X+Y)\sqrt{2}$, so $y =
+            \dfrac{X+Y}{\sqrt{2}}$.
+          </p>
+          <p>Subtract $(2)$ from $(1)$: $\;2x = (X-Y)\sqrt{2}$, so:</p>
+          <div class="result">
+            <span class="result-label">Result - inverse rotation at 45°</span>
+            $$x = \frac{X-Y}{\sqrt{2}}, \qquad y = \frac{X+Y}{\sqrt{2}}$$
+            <p
+              style="
+                margin-top: 10px;
+                font-family: var(--font-ui);
+                font-size: 13px;
+                color: var(--text2);
+              "
+            >
+              These come from solving two simultaneous linear equations -
+              nothing more mysterious than that.
+            </p>
+          </div>
+
+          <h4>General angle θ</h4>
+          <p>
+            The same argument works for any angle. The new axes have unit
+            vectors $(\cos\theta, \sin\theta)$ and $(-\sin\theta, \cos\theta)$,
+            giving:
+          </p>
+          <div class="eq-block">
+            $$X = x\cos\theta + y\sin\theta, \qquad Y = -x\sin\theta +
+            y\cos\theta$$
+          </div>
+          <p>Inverting (solving simultaneously):</p>
+          <div class="eq-block">
+            $$x = X\cos\theta - Y\sin\theta, \qquad y = X\sin\theta +
+            Y\cos\theta$$
+          </div>
+          <p>
+            For $\theta = 45°$, $\cos\theta = \sin\theta = \frac{1}{\sqrt{2}}$,
+            which recovers the 45° formulas exactly.
+          </p>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 2 - Rotation by a general angle θ</span
+            >
+            <canvas id="rotGenCanvas" width="700" height="420"></canvas>
+            <p class="graph-caption">
+              The same projection argument works for any θ, not just 45°.
+              Project $P$ onto the rotated X-axis (orange) and Y-axis (blue) to
+              read off $X$ and $Y$ in terms of $x$, $y$, $\cos\theta$,
+              $\sin\theta$.
+            </p>
+          </div>
+        </section>
+      </section>
+
+      <!-- ════════════════════════════════════════════════ -->
+      <div class="part-divider">
+        <span class="part-label">Part I &nbsp;·&nbsp; The Parabola</span>
+      </div>
+
+      <section id="parabola-def">
+        <h2>The Parabola</h2>
+
+        <div class="definition">
+          <span class="definition-label">Definition</span>
+          <p>
+            A <strong>parabola</strong> is the set of all points $P$ in the
+            plane that are equidistant from a fixed point $F$ (the
+            <em>focus</em>) and a fixed line $\ell$ (the <em>directrix</em>).
+          </p>
+          <p style="margin-top: 8px">
+            $$PF = \text{distance from } P \text{ to } \ell$$
+          </p>
+        </div>
+
+        <p>
+          The <strong>axis</strong> is the line through $F$ perpendicular to
+          $\ell$. The <strong>vertex</strong> is the midpoint between $F$ and
+          $\ell$ - it lies on the axis.
+        </p>
+
+        <div class="graph-wrap">
+          <span class="graph-title"
+            >Figure 3 - Parabola from its definition</span
+          >
+          <canvas id="parDefCanvas" width="700" height="360"></canvas>
+          <p class="graph-caption">
+            Every point on the curve is exactly the same distance from the focus
+            $F$ (red) as from the directrix line (blue). The vertex is halfway
+            between them.
+          </p>
+        </div>
+
+        <section id="parabola-standard">
+          <h3>1.1 Standard equation - axis along $x$, vertex at origin</h3>
+
+          <p>
+            Place the vertex at the origin. The focus is at $F = (p, 0)$ and the
+            directrix is $x = -p$. For any point $P = (x, y)$:
+          </p>
+
+          <div class="derivation">
+            <span class="derivation-label"
+              >Full derivation from definition</span
+            >
+            <div class="eq-block">
+              <div class="eq-step">
+                <div>$$PF = \text{dist to directrix}$$</div>
+                <div class="eq-reason">definition</div>
+              </div>
+              <div class="eq-step">
+                <div>$$\sqrt{(x-p)^2 + y^2} = |x+p|$$</div>
+                <div class="eq-reason">expanding both sides</div>
+              </div>
+              <div class="eq-step">
+                <div>$$(x-p)^2 + y^2 = (x+p)^2$$</div>
+                <div class="eq-reason">square both sides</div>
+              </div>
+              <div class="eq-step">
+                <div>$$x^2 - 2px + p^2 + y^2 = x^2 + 2px + p^2$$</div>
+                <div class="eq-reason">expand</div>
+              </div>
+              <div class="eq-step">
+                <div>$$y^2 = 4px$$</div>
+                <div class="eq-reason">cancel $x^2, p^2$; collect</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result">
+            <span class="result-label">Standard equation - opens right</span>
+            $$y^2 = 4px$$
+            <p
+              style="
+                margin-top: 8px;
+                font-family: var(--font-ui);
+                font-size: 13px;
+                color: var(--text2);
+              "
+            >
+              Vertex $(0,0)$. Focus $(p,0)$. Directrix $x = -p$. Axis: the
+              $x$-axis.
+            </p>
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 4 - Standard parabola $y^2 = 4px$</span
+            >
+            <canvas id="parStdCanvas" width="700" height="340"></canvas>
+            <p class="graph-caption">
+              Three curves show how the parabola widens as the focal parameter
+              $p$ increases - the latus rectum (the focal chord) has length
+              $4p$.
+            </p>
+          </div>
+        </section>
+
+        <section id="parabola-translate">
+          <h3>1.2 Translation - vertex at $(h, k)$</h3>
+          <p>
+            Shift the origin to $(h, k)$: replace $x \to x - h$ and $y \to y -
+            k$.
+          </p>
+          <div class="result">
+            <span class="result-label">Translated parabola - opens right</span>
+            $$(y-k)^2 = 4p(x-h)$$
+            <p
+              style="
+                margin-top: 8px;
+                font-family: var(--font-ui);
+                font-size: 13px;
+                color: var(--text2);
+              "
+            >
+              Vertex $(h,k)$. Axis is the horizontal line $y = k$.
+            </p>
+          </div>
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 5 - Translated parabola $(y-k)^2 = 4p(x-h)$</span
+            >
+            <canvas id="parTransCanvas" width="700" height="340"></canvas>
+            <p class="graph-caption">
+              The gray curve marks the original $y^2=4px$ at the origin; the
+              orange curve is the same shape moved so its vertex sits at $(h,k)$.
+              The axis is now the line $y=k$.
+            </p>
+          </div>
+        </section>
+
+        <section id="parabola-90">
+          <h3>1.3 Rotation by 90° - axis along $y$, opens upward</h3>
+          <p>
+            Rotate the plane 90° counterclockwise. The 90° rotation substitution
+            is $x \to y,\ y \to -x$. Apply to $y^2 = 4px$:
+          </p>
+          <div class="derivation">
+            <span class="derivation-label">Derivation</span>
+            <div class="eq-block">
+              <div class="eq-step">
+                <div>Replace $y \to -x$, $x \to y$ in $y^2 = 4px$:</div>
+              </div>
+              <div class="eq-step">
+                <div>$$(-x)^2 = 4p(y)$$</div>
+                <div class="eq-reason">substitution</div>
+              </div>
+              <div class="eq-step">
+                <div>$$x^2 = 4py$$</div>
+                <div class="eq-reason">simplify</div>
+              </div>
+            </div>
+          </div>
+          <p>Translate vertex to $(h, k)$:</p>
+          <div class="result">
+            <span class="result-label">Parabola - opens upward</span>
+            $$(x-h)^2 = 4p(y-k)$$
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 6 - Parabola opening upward, axis along $y$</span
+            >
+            <canvas id="parUpCanvas" width="700" height="360"></canvas>
+            <p class="graph-caption">
+              The gray curve is $x^2=4py$ at the origin; rotating 90° and
+              translating gives the orange curve $(x-h)^2=4p(y-k)$, opening
+              upward with vertex $(h,k)$ and focus $F$ directly above it.
+            </p>
+          </div>
+        </section>
+
+        <section id="parabola-180">
+          <h3>1.4 Rotation by 180° - opens left and downward</h3>
+          <p>Rotation by 180°: $x \to -x,\ y \to -y$. Apply to $y^2 = 4px$:</p>
+          <div class="eq-block">$$(-y)^2 = 4p(-x) \implies y^2 = -4px$$</div>
+          <p>Opens to the <strong>left</strong>. Translate to $(h,k)$:</p>
+          <div class="result">
+            <span class="result-label">Parabola - opens left</span>
+            $$(y-k)^2 = -4p(x-h)$$
+          </div>
+          <p>
+            Apply 180° to $x^2 = 4py$ instead: $x^2 = -4py$. Opens
+            <strong>downward</strong>. Translate:
+          </p>
+          <div class="result">
+            <span class="result-label">Parabola - opens downward</span>
+            $$(x-h)^2 = -4p(y-k)$$
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 7 - All four standard parabolas (your Class 12
+              syllabus)</span
+            >
+            <canvas id="parFourCanvas" width="700" height="380"></canvas>
+            <p class="graph-caption">
+              Each is a rotation + translation of $y^2 = 4px$. The sign of $4p$
+              and whether $x$ or $y$ is squared tells you the direction.
+            </p>
+          </div>
+
+          <div class="note">
+            These four forms - $(y-k)^2 = \pm4p(x-h)$ and $(x-h)^2 = \pm4p(y-k)$
+            - cover everything in the standard Class 12 syllabus. The next two
+            sections go further.
+          </div>
+        </section>
+
+        <section id="parabola-45">
+          <h3>1.5 Rotation by 45° - axis along $y = x$</h3>
+          <p>
+            Now rotate the plane by 45°. We established that the substitution to
+            undo 45° rotation is $x = \dfrac{X-Y}{\sqrt{2}},\; y =
+            \dfrac{X+Y}{\sqrt{2}}$, where $X, Y$ are the standard coordinates.
+            So to rewrite the standard parabola $Y^2 = 4pX$ in old $(x,y)$
+            coordinates, substitute:
+          </p>
+
+          <div class="derivation">
+            <span class="derivation-label"
+              >Derivation - 45° rotation of $Y^2 = 4pX$</span
+            >
+            <div class="eq-block">
+              <div class="eq-step">
+                <div>
+                  $$\left(\frac{y-x}{\sqrt{2}}\right)^2 = 4p \cdot
+                  \frac{x+y}{\sqrt{2}}$$
+                </div>
+                <div class="eq-reason">substitute $X, Y$</div>
+              </div>
+              <div class="eq-step">
+                <div>$$\frac{(y-x)^2}{2} = \frac{4p(x+y)}{\sqrt{2}}$$</div>
+                <div class="eq-reason">simplify left side</div>
+              </div>
+              <div class="eq-step">
+                <div>
+                  $$(y-x)^2 = \frac{2 \cdot 4p(x+y)}{\sqrt{2}} =
+                  4p\sqrt{2}\,(x+y)$$
+                </div>
+                <div class="eq-reason">multiply both sides by 2</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result">
+            <span class="result-label"
+              >Parabola - axis along $y = x$, vertex at origin</span
+            >
+            $$(y-x)^2 = 4p\sqrt{2}\,(x+y)$$
+          </div>
+
+          <p>
+            Translate vertex to $(h, k)$ - replace $x \to x-h$, $y \to y-k$:
+          </p>
+          <div class="result">
+            <span class="result-label"
+              >Parabola - axis along $y = x$, vertex at $(h,k)$</span
+            >
+            $$\bigl(y - x - (k-h)\bigr)^2 = 4p\sqrt{2}\,\bigl(x + y - h -
+            k\bigr)$$
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 8 - Parabola with axis along $y = x$</span
+            >
+            <canvas id="par45Canvas" width="700" height="380"></canvas>
+            <p class="graph-caption">
+              The axis of symmetry is the line $y = x$ (blue). The vertex sits
+              at the origin. The $\sqrt{2}$ factor appears because the rotation
+              stretches the coordinate in that direction.
+            </p>
+          </div>
+        </section>
+
+        <section id="parabola-general">
+          <h3>1.6 General axis - $ax + by = c$</h3>
+          <p>The line $ax + by = c$ has:</p>
+          <ul style="margin: 0 0 14px 20px">
+            <li>Normal direction $(a, b)$ - perpendicular to the line</li>
+            <li>Direction along the line: $(-b, a)$</li>
+          </ul>
+          <p>So the two natural coordinate combinations are:</p>
+          <div class="eq-block">
+            $$P = \frac{-bx + ay}{\sqrt{a^2+b^2}} \quad \text{(distance along
+            the axis)}$$ $$Q = \frac{ax + by - c}{\sqrt{a^2+b^2}} \quad
+            \text{(signed distance from the axis line)}$$
+          </div>
+          <p>
+            Notice that $Q$ is precisely the
+            <strong
+              >signed distance from the point $(x,y)$ to the line
+              $ax+by=c$</strong
+            >
+            - a formula you already know from coordinate geometry.
+          </p>
+          <div class="result">
+            <span class="result-label"
+              >Parabola - general axis $ax+by=c$, vertex on the line</span
+            >
+            $$Q^2 = 4p \cdot P$$ $$\left(\frac{ax+by-c}{\sqrt{a^2+b^2}}\right)^2
+            = 4p\left(\frac{-bx+ay}{\sqrt{a^2+b^2}}\right)$$
+          </div>
+          <div class="note">
+            Check - the 45° case: with $a=1, b=-1, c=0$ (axis line $x-y=0$, i.e.
+            $y=x$), $\sqrt{a^2+b^2}=\sqrt{2}$, so $P=\frac{x+y}{\sqrt2}$ and
+            $Q=\frac{x-y}{\sqrt2}$. Substituting into $Q^2=4pP$ recovers
+            $(y-x)^2 = 4p\sqrt{2}(x+y)$ exactly - matching the result derived
+            above. ✓
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 9 - Parabola with a general axis $ax+by=c$</span
+            >
+            <canvas id="parGenCanvas" width="700" height="380"></canvas>
+            <p class="graph-caption">
+              Here the axis is the line $x+2y=2$ (blue, dashed). $P$ measures
+              position along the axis; $Q$ measures signed distance from it.
+              Stand on the tilted axis and the curve $Q^2=4pP$ looks exactly
+              like the standard parabola.
+            </p>
+          </div>
+        </section>
+      </section>
+
+      <!-- ════════════════════════════════════════════════ -->
+      <div class="part-divider">
+        <span class="part-label"
+          >Part II &nbsp;·&nbsp; Ellipse &amp; Circle</span
+        >
+      </div>
+
+      <section id="ellipse-def">
+        <h2>The Ellipse (and Circle)</h2>
+
+        <div class="definition">
+          <span class="definition-label">Definition</span>
+          <p>
+            An <strong>ellipse</strong> is the set of all points $P$ such that
+            the <em>sum</em> of distances from $P$ to two fixed points $F_1$ and
+            $F_2$ (the foci) is constant:
+          </p>
+          $$PF_1 + PF_2 = 2a_e \qquad (2a_e > F_1F_2)$$
+        </div>
+
+        <div class="graph-wrap">
+          <span class="graph-title"
+            >Figure 10 - Ellipse from its definition</span
+          >
+          <canvas id="ellDefCanvas" width="700" height="360"></canvas>
+          <p class="graph-caption">
+            The sum $PF_1 + PF_2$ is constant for every point on the ellipse.
+            Move $P$ mentally around the curve - the two distances change, but
+            their sum stays at $2a_e$.
+          </p>
+        </div>
+
+        <section id="ellipse-standard">
+          <h3>2.1 Standard equation - foci on $x$-axis, center at origin</h3>
+          <p>
+            Place foci at $(\pm c, 0)$, constant sum $= 2a_e$, with $a_e > c$.
+            Define $b_e^2 = a_e^2 - c^2$.
+          </p>
+
+          <div class="derivation">
+            <span class="derivation-label">Derivation</span>
+            <div class="eq-block">
+              <div class="eq-step">
+                <div>$$\sqrt{(x+c)^2+y^2} + \sqrt{(x-c)^2+y^2} = 2a_e$$</div>
+                <div class="eq-reason">definition</div>
+              </div>
+              <div class="eq-step">
+                <div>$$\sqrt{(x+c)^2+y^2} = 2a_e - \sqrt{(x-c)^2+y^2}$$</div>
+                <div class="eq-reason">isolate one radical</div>
+              </div>
+              <div class="eq-step">
+                <div>
+                  $$(x+c)^2+y^2 = 4a_e^2 - 4a_e\sqrt{(x-c)^2+y^2} +
+                  (x-c)^2+y^2$$
+                </div>
+                <div class="eq-reason">square both sides</div>
+              </div>
+              <div class="eq-step">
+                <div>$$4cx - 4a_e^2 = -4a_e\sqrt{(x-c)^2+y^2}$$</div>
+                <div class="eq-reason">expand and simplify</div>
+              </div>
+              <div class="eq-step">
+                <div>$$a_e^2(x-c)^2 + a_e^2 y^2 = (a_e^2 - cx)^2$$</div>
+                <div class="eq-reason">divide by $-4$, square again</div>
+              </div>
+              <div class="eq-step">
+                <div>$$(a_e^2 - c^2)x^2 + a_e^2 y^2 = a_e^2(a_e^2 - c^2)$$</div>
+                <div class="eq-reason">expand and collect</div>
+              </div>
+              <div class="eq-step">
+                <div>$$\frac{x^2}{a_e^2} + \frac{y^2}{b_e^2} = 1$$</div>
+                <div class="eq-reason">
+                  divide by $a_e^2 b_e^2$, use $b_e^2 = a_e^2 - c^2$
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result">
+            <span class="result-label"
+              >Standard ellipse - major axis along $x$</span
+            >
+            $$\frac{x^2}{a_e^2} + \frac{y^2}{b_e^2} = 1, \qquad a_e > b_e > 0$$
+            <p
+              style="
+                margin-top: 8px;
+                font-family: var(--font-ui);
+                font-size: 13px;
+                color: var(--text2);
+              "
+            >
+              Center $(0,0)$. Foci $(\pm c, 0)$ where $c^2 = a_e^2 - b_e^2$.
+              Semi-major axis $a_e$, semi-minor axis $b_e$.
+            </p>
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 11 - Standard ellipse, labelled $a$, $b$, $c$</span
+            >
+            <canvas id="ellStdCanvas" width="700" height="360"></canvas>
+            <p class="graph-caption">
+              Semi-major axis $a$ and semi-minor axis $b$ are measured from the
+              center; the foci (red) sit at $(\pm c, 0)$ with $c^2 = a^2 - b^2$.
+            </p>
+          </div>
+        </section>
+
+        <section id="circle-natural">
+          <h3>2.2 The circle emerges naturally</h3>
+          <p>
+            What happens if both foci coincide - i.e., $c = 0$? Then $b_e^2 =
+            a_e^2 - 0 = a_e^2$, so $a_e = b_e = r$. The ellipse equation
+            becomes:
+          </p>
+          <div class="eq-block">
+            $$\frac{x^2}{r^2} + \frac{y^2}{r^2} = 1 \implies x^2 + y^2 = r^2$$
+          </div>
+          <div class="result">
+            <span class="result-label"
+              >Circle - special case of ellipse with $a_e = b_e$</span
+            >
+            $$x^2 + y^2 = r^2$$
+            <p
+              style="
+                margin-top: 8px;
+                font-family: var(--font-ui);
+                font-size: 13px;
+                color: var(--text2);
+              "
+            >
+              The circle needs no separate definition - it is the ellipse whose
+              two foci have merged into a single center. Every direction is a
+              "major axis."
+            </p>
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 12 - Circle as limiting case of ellipse ($c \to 0$)</span
+            >
+            <canvas id="circleCanvas" width="700" height="340"></canvas>
+            <p class="graph-caption">
+              As $c$ shrinks toward $0$ (gray ellipses), the foci slide toward
+              the center. At $c=0$ the curve becomes a perfect circle (orange)
+              with its foci merged at one point.
+            </p>
+          </div>
+        </section>
+
+        <section id="ellipse-translate">
+          <h3>2.3 Translation and 90° rotation</h3>
+          <p>
+            <strong>Translate center to $(h,k)$</strong> - replace $x \to x-h$,
+            $y \to y-k$:
+          </p>
+          <div class="result">
+            <span class="result-label"
+              >Ellipse - center at $(h,k)$, major axis horizontal</span
+            >
+            $$\frac{(x-h)^2}{a_e^2} + \frac{(y-k)^2}{b_e^2} = 1$$
+          </div>
+          <p>For the circle: $(x-h)^2 + (y-k)^2 = r^2$.</p>
+          <p>
+            <strong>Rotate 90°</strong> ($x \to y, y \to -x$) to get the major
+            axis along $y$, then translate:
+          </p>
+          <div class="result">
+            <span class="result-label"
+              >Ellipse - center at $(h,k)$, major axis vertical</span
+            >
+            $$\frac{(x-h)^2}{b_e^2} + \frac{(y-k)^2}{a_e^2} = 1, \qquad a_e >
+            b_e$$
+          </div>
+          <div class="note">
+            The circle is <strong>unchanged by any rotation</strong>: $(x-h)^2 +
+            (y-k)^2 = r^2$ looks identical after any rotation because both axes
+            are equal - there is no preferred direction. This is the geometric
+            reason circles have no axis.
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 13 - Ellipse after a 90° rotation and translation</span
+            >
+            <canvas id="ellVertCanvas" width="700" height="380"></canvas>
+            <p class="graph-caption">
+              The pale curve is the original ellipse at the origin; rotating 90°
+              and translating gives the orange ellipse with a vertical major
+              axis, centered at $(h,k)$.
+            </p>
+          </div>
+        </section>
+
+        <section id="ellipse-45">
+          <h3>2.4 Rotation by 45° - major axis along $y = x$</h3>
+          <p>
+            In the rotated frame the standard form is $\dfrac{X^2}{a_e^2} +
+            \dfrac{Y^2}{b_e^2} = 1$. Substitute $X = \dfrac{x+y}{\sqrt{2}}$, $Y
+            = \dfrac{y-x}{\sqrt{2}}$:
+          </p>
+          <div class="derivation">
+            <span class="derivation-label">Derivation</span>
+            <div class="eq-block">
+              <div class="eq-step">
+                <div>
+                  $$\frac{1}{a_e^2}\left(\frac{x+y}{\sqrt{2}}\right)^2 +
+                  \frac{1}{b_e^2}\left(\frac{y-x}{\sqrt{2}}\right)^2 = 1$$
+                </div>
+                <div class="eq-reason">substitute $X, Y$</div>
+              </div>
+              <div class="eq-step">
+                <div>
+                  $$\frac{(x+y)^2}{2a_e^2} + \frac{(y-x)^2}{2b_e^2} = 1$$
+                </div>
+                <div class="eq-reason">simplify</div>
+              </div>
+            </div>
+          </div>
+          <div class="result">
+            <span class="result-label">Ellipse - major axis along $y = x$</span>
+            $$\frac{(x+y)^2}{2a_e^2} + \frac{(y-x)^2}{2b_e^2} = 1$$
+          </div>
+
+          <p>
+            <strong>Check - circle is unchanged:</strong> Set $a_e = b_e = r$:
+          </p>
+          <div class="eq-block">
+            $$\frac{(x+y)^2 + (y-x)^2}{2r^2} = 1 \implies \frac{2x^2 +
+            2y^2}{2r^2} = 1 \implies x^2 + y^2 = r^2 \checkmark$$
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 14 - Ellipse with major axis along $y = x$</span
+            >
+            <canvas id="ell45Canvas" width="700" height="380"></canvas>
+            <p class="graph-caption">
+              The ellipse is tilted 45°. Its major axis lies along the blue line
+              $y=x$.
+            </p>
+          </div>
+        </section>
+
+        <section id="ellipse-general">
+          <h3>2.5 General axis - $ax + by = c$</h3>
+          <p>
+            Using the same $P$ (along axis) and $Q$ (perpendicular to axis) as
+            for the parabola:
+          </p>
+          <div class="result">
+            <span class="result-label">Ellipse - general axis $ax+by=c$</span>
+            $$\frac{P^2}{a_e^2} + \frac{Q^2}{b_e^2} = 1$$
+            <p
+              style="
+                margin-top: 8px;
+                font-family: var(--font-ui);
+                font-size: 13px;
+                color: var(--text2);
+              "
+            >
+              where $P = \dfrac{-bx+ay}{\sqrt{a^2+b^2}}$ and $Q =
+              \dfrac{ax+by-c}{\sqrt{a^2+b^2}}$.
+            </p>
+          </div>
+          <p>
+            For the <strong>circle</strong> ($a_e = b_e = r$): $P^2 + Q^2 =
+            r^2$, which expands to $(x-h)^2 + (y-k)^2 = r^2$ - the axis
+            direction vanishes entirely.
+          </p>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 15 - Ellipse with a general axis $ax+by=c$</span
+            >
+            <canvas id="ellGenCanvas" width="700" height="380"></canvas>
+            <p class="graph-caption">
+              Same idea as the parabola: $P$ runs along the tilted axis (blue,
+              dashed), $Q$ measures perpendicular distance from it, and the foci
+              (red) sit on the axis itself.
+            </p>
+          </div>
+        </section>
+      </section>
+
+      <!-- ════════════════════════════════════════════════ -->
+      <div class="part-divider">
+        <span class="part-label">Part III &nbsp;·&nbsp; The Hyperbola</span>
+      </div>
+
+      <section id="hyperbola-def">
+        <h2>The Hyperbola</h2>
+
+        <div class="definition">
+          <span class="definition-label">Definition</span>
+          <p>
+            A <strong>hyperbola</strong> is the set of all points $P$ such that
+            the <em>difference</em> of distances from $P$ to two fixed points
+            $F_1$ and $F_2$ (the foci) is constant:
+          </p>
+          $$|PF_1 - PF_2| = 2a_h$$
+        </div>
+
+        <div class="graph-wrap">
+          <span class="graph-title"
+            >Figure 16 - Hyperbola from its definition</span
+          >
+          <canvas id="hypDefCanvas" width="700" height="360"></canvas>
+          <p class="graph-caption">
+            The <em>difference</em> (not sum) of distances to the two foci is
+            constant. This gives two separate branches - one where $PF_1 - PF_2
+            = 2a_h$ and one where $PF_2 - PF_1 = 2a_h$.
+          </p>
+        </div>
+
+        <section id="hyperbola-standard">
+          <h3>3.1 Standard equation - foci on $x$-axis, center at origin</h3>
+          <p>
+            Place foci at $(\pm c, 0)$, constant difference $2a_h$, with $c >
+            a_h$. Define $b_h^2 = c^2 - a_h^2$ (note: <em>reversed</em> from the
+            ellipse).
+          </p>
+
+          <div class="derivation">
+            <span class="derivation-label"
+              >Derivation (parallel to ellipse, but difference)</span
+            >
+            <div class="eq-block">
+              <div class="eq-step">
+                <div>
+                  $$\left|\sqrt{(x+c)^2+y^2} - \sqrt{(x-c)^2+y^2}\right| =
+                  2a_h$$
+                </div>
+                <div class="eq-reason">definition</div>
+              </div>
+              <div class="eq-step">
+                <div>Isolate one radical, square, isolate again, square:</div>
+              </div>
+              <div class="eq-step">
+                <div>$$(c^2 - a_h^2)x^2 - a_h^2 y^2 = a_h^2(c^2 - a_h^2)$$</div>
+                <div class="eq-reason">
+                  after double squaring (same algebra as ellipse, sign flips)
+                </div>
+              </div>
+              <div class="eq-step">
+                <div>$$\frac{x^2}{a_h^2} - \frac{y^2}{b_h^2} = 1$$</div>
+                <div class="eq-reason">
+                  divide by $a_h^2 b_h^2$, use $b_h^2 = c^2 - a_h^2$
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result">
+            <span class="result-label"
+              >Standard hyperbola - transverse axis along $x$</span
+            >
+            $$\frac{x^2}{a_h^2} - \frac{y^2}{b_h^2} = 1$$
+            <p
+              style="
+                margin-top: 8px;
+                font-family: var(--font-ui);
+                font-size: 13px;
+                color: var(--text2);
+              "
+            >
+              Center $(0,0)$. Foci $(\pm c, 0)$ where $c^2 = a_h^2 + b_h^2$.
+              Asymptotes $y = \pm\frac{b_h}{a_h}x$. Vertices $(\pm a_h, 0)$.
+            </p>
+          </div>
+
+          <p>Translate center to $(h, k)$:</p>
+          <div class="result">
+            <span class="result-label"
+              >Hyperbola - transverse axis horizontal, center $(h,k)$</span
+            >
+            $$\frac{(x-h)^2}{a_h^2} - \frac{(y-k)^2}{b_h^2} = 1$$
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 17 - Standard hyperbola, labelled $a$, $b$, $c$</span
+            >
+            <canvas id="hypStdCanvas" width="700" height="360"></canvas>
+            <p class="graph-caption">
+              Vertices sit at $(\pm a, 0)$; the asymptotes $y=\pm(b/a)x$ (blue,
+              dashed) bound the branches; the foci (red) sit further out at
+              $(\pm c, 0)$ with $c^2=a^2+b^2$.
+            </p>
+          </div>
+        </section>
+
+        <section id="hyperbola-rotate">
+          <h3>3.2 Rotation by 90° - transverse axis along $y$</h3>
+          <p>Rotate 90° ($x \to y, y \to -x$) and translate:</p>
+          <div class="result">
+            <span class="result-label"
+              >Hyperbola - transverse axis vertical</span
+            >
+            $$\frac{(y-k)^2}{a_h^2} - \frac{(x-h)^2}{b_h^2} = 1$$
+            <p
+              style="
+                margin-top: 8px;
+                font-family: var(--font-ui);
+                font-size: 13px;
+                color: var(--text2);
+              "
+            >
+              Note the sign: $y^2$ is now positive. The branches open up and
+              down.
+            </p>
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 18 - Hyperbola in both orientations</span
+            >
+            <canvas id="hypBothCanvas" width="700" height="360"></canvas>
+            <p class="graph-caption">
+              Left (orange): transverse axis horizontal, branches open
+              left-right. Right (blue): transverse axis vertical, branches open
+              up-down.
+            </p>
+          </div>
+        </section>
+
+        <section id="hyperbola-rect">
+          <h3>3.3 Rotation by 45° - rectangular hyperbola $xy = k$</h3>
+          <p>
+            Rotate $\dfrac{X^2}{a_h^2} - \dfrac{Y^2}{b_h^2} = 1$ by 45°.
+            Substitute $X = \dfrac{x+y}{\sqrt{2}}$, $Y = \dfrac{y-x}{\sqrt{2}}$:
+          </p>
+
+          <div class="result">
+            <span class="result-label">Hyperbola - axis along $y = x$</span>
+            $$\frac{(x+y)^2}{2a_h^2} - \frac{(y-x)^2}{2b_h^2} = 1$$
+          </div>
+
+          <p>
+            <strong>Special case - rectangular hyperbola</strong> ($a_h = b_h$):
+          </p>
+          <div class="derivation">
+            <span class="derivation-label">Derivation of $xy = k$</span>
+            <div class="eq-block">
+              <div class="eq-step">
+                <div>$$\frac{(x+y)^2 - (y-x)^2}{2a_h^2} = 1$$</div>
+                <div class="eq-reason">set $a_h = b_h$</div>
+              </div>
+              <div class="eq-step">
+                <div>$$\frac{4xy}{2a_h^2} = 1$$</div>
+                <div class="eq-reason">$(x+y)^2 - (y-x)^2 = 4xy$</div>
+              </div>
+              <div class="eq-step">
+                <div>$$xy = \frac{a_h^2}{2}$$</div>
+                <div class="eq-reason">i.e. $xy = k$</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result">
+            <span class="result-label"
+              >Rectangular hyperbola - asymptotes along $x$ and $y$ axes</span
+            >
+            $$xy = k$$
+            <p
+              style="
+                margin-top: 8px;
+                font-family: var(--font-ui);
+                font-size: 13px;
+                color: var(--text2);
+              "
+            >
+              This is simply $x^2 - y^2 = 2k$ rotated 45°. Its asymptotes are
+              the coordinate axes. You see this equation in physics (Boyle's law
+              $PV = \text{const}$) and economics (demand curves).
+            </p>
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 19 - Rectangular hyperbola $xy = k$ and its parent $x^2 -
+              y^2 = \text{const}$</span
+            >
+            <canvas id="hypRectCanvas" width="700" height="360"></canvas>
+            <p class="graph-caption">
+              The rectangular hyperbola $xy = k$ (orange) is exactly $x^2 - y^2 =
+              \text{const}$ (blue) rotated by 45°. The coordinate axes are the
+              asymptotes.
+            </p>
+          </div>
+        </section>
+
+        <section id="hyperbola-general">
+          <h3>3.4 General axis - $ax + by = c$</h3>
+          <div class="result">
+            <span class="result-label">Hyperbola - general axis $ax+by=c$</span>
+            $$\frac{P^2}{a_h^2} - \frac{Q^2}{b_h^2} = 1$$
+            <p
+              style="
+                margin-top: 8px;
+                font-family: var(--font-ui);
+                font-size: 13px;
+                color: var(--text2);
+              "
+            >
+              where $P = \dfrac{-bx+ay}{\sqrt{a^2+b^2}}$ and $Q =
+              \dfrac{ax+by-c}{\sqrt{a^2+b^2}}$.
+            </p>
+          </div>
+
+          <div class="graph-wrap">
+            <span class="graph-title"
+              >Figure 20 - Hyperbola with a general axis $ax+by=c$</span
+            >
+            <canvas id="hypGenCanvas" width="700" height="380"></canvas>
+            <p class="graph-caption">
+              The same $P, Q$ construction as before, now producing two branches
+              that open along the tilted axis (blue, dashed) instead of the
+              $x$-axis.
+            </p>
+          </div>
+        </section>
+      </section>
+
+      <!-- ════════════════════════════════════════════════ -->
+      <div class="part-divider"><span class="part-label">Summary</span></div>
+
+      <section id="grand-summary">
+        <h2>The Grand Unified Picture</h2>
+        <p>
+          Every conic with axis along $ax + by = c$ is described by just two
+          quantities:
+        </p>
+        <div class="eq-block">
+          $$P = \frac{-bx+ay}{\sqrt{a^2+b^2}} \quad \text{(position along the
+          axis)}$$ $$Q = \frac{ax+by-c}{\sqrt{a^2+b^2}} \quad \text{(signed
+          distance from the axis line)}$$
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Conic</th>
+              <th>Equation in $P, Q$</th>
+              <th>What it says geometrically</th>
+            </tr>
+            <tr>
+              <td><strong>Parabola</strong></td>
+              <td>$Q^2 = 4pP$</td>
+              <td>Distance-to-axis² grows linearly along the axis</td>
+            </tr>
+            <tr>
+              <td><strong>Ellipse</strong></td>
+              <td>$\dfrac{P^2}{\alpha^2} + \dfrac{Q^2}{\beta^2} = 1$</td>
+              <td>Bounded in both directions</td>
+            </tr>
+            <tr>
+              <td><strong>Circle</strong></td>
+              <td>$P^2 + Q^2 = r^2$</td>
+              <td>Equal bound in all directions - axis vanishes</td>
+            </tr>
+            <tr>
+              <td><strong>Hyperbola</strong></td>
+              <td>$\dfrac{P^2}{\alpha^2} - \dfrac{Q^2}{\beta^2} = 1$</td>
+              <td>Unbounded, opens along the axis - two branches</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="graph-wrap">
+          <span class="graph-title"
+            >Figure 21 - All four conics on one set of axes</span
+          >
+          <canvas id="allConicsCanvas" width="700" height="400"></canvas>
+          <p class="graph-caption">
+            Parabola (orange), ellipse (blue), circle (green), hyperbola (red) -
+            four equations, one substitution pattern.
+          </p>
+        </div>
+
+        <p>
+          And the journey to get here was just a single pipeline applied
+          repeatedly:
+        </p>
+        <div
+          class="eq-block"
+          style="
+            text-align: center;
+            font-family: var(--font-ui);
+            font-size: 14px;
+            line-height: 2.2;
+          "
+        >
+          Definition $\xrightarrow{\text{algebra}}$ Standard form
+          $\xrightarrow{+\,(h,k)}$ Translated $\xrightarrow{+\,\theta}$ Rotated
+          $\xrightarrow{\text{algebra}}$ General
+        </div>
+      </section>
+    </main>
+
+    <!-- SCROLL TO TOP -->
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+      ↑
+    </button>
+
+    <script>
+      /* ── UI: sidebar toggle ── */
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+      const menuBtn = document.getElementById("menuBtn");
+      function openSidebar() {
+        sidebar.classList.add("open");
+        overlay.classList.add("show");
+      }
+      function closeSidebar() {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("show");
+      }
+      menuBtn.addEventListener("click", () =>
+        sidebar.classList.contains("open") ? closeSidebar() : openSidebar(),
+      );
+      overlay.addEventListener("click", closeSidebar);
+      document.querySelectorAll(".nav-item").forEach((el) => {
+        el.addEventListener("click", () => {
+          if (window.innerWidth < 1080) closeSidebar();
+        });
+      });
+
+      /* ── progress bar ── */
+      const progressFill = document.getElementById("progressFill");
+      window.addEventListener("scroll", () => {
+        const total = document.body.scrollHeight - window.innerHeight;
+        progressFill.style.width =
+          (total > 0 ? (window.scrollY / total) * 100 : 0) + "%";
+      });
+
+      /* ── scroll to top ── */
+      const scrollTopBtn = document.getElementById("scrollTop");
+      window.addEventListener("scroll", () =>
+        scrollTopBtn.classList.toggle("show", window.scrollY > 400),
+      );
+      scrollTopBtn.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" }),
+      );
+
+      /* ── active nav ── */
+      const sections = document.querySelectorAll("section[id]");
+      const navItems = document.querySelectorAll(".nav-item");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              navItems.forEach((n) =>
+                n.classList.toggle(
+                  "active",
+                  n.getAttribute("href") === "#" + e.target.id,
+                ),
+              );
+            }
+          });
+        },
+        { rootMargin: "-20% 0px -70% 0px" },
+      );
+      sections.forEach((s) => observer.observe(s));
+
+      /* ══════════════════════════════════════════
+   CANVAS DRAWING UTILITIES
+
+   Color roles (kept deliberately small):
+   - accent    → the curve under discussion / the destination
+   - secondary → axis lines, asymptotes, directrices, the "given" construction
+   - mark      → the single most important marked point(s): focus / foci
+   - quat      → a 4th categorical color, used only in figures that legitimately
+                 compare several curves side by side (a legend, not decoration)
+   - axis/grid/text → neutral grays for everything that's just scaffolding
+   ══════════════════════════════════════════ */
+      function getColors() {
+        const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        return {
+          bg: dark ? "#161b22" : "#ffffff",
+          grid: dark ? "#21262d" : "#eaeef2",
+          axis: dark ? "#3d444d" : "#afb8c1",
+          text: dark ? "#9198a1" : "#59636e",
+          accent: dark ? "#ffa657" : "#bc4c00", // orange — parabola
+          secondary: dark ? "#2f81f7" : "#0969da", // blue — ellipse
+          mark: dark ? "#f85149" : "#cf222e", // red — hyperbola
+          quat: dark ? "#3fb950" : "#1a7f37", // green — circle
+        };
+      }
+
+      function setupCanvas(id) {
+        const canvas = document.getElementById(id);
+        if (!canvas) return null;
+        const dpr = window.devicePixelRatio || 1;
+        const W = canvas.clientWidth || 700;
+        const H = parseInt(canvas.getAttribute("height")) || 340;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.height = H + "px";
+        const ctx = canvas.getContext("2d");
+        ctx.scale(dpr, dpr);
+        return { ctx, W, H };
+      }
+
+      function drawAxes(ctx, W, H, ox, oy, scale, c) {
+        ctx.strokeStyle = c.axis;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(20, oy);
+        ctx.lineTo(W - 20, oy);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(ox, H - 20);
+        ctx.lineTo(ox, 20);
+        ctx.stroke();
+        ctx.strokeStyle = c.axis;
+        ctx.lineWidth = 0.5;
+        for (let i = -10; i <= 10; i++) {
+          if (i === 0) continue;
+          const px = ox + i * scale,
+            py = oy - i * scale;
+          if (px > 20 && px < W - 20) {
+            ctx.beginPath();
+            ctx.moveTo(px, oy - 4);
+            ctx.lineTo(px, oy + 4);
+            ctx.stroke();
+          }
+          if (py > 20 && py < H - 20) {
+            ctx.beginPath();
+            ctx.moveTo(ox - 4, py);
+            ctx.lineTo(ox + 4, py);
+            ctx.stroke();
+          }
+        }
+        ctx.fillStyle = c.text;
+        ctx.font = "12px Inter, sans-serif";
+        ctx.fillText("x", W - 18, oy - 6);
+        ctx.fillText("y", ox + 6, 18);
+      }
+
+      function drawGrid(ctx, W, H, ox, oy, scale, c) {
+        ctx.strokeStyle = c.grid;
+        ctx.lineWidth = 0.5;
+        for (let i = -20; i <= 20; i++) {
+          const px = ox + i * scale,
+            py = oy - i * scale;
+          if (px > 0 && px < W) {
+            ctx.beginPath();
+            ctx.moveTo(px, 0);
+            ctx.lineTo(px, H);
+            ctx.stroke();
+          }
+          if (py > 0 && py < H) {
+            ctx.beginPath();
+            ctx.moveTo(0, py);
+            ctx.lineTo(W, py);
+            ctx.stroke();
+          }
+        }
+      }
+
+      /* ── Figure 1: rotation geometry, 45° ── */
+      function drawRotCanvas() {
+        const r = setupCanvas("rotCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.42,
+          oy = H * 0.55,
+          sc = Math.min(W, H) * 0.15;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([8, 5]);
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 3, oy + sc * 3);
+        ctx.lineTo(ox + sc * 3, oy - sc * 3);
+        ctx.stroke();
+        ctx.strokeStyle = c.secondary;
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 2.5, oy - sc * 2.5);
+        ctx.lineTo(ox + sc * 2.5, oy + sc * 2.5);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        const Px = ox + 2 * sc,
+          Py = oy - 1.5 * sc;
+        ctx.strokeStyle = c.axis;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(Px, oy);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(ox, Py);
+        ctx.stroke();
+        const dot = (2 + 1.5) / 2;
+        const Xfx = ox + dot * sc,
+          Xfy = oy - dot * sc;
+        const Ydot = (1.5 - 2) / 2;
+        const Yfx = ox - Ydot * sc,
+          Yfy = oy - Ydot * sc;
+        ctx.strokeStyle = c.accent;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(Xfx, Xfy);
+        ctx.stroke();
+        ctx.strokeStyle = c.secondary;
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(Yfx, Yfy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = '13px "STIX Two Text", serif';
+        ctx.fillStyle = c.text;
+        ctx.fillText("x", Px, oy + 16);
+        ctx.fillText("y", ox - 16, Py + 4);
+        ctx.fillStyle = c.accent;
+        ctx.font = "12px Inter, sans-serif";
+        ctx.fillText("X-axis (y=x)", ox + sc * 2 + 8, oy - sc * 2 - 6);
+        ctx.fillText("X", Xfx - 6, Xfy - 10);
+        ctx.fillStyle = c.secondary;
+        ctx.fillText("Y-axis (y=−x)", ox + sc * 2, oy + sc * 2 + 16);
+        ctx.fillText("Y", Yfx + 8, Yfy + 4);
+        ctx.fillStyle = c.mark;
+        ctx.beginPath();
+        ctx.arc(Px, Py, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.mark;
+        ctx.font = 'bold 14px "STIX Two Text", serif';
+        ctx.fillText("P(x, y) = P(X, Y)", Px + 8, Py - 8);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(ox, oy, sc * 0.55, -Math.PI / 4, 0);
+        ctx.stroke();
+        ctx.fillStyle = c.accent;
+        ctx.font = "12px Inter, sans-serif";
+        ctx.fillText("45°", ox + sc * 0.35, oy - sc * 0.12);
+      }
+
+      /* ── Figure 2: rotation geometry, general angle θ ── */
+      function drawRotGen() {
+        const r = setupCanvas("rotGenCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.42,
+          oy = H * 0.55,
+          sc = Math.min(W, H) * 0.15;
+        const theta = (28 * Math.PI) / 180;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        const cosT = Math.cos(theta),
+          sinT = Math.sin(theta);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([8, 5]);
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 3.2 * cosT, oy + sc * 3.2 * sinT);
+        ctx.lineTo(ox + sc * 3.2 * cosT, oy - sc * 3.2 * sinT);
+        ctx.stroke();
+        ctx.strokeStyle = c.secondary;
+        ctx.beginPath();
+        ctx.moveTo(ox + sc * 2.6 * sinT, oy + sc * 2.6 * cosT);
+        ctx.lineTo(ox - sc * 2.6 * sinT, oy - sc * 2.6 * cosT);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        const px0 = 2.3,
+          py0 = 1.1;
+        const Px = ox + px0 * sc,
+          Py = oy - py0 * sc;
+        ctx.strokeStyle = c.axis;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(Px, oy);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(ox, Py);
+        ctx.stroke();
+        const Xcoord = px0 * cosT + py0 * sinT,
+          Ycoord = -px0 * sinT + py0 * cosT;
+        const Xfx = ox + Xcoord * cosT * sc,
+          Xfy = oy - Xcoord * sinT * sc;
+        const Yfx = ox - Ycoord * sinT * sc,
+          Yfy = oy - Ycoord * cosT * sc;
+        ctx.strokeStyle = c.accent;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(Xfx, Xfy);
+        ctx.stroke();
+        ctx.strokeStyle = c.secondary;
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(Yfx, Yfy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(ox, oy, sc * 0.5, -theta, 0);
+        ctx.stroke();
+        ctx.fillStyle = c.accent;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("θ", ox + sc * 0.32, oy - sc * 0.08);
+        ctx.fillStyle = c.accent;
+        ctx.fillText(
+          "X (rotated)",
+          ox + sc * 3.2 * cosT - 60,
+          oy - sc * 3.2 * sinT - 8,
+        );
+        ctx.fillStyle = c.secondary;
+        ctx.fillText(
+          "Y (rotated)",
+          ox - sc * 2.6 * sinT + 8,
+          oy - sc * 2.6 * cosT - 4,
+        );
+        ctx.fillStyle = c.mark;
+        ctx.beginPath();
+        ctx.arc(Px, Py, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.mark;
+        ctx.font = 'bold 13px "STIX Two Text",serif';
+        ctx.fillText("P", Px + 8, Py - 8);
+        ctx.fillStyle = c.text;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("X = x cosθ + y sinθ", W * 0.04, H * 0.08);
+        ctx.fillText("Y = −x sinθ + y cosθ", W * 0.04, H * 0.14);
+      }
+
+      /* ── Figure 3: parabola definition ── */
+      function drawParDef() {
+        const r = setupCanvas("parDefCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.35,
+          oy = H * 0.5,
+          sc = H * 0.14;
+        const p = 1.2;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.moveTo(ox - p * sc, 20);
+        ctx.lineTo(ox - p * sc, H - 20);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("directrix x = −p", ox - p * sc - 4, 16);
+        ctx.fillStyle = c.mark;
+        ctx.beginPath();
+        ctx.arc(ox + p * sc, oy, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.mark;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("F (focus)", ox + p * sc + 8, oy - 8);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        let first = true;
+        for (let t = -3; t <= 3; t += 0.02) {
+          const px = ox + ((t * t) / (4 * p)) * sc,
+            py = oy - t * sc;
+          if (px < W - 10) {
+            first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+            first = false;
+          }
+        }
+        ctx.stroke();
+        const t0 = 1.5,
+          px0 = ox + ((t0 * t0) / (4 * p)) * sc,
+          py0 = oy - t0 * sc;
+        ctx.fillStyle = c.secondary;
+        ctx.beginPath();
+        ctx.arc(px0, py0, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.secondary;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("P", px0 + 8, py0 - 6);
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(px0, py0);
+        ctx.lineTo(ox + p * sc, oy);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(px0, py0);
+        ctx.lineTo(ox - p * sc, py0);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillStyle = c.secondary;
+        ctx.fillText("PF", (px0 + ox + p * sc) / 2 + 4, (py0 + oy) / 2 - 6);
+        ctx.fillText("d(P, ℓ)", (px0 + ox - p * sc) / 2, py0 - 8);
+        ctx.fillStyle = c.accent;
+        ctx.beginPath();
+        ctx.arc(ox, oy, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.accent;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("vertex", ox + 6, oy + 14);
+      }
+
+      /* ── Figure 4: standard parabola, varying p ── */
+      function drawParStd() {
+        const r = setupCanvas("parStdCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.3,
+          oy = H * 0.5,
+          sc = H * 0.13;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        [1, 1.5, 2.5].forEach((p, i) => {
+          const cols = [c.accent, c.secondary, c.quat];
+          ctx.strokeStyle = cols[i];
+          ctx.lineWidth = i === 0 ? 2.5 : 1.5;
+          ctx.beginPath();
+          let first = true;
+          for (let t = -3.5; t <= 3.5; t += 0.02) {
+            const px = ox + ((t * t) / (4 * p)) * sc,
+              py = oy - t * sc;
+            if (px < W - 10) {
+              first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+              first = false;
+            }
+          }
+          ctx.stroke();
+        });
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillStyle = c.accent;
+        ctx.fillText("p=1", W * 0.7, H * 0.25);
+        ctx.fillStyle = c.secondary;
+        ctx.fillText("p=1.5", W * 0.75, H * 0.2);
+        ctx.fillStyle = c.quat;
+        ctx.fillText("p=2.5", W * 0.8, H * 0.15);
+        ctx.fillStyle = c.text;
+        ctx.font = '14px "STIX Two Text",serif';
+        ctx.fillText("y² = 4px", W * 0.55, H * 0.12);
+        ctx.fillStyle = c.accent;
+        ctx.beginPath();
+        ctx.arc(ox, oy, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      /* ── Figure 5: translated parabola ── */
+      function drawParTrans() {
+        const r = setupCanvas("parTransCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.4,
+          oy = H * 0.5,
+          sc = H * 0.12;
+        const h = 1,
+          k = 0.8,
+          p = 1.2;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        ctx.strokeStyle = c.axis;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        let first = true;
+        for (let t = -3.5; t <= 3.5; t += 0.02) {
+          const px = ox + ((t * t) / (4 * p)) * sc,
+            py = oy - t * sc;
+          if (px < W - 10) {
+            first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+            first = false;
+          }
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        first = true;
+        for (let t = -3.5; t <= 3.5; t += 0.02) {
+          const px = ox + (h + (t * t) / (4 * p)) * sc,
+            py = oy - (k + t) * sc;
+          if (px < W - 10 && py > 10 && py < H - 10) {
+            first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+            first = false;
+          }
+        }
+        ctx.stroke();
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(20, oy - k * sc);
+        ctx.lineTo(W - 20, oy - k * sc);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("y = k (axis)", W * 0.6, oy - k * sc - 6);
+        const vx = ox + h * sc,
+          vy = oy - k * sc;
+        ctx.fillStyle = c.accent;
+        ctx.beginPath();
+        ctx.arc(vx, vy, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.accent;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("vertex (h,k)", vx + 8, vy - 8);
+        ctx.fillStyle = c.text;
+        ctx.font = '14px "STIX Two Text",serif';
+        ctx.fillText("(y−k)² = 4p(x−h)", W * 0.5, H * 0.1);
+      }
+
+      /* ── Figure 6: parabola opening upward ── */
+      function drawParUp() {
+        const r = setupCanvas("parUpCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.62,
+          sc = H * 0.12;
+        const h = 0.6,
+          k = -0.8,
+          p = 1.1;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        ctx.strokeStyle = c.axis;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        let first = true;
+        for (let t = -3.5; t <= 3.5; t += 0.02) {
+          const px = ox + t * sc,
+            py = oy - ((t * t) / (4 * p)) * sc;
+          if (py > 10) {
+            first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+            first = false;
+          }
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        first = true;
+        for (let t = -3.5; t <= 3.5; t += 0.02) {
+          const px = ox + (h + t) * sc,
+            py = oy - (k + (t * t) / (4 * p)) * sc;
+          if (px > 10 && px < W - 10 && py > 10) {
+            first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+            first = false;
+          }
+        }
+        ctx.stroke();
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(ox + h * sc, H - 20);
+        ctx.lineTo(ox + h * sc, 20);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("x = h (axis)", ox + h * sc + 8, 30);
+        const vx = ox + h * sc,
+          vy = oy - k * sc;
+        ctx.fillStyle = c.accent;
+        ctx.beginPath();
+        ctx.arc(vx, vy, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.accent;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("vertex (h,k)", vx + 8, vy + 16);
+        const fx = vx,
+          fy = vy - p * sc;
+        ctx.fillStyle = c.mark;
+        ctx.beginPath();
+        ctx.arc(fx, fy, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.mark;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("F", fx + 8, fy - 6);
+        ctx.fillStyle = c.text;
+        ctx.font = '14px "STIX Two Text",serif';
+        ctx.fillText("(x−h)² = 4p(y−k)", W * 0.06, H * 0.1);
+      }
+
+      /* ── Figure 7: all four standard parabolas ── */
+      function drawParFour() {
+        const r = setupCanvas("parFourCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          sc = H * 0.1;
+        const p = 1.5;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        const pars = [
+          {
+            fn: (t) => [ox + ((t * t) / (4 * p)) * sc, oy - t * sc],
+            col: c.accent,
+            label: "(y−k)²=4p(x−h)",
+            lx: W * 0.72,
+            ly: H * 0.12,
+          },
+          {
+            fn: (t) => [ox - ((t * t) / (4 * p)) * sc, oy - t * sc],
+            col: c.secondary,
+            label: "(y−k)²=−4p(x−h)",
+            lx: W * 0.04,
+            ly: H * 0.12,
+          },
+          {
+            fn: (t) => [ox + t * sc, oy - ((t * t) / (4 * p)) * sc],
+            col: c.quat,
+            label: "(x−h)²=4p(y−k)",
+            lx: W * 0.6,
+            ly: H * 0.04,
+          },
+          {
+            fn: (t) => [ox + t * sc, oy + ((t * t) / (4 * p)) * sc],
+            col: c.mark,
+            label: "(x−h)²=−4p(y−k)",
+            lx: W * 0.6,
+            ly: H * 0.92,
+          },
+        ];
+        pars.forEach(({ fn, col, label, lx, ly }) => {
+          ctx.strokeStyle = col;
+          ctx.lineWidth = 2.2;
+          ctx.beginPath();
+          let first = true;
+          for (let t = -4; t <= 4; t += 0.02) {
+            const [px, py] = fn(t);
+            if (px > 10 && px < W - 10 && py > 10 && py < H - 10) {
+              first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+              first = false;
+            }
+          }
+          ctx.stroke();
+          ctx.fillStyle = col;
+          ctx.font = "11px Inter,sans-serif";
+          ctx.fillText(label, lx, ly);
+        });
+      }
+
+      /* ── Figure 8: 45° parabola ── */
+      function drawPar45() {
+        const r = setupCanvas("par45Canvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          sc = H * 0.1;
+        const p = 1;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([6, 5]);
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 4, oy + sc * 4);
+        ctx.lineTo(ox + sc * 4, oy - sc * 4);
+        ctx.stroke();
+        ctx.strokeStyle = c.axis;
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 4, oy - sc * 4);
+        ctx.lineTo(ox + sc * 4, oy + sc * 4);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillStyle = c.secondary;
+        ctx.fillText("y = x (axis)", ox + sc * 2.5, oy - sc * 2.8);
+        ctx.fillStyle = c.axis;
+        ctx.fillText("y = −x", ox + sc * 2.5, oy + sc * 2.8);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        let first = true;
+        const sq2 = Math.sqrt(2);
+        for (let t = -3.5; t <= 3.5; t += 0.02) {
+          const X = (t * t) / (4 * p),
+            Y = t;
+          const px = ox + ((X - Y) / sq2) * sc,
+            py = oy - ((X + Y) / sq2) * sc;
+          if (px > 10 && px < W - 10 && py > 10 && py < H - 10) {
+            first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+            first = false;
+          }
+        }
+        ctx.stroke();
+        ctx.fillStyle = c.accent;
+        ctx.beginPath();
+        ctx.arc(ox, oy, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.text;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("(y−x)² = 4p√2 (x+y)", W * 0.04, H * 0.08);
+      }
+
+      /* ── Figure 9: parabola, general axis ── */
+      function drawParGen() {
+        const r = setupCanvas("parGenCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.55,
+          sc = H * 0.11;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        const a = 1,
+          b = 2,
+          cc = 2,
+          p = 0.55;
+        const norm = Math.sqrt(a * a + b * b);
+        const tHat = [-b / norm, a / norm],
+          nHat = [a / norm, b / norm];
+        const foot = [(a * cc) / (norm * norm), (b * cc) / (norm * norm)];
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([7, 5]);
+        ctx.beginPath();
+        ctx.moveTo(
+          ox + (foot[0] - 4 * tHat[0]) * sc,
+          oy - (foot[1] - 4 * tHat[1]) * sc,
+        );
+        ctx.lineTo(
+          ox + (foot[0] + 4 * tHat[0]) * sc,
+          oy - (foot[1] + 4 * tHat[1]) * sc,
+        );
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText(
+          "axis: x + 2y = 2",
+          ox + (foot[0] + 2.4 * tHat[0]) * sc + 6,
+          oy - (foot[1] + 2.4 * tHat[1]) * sc - 6,
+        );
+        ctx.strokeStyle = c.axis;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(
+          ox + (foot[0] - 1.5 * nHat[0]) * sc,
+          oy - (foot[1] - 1.5 * nHat[1]) * sc,
+        );
+        ctx.lineTo(
+          ox + (foot[0] + 1.5 * nHat[0]) * sc,
+          oy - (foot[1] + 1.5 * nHat[1]) * sc,
+        );
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        let first = true;
+        for (let s = -2.4; s <= 2.4; s += 0.02) {
+          const P = (s * s) / (4 * p),
+            Q = s;
+          const X = foot[0] + P * tHat[0] + Q * nHat[0],
+            Y = foot[1] + P * tHat[1] + Q * nHat[1];
+          const px = ox + X * sc,
+            py = oy - Y * sc;
+          if (px > 10 && px < W - 10 && py > 10 && py < H - 10) {
+            first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+            first = false;
+          }
+        }
+        ctx.stroke();
+        ctx.fillStyle = c.accent;
+        ctx.beginPath();
+        ctx.arc(ox + foot[0] * sc, oy - foot[1] * sc, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.accent;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("vertex", ox + foot[0] * sc + 8, oy - foot[1] * sc + 16);
+        ctx.fillStyle = c.text;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("Q² = 4pP", W * 0.05, H * 0.1);
+      }
+
+      /* ── Figure 10: ellipse definition ── */
+      function drawEllDef() {
+        const r = setupCanvas("ellDefCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          ae = 2.5,
+          be = 1.6,
+          sc = H * 0.13;
+        const ce = Math.sqrt(ae * ae - be * be);
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.02) {
+          const px = ox + ae * Math.cos(t) * sc,
+            py = oy - be * Math.sin(t) * sc;
+          t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        const f1x = ox - ce * sc,
+          f2x = ox + ce * sc;
+        [f1x, f2x].forEach((fx, i) => {
+          ctx.fillStyle = c.mark;
+          ctx.beginPath();
+          ctx.arc(fx, oy, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = c.mark;
+          ctx.font = '13px "STIX Two Text",serif';
+          ctx.fillText(i === 0 ? "F₁" : "F₂", fx - 8, oy + 16);
+        });
+        const ang = Math.PI / 3.5,
+          Px = ox + ae * Math.cos(ang) * sc,
+          Py = oy - be * Math.sin(ang) * sc;
+        ctx.fillStyle = c.secondary;
+        ctx.beginPath();
+        ctx.arc(Px, Py, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.secondary;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("P", Px + 7, Py - 6);
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.3;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(f1x, oy);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(f2x, oy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("PF₁", (Px + f1x) / 2 - 16, (Py + oy) / 2 - 8);
+        ctx.fillText("PF₂", (Px + f2x) / 2 + 4, (Py + oy) / 2 - 8);
+        ctx.fillStyle = c.text;
+        ctx.fillText("PF₁ + PF₂ = 2a", W * 0.6, H * 0.12);
+      }
+
+      /* ── Figure 11: standard ellipse, labelled a, b, c ── */
+      function drawEllStd() {
+        const r = setupCanvas("ellStdCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          ae = 2.6,
+          be = 1.5,
+          sc = H * 0.12;
+        const ce = Math.sqrt(ae * ae - be * be);
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.02) {
+          const px = ox + ae * Math.cos(t) * sc,
+            py = oy - be * Math.sin(t) * sc;
+          t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.3;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(ox, oy);
+        ctx.lineTo(ox + ae * sc, oy);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(ox, oy);
+        ctx.lineTo(ox, oy - be * sc);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("a", ox + (ae * sc) / 2, oy - 8);
+        ctx.fillText("b", ox + 8, oy - (be * sc) / 2);
+        ctx.fillStyle = c.accent;
+        [
+          [ae, 0],
+          [-ae, 0],
+          [0, be],
+          [0, -be],
+        ].forEach(([x, y]) => {
+          ctx.beginPath();
+          ctx.arc(ox + x * sc, oy - y * sc, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        const f1x = ox - ce * sc,
+          f2x = ox + ce * sc;
+        [f1x, f2x].forEach((fx, i) => {
+          ctx.fillStyle = c.mark;
+          ctx.beginPath();
+          ctx.arc(fx, oy, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = c.mark;
+          ctx.font = '12px "STIX Two Text",serif';
+          ctx.fillText(i === 0 ? "F₁ (−c,0)" : "F₂ (c,0)", fx - 30, oy + 18);
+        });
+        ctx.fillStyle = c.text;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("x²/a² + y²/b² = 1,  c² = a² − b²", W * 0.04, H * 0.1);
+      }
+
+      /* ── Figure 12: circle as limiting case ── */
+      function drawCircle() {
+        const r = setupCanvas("circleCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          sc = H * 0.14;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        const ae = 2.2;
+        [1.8, 1.2, 0.6].forEach((cv) => {
+          const be = Math.sqrt(ae * ae - cv * cv);
+          ctx.strokeStyle = c.axis;
+          ctx.lineWidth = 1.3;
+          ctx.setLineDash([5, 4]);
+          ctx.beginPath();
+          for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.02) {
+            const px = ox + ae * Math.cos(t) * sc,
+              py = oy - be * Math.sin(t) * sc;
+            t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.fillStyle = c.mark;
+          ctx.beginPath();
+          ctx.arc(ox - cv * sc, oy, 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(ox + cv * sc, oy, 3, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.6;
+        ctx.beginPath();
+        for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.02) {
+          const px = ox + ae * Math.cos(t) * sc,
+            py = oy - ae * Math.sin(t) * sc;
+          t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fillStyle = c.mark;
+        ctx.beginPath();
+        ctx.arc(ox, oy, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillStyle = c.axis;
+        ctx.fillText("c → 0 (gray, foci sliding inward)", W * 0.04, H * 0.1);
+        ctx.fillStyle = c.accent;
+        ctx.fillText("c = 0 - a circle (orange)", W * 0.04, H * 0.17);
+      }
+
+      /* ── Figure 13: ellipse, vertical axis after translation ── */
+      function drawEllVert() {
+        const r = setupCanvas("ellVertCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.42,
+          oy = H * 0.58,
+          sc = H * 0.1;
+        const h = 0.8,
+          k = -0.6,
+          ae = 2.3,
+          be = 1.4;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        ctx.strokeStyle = c.axis;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.02) {
+          const px = ox + ae * Math.cos(t) * sc,
+            py = oy - be * Math.sin(t) * sc;
+          t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.02) {
+          const px = ox + (h + be * Math.cos(t)) * sc,
+            py = oy - (k + ae * Math.sin(t)) * sc;
+          t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fillStyle = c.accent;
+        ctx.beginPath();
+        ctx.arc(ox + h * sc, oy - k * sc, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.accent;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("center (h,k)", ox + h * sc + 8, oy - k * sc + 4);
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(ox + h * sc, H - 20);
+        ctx.lineTo(ox + h * sc, 20);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("x = h (major axis)", ox + h * sc + 8, 30);
+        const ce = Math.sqrt(ae * ae - be * be);
+        [k + ce, k - ce].forEach((fy) => {
+          ctx.fillStyle = c.mark;
+          ctx.beginPath();
+          ctx.arc(ox + h * sc, oy - fy * sc, 4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.fillStyle = c.text;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("(x−h)²/b² + (y−k)²/a² = 1", W * 0.04, H * 0.1);
+      }
+
+      /* ── Figure 14: 45° ellipse ── */
+      function drawEll45() {
+        const r = setupCanvas("ell45Canvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          sc = H * 0.11;
+        const ae = 2.5,
+          be = 1.5;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([6, 5]);
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 4, oy + sc * 4);
+        ctx.lineTo(ox + sc * 4, oy - sc * 4);
+        ctx.stroke();
+        ctx.strokeStyle = c.axis;
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 4, oy - sc * 4);
+        ctx.lineTo(ox + sc * 4, oy + sc * 4);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        const sq2 = Math.sqrt(2);
+        for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.02) {
+          const X = ae * Math.cos(t),
+            Y = be * Math.sin(t);
+          const px = ox + ((X - Y) / sq2) * sc,
+            py = oy - ((X + Y) / sq2) * sc;
+          t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fillStyle = c.accent;
+        ctx.beginPath();
+        ctx.arc(ox, oy, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.text;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("(x+y)²/2a² + (y−x)²/2b² = 1", W * 0.04, H * 0.08);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("major axis (y=x)", ox + sc * 1.5, oy - sc * 2.2);
+      }
+
+      /* ── Figure 15: ellipse, general axis ── */
+      function drawEllGen() {
+        const r = setupCanvas("ellGenCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          sc = H * 0.1;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        const a = 1,
+          b = 2,
+          cc = 1.5,
+          alpha = 2.4,
+          beta = 1.4;
+        const norm = Math.sqrt(a * a + b * b);
+        const tHat = [-b / norm, a / norm],
+          nHat = [a / norm, b / norm];
+        const foot = [(a * cc) / (norm * norm), (b * cc) / (norm * norm)];
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([7, 5]);
+        ctx.beginPath();
+        ctx.moveTo(
+          ox + (foot[0] - 4 * tHat[0]) * sc,
+          oy - (foot[1] - 4 * tHat[1]) * sc,
+        );
+        ctx.lineTo(
+          ox + (foot[0] + 4 * tHat[0]) * sc,
+          oy - (foot[1] + 4 * tHat[1]) * sc,
+        );
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText(
+          "axis: x + 2y = 1.5",
+          ox + (foot[0] + 3 * tHat[0]) * sc + 4,
+          oy - (foot[1] + 3 * tHat[1]) * sc - 6,
+        );
+        const ce = Math.sqrt(Math.max(alpha * alpha - beta * beta, 0));
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let th = 0; th <= Math.PI * 2 + 0.01; th += 0.02) {
+          const P = alpha * Math.cos(th),
+            Q = beta * Math.sin(th);
+          const X = foot[0] + P * tHat[0] + Q * nHat[0],
+            Y = foot[1] + P * tHat[1] + Q * nHat[1];
+          const px = ox + X * sc,
+            py = oy - Y * sc;
+          th === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        [ce, -ce].forEach((fp) => {
+          const X = foot[0] + fp * tHat[0],
+            Y = foot[1] + fp * tHat[1];
+          ctx.fillStyle = c.mark;
+          ctx.beginPath();
+          ctx.arc(ox + X * sc, oy - Y * sc, 4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.fillStyle = c.accent;
+        ctx.beginPath();
+        ctx.arc(ox + foot[0] * sc, oy - foot[1] * sc, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.text;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("P²/α² + Q²/β² = 1", W * 0.04, H * 0.1);
+      }
+
+      /* ── Figure 16: hyperbola definition ── */
+      function drawHypDef() {
+        const r = setupCanvas("hypDefCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          ah = 1.5,
+          bh = 1.2,
+          sc = H * 0.12;
+        const ch = Math.sqrt(ah * ah + bh * bh);
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        const slope = bh / ah;
+        ctx.strokeStyle = c.axis;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 4, oy + sc * 4 * slope);
+        ctx.lineTo(ox + sc * 4, oy - sc * 4 * slope);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 4, oy - sc * 4 * slope);
+        ctx.lineTo(ox + sc * 4, oy + sc * 4 * slope);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        [1, -1].forEach((sign) => {
+          ctx.beginPath();
+          let first = true;
+          for (let t = -3; t <= 3; t += 0.02) {
+            const x = sign * ah * Math.cosh(t),
+              y = bh * Math.sinh(t);
+            const px = ox + x * sc,
+              py = oy - y * sc;
+            if (px > 15 && px < W - 15 && py > 15 && py < H - 15) {
+              first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+              first = false;
+            }
+          }
+          ctx.stroke();
+        });
+        const f1x = ox - ch * sc,
+          f2x = ox + ch * sc;
+        [f1x, f2x].forEach((fx, i) => {
+          ctx.fillStyle = c.mark;
+          ctx.beginPath();
+          ctx.arc(fx, oy, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = c.mark;
+          ctx.font = '13px "STIX Two Text",serif';
+          ctx.fillText(i === 0 ? "F₁" : "F₂", fx - 8, oy + 16);
+        });
+        const tp = 0.7,
+          Px = ox + ah * Math.cosh(tp) * sc,
+          Py = oy - bh * Math.sinh(tp) * sc;
+        ctx.fillStyle = c.secondary;
+        ctx.beginPath();
+        ctx.arc(Px, Py, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = c.secondary;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("P", Px + 7, Py - 6);
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(f1x, oy);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(Px, Py);
+        ctx.lineTo(f2x, oy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.text;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("x²/a² − y²/b² = 1", W * 0.6, H * 0.1);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("|PF₁−PF₂| = 2a", W * 0.55, H * 0.88);
+      }
+
+      /* ── Figure 17: standard hyperbola, labelled a, b, c ── */
+      function drawHypStd() {
+        const r = setupCanvas("hypStdCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          ah = 1.6,
+          bh = 1.3,
+          sc = H * 0.12;
+        const ch = Math.sqrt(ah * ah + bh * bh);
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        const slope = bh / ah;
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 4, oy + sc * 4 * slope);
+        ctx.lineTo(ox + sc * 4, oy - sc * 4 * slope);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 4, oy - sc * 4 * slope);
+        ctx.lineTo(ox + sc * 4, oy + sc * 4 * slope);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText(
+          "asymptotes y = ±(b/a)x",
+          ox + sc * 2.4,
+          oy - sc * 2.4 * slope - 8,
+        );
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        [1, -1].forEach((sign) => {
+          ctx.beginPath();
+          let first = true;
+          for (let t = -3; t <= 3; t += 0.02) {
+            const x = sign * ah * Math.cosh(t),
+              y = bh * Math.sinh(t);
+            const px = ox + x * sc,
+              py = oy - y * sc;
+            if (px > 15 && px < W - 15 && py > 15 && py < H - 15) {
+              first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+              first = false;
+            }
+          }
+          ctx.stroke();
+        });
+        ctx.fillStyle = c.accent;
+        [
+          [ah, 0],
+          [-ah, 0],
+        ].forEach(([x, y]) => {
+          ctx.beginPath();
+          ctx.arc(ox + x * sc, oy - y * sc, 4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.fillStyle = c.text;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText("a", ox + (ah * sc) / 2, oy - 8);
+        const f1x = ox - ch * sc,
+          f2x = ox + ch * sc;
+        [f1x, f2x].forEach((fx, i) => {
+          ctx.fillStyle = c.mark;
+          ctx.beginPath();
+          ctx.arc(fx, oy, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = c.mark;
+          ctx.font = '13px "STIX Two Text",serif';
+          ctx.fillText(i === 0 ? "F₁" : "F₂", fx - 8, oy + 18);
+        });
+        ctx.fillStyle = c.text;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("x²/a² − y²/b² = 1,  c² = a² + b²", W * 0.04, H * 0.1);
+      }
+
+      /* ── Figure 18: hyperbola, both orientations ── */
+      function drawHypBoth() {
+        const r = setupCanvas("hypBothCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        [
+          [W * 0.28, H * 0.5, 1],
+          [W * 0.73, H * 0.5, 0],
+        ].forEach(([ox, oy, horiz], idx) => {
+          const ah = 1.3,
+            bh = 1,
+            sc = H * 0.13;
+          drawGrid(ctx, W / 2 - 10, H, ox, oy, sc, c);
+          drawAxes(ctx, W, H, ox, oy, sc, c);
+          const col = idx === 0 ? c.accent : c.secondary;
+          ctx.strokeStyle = col;
+          ctx.lineWidth = 2.2;
+          [1, -1].forEach((sign) => {
+            ctx.beginPath();
+            let first = true;
+            for (let t = -2.5; t <= 2.5; t += 0.02) {
+              let px, py;
+              if (horiz) {
+                px = ox + sign * ah * Math.cosh(t) * sc;
+                py = oy - bh * Math.sinh(t) * sc;
+              } else {
+                py = oy - sign * ah * Math.cosh(t) * sc;
+                px = ox + bh * Math.sinh(t) * sc;
+              }
+              if (px > W * 0.02 && px < W * 0.98 && py > 15 && py < H - 15) {
+                first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+                first = false;
+              }
+            }
+            ctx.stroke();
+          });
+          ctx.fillStyle = col;
+          ctx.font = "12px Inter,sans-serif";
+          const lbl = horiz ? "x²/a²−y²/b²=1" : "y²/a²−x²/b²=1";
+          ctx.fillText(lbl, ox - 50, oy - H * 0.38);
+        });
+      }
+
+      /* ── Figure 19: rectangular hyperbola ── */
+      function drawHypRect() {
+        const r = setupCanvas("hypRectCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          sc = H * 0.12;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        const k = 2;
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        [1, -1].forEach((sign) => {
+          ctx.beginPath();
+          let first = true;
+          for (let x = 0.15; x <= 5; x += 0.02) {
+            const y = (sign * k) / x;
+            const px = ox + x * sc,
+              py = oy - y * sc;
+            if (px < W - 10 && py > 10 && py < H - 10) {
+              first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+              first = false;
+            }
+          }
+          ctx.stroke();
+          ctx.beginPath();
+          first = true;
+          for (let x = 0.15; x <= 5; x += 0.02) {
+            const y = (-sign * k) / x;
+            const px = ox - x * sc,
+              py = oy - y * sc;
+            if (px > 10 && py > 10 && py < H - 10) {
+              first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+              first = false;
+            }
+          }
+          ctx.stroke();
+        });
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 4]);
+        const a2 = 2 * k;
+        [1, -1].forEach((sign) => {
+          ctx.beginPath();
+          let first = true;
+          for (let t = -2.5; t <= 2.5; t += 0.02) {
+            const px = ox + sign * Math.sqrt(a2) * Math.cosh(t) * sc,
+              py = oy - Math.sqrt(a2) * Math.sinh(t) * sc;
+            if (px > 10 && px < W - 10 && py > 10 && py < H - 10) {
+              first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+              first = false;
+            }
+          }
+          ctx.stroke();
+        });
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.accent;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("xy = k", W * 0.68, H * 0.1);
+        ctx.fillStyle = c.secondary;
+        ctx.fillText("x²−y²=const", W * 0.04, H * 0.1);
+        ctx.strokeStyle = c.axis;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.moveTo(ox - sc * 3, oy + sc * 3);
+        ctx.lineTo(ox + sc * 3, oy - sc * 3);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.axis;
+        ctx.font = "11px Inter,sans-serif";
+        ctx.fillText("45° rotation", ox + sc, oy - sc * 2.5);
+      }
+
+      /* ── Figure 20: hyperbola, general axis ── */
+      function drawHypGen() {
+        const r = setupCanvas("hypGenCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          sc = H * 0.11;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        const a = 1,
+          b = 2,
+          cc = 1.5,
+          ah = 1.3,
+          bh = 1.1;
+        const norm = Math.sqrt(a * a + b * b);
+        const tHat = [-b / norm, a / norm],
+          nHat = [a / norm, b / norm];
+        const foot = [(a * cc) / (norm * norm), (b * cc) / (norm * norm)];
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([7, 5]);
+        ctx.beginPath();
+        ctx.moveTo(
+          ox + (foot[0] - 4 * tHat[0]) * sc,
+          oy - (foot[1] - 4 * tHat[1]) * sc,
+        );
+        ctx.lineTo(
+          ox + (foot[0] + 4 * tHat[0]) * sc,
+          oy - (foot[1] + 4 * tHat[1]) * sc,
+        );
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = c.secondary;
+        ctx.font = "12px Inter,sans-serif";
+        ctx.fillText(
+          "axis: x + 2y = 1.5",
+          ox + (foot[0] + 3 * tHat[0]) * sc + 4,
+          oy - (foot[1] + 3 * tHat[1]) * sc - 6,
+        );
+        const ch = Math.sqrt(ah * ah + bh * bh);
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        [1, -1].forEach((sign) => {
+          ctx.beginPath();
+          let first = true;
+          for (let t = -2.2; t <= 2.2; t += 0.02) {
+            const P = sign * ah * Math.cosh(t),
+              Q = bh * Math.sinh(t);
+            const X = foot[0] + P * tHat[0] + Q * nHat[0],
+              Y = foot[1] + P * tHat[1] + Q * nHat[1];
+            const px = ox + X * sc,
+              py = oy - Y * sc;
+            if (px > 10 && px < W - 10 && py > 10 && py < H - 10) {
+              first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+              first = false;
+            }
+          }
+          ctx.stroke();
+        });
+        [ch, -ch].forEach((fp) => {
+          const X = foot[0] + fp * tHat[0],
+            Y = foot[1] + fp * tHat[1];
+          ctx.fillStyle = c.mark;
+          ctx.beginPath();
+          ctx.arc(ox + X * sc, oy - Y * sc, 4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.fillStyle = c.text;
+        ctx.font = '13px "STIX Two Text",serif';
+        ctx.fillText("P²/a² − Q²/b² = 1", W * 0.04, H * 0.1);
+      }
+
+      /* ── Figure 21: all conics ── */
+      function drawAllConics() {
+        const r = setupCanvas("allConicsCanvas");
+        if (!r) return;
+        const { ctx, W, H } = r;
+        const c = getColors();
+        const ox = W * 0.5,
+          oy = H * 0.5,
+          sc = H * 0.1;
+        ctx.fillStyle = c.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawGrid(ctx, W, H, ox, oy, sc, c);
+        drawAxes(ctx, W, H, ox, oy, sc, c);
+        const p = 1.2;
+        ctx.strokeStyle = c.accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        let first = true;
+        for (let t = -3.5; t <= 3.5; t += 0.02) {
+          const px = ox + ((t * t) / (4 * p)) * sc,
+            py = oy - t * sc;
+          if (px < W - 10 && py > 10 && py < H - 10) {
+            first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+            first = false;
+          }
+        }
+        ctx.stroke();
+        ctx.strokeStyle = c.secondary;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.02) {
+          const px = ox + 2.5 * Math.cos(t) * sc,
+            py = oy - 1.5 * Math.sin(t) * sc;
+          t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.strokeStyle = c.quat;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(ox, oy, 1.8 * sc, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.strokeStyle = c.mark;
+        ctx.lineWidth = 2.5;
+        [1, -1].forEach((sign) => {
+          ctx.beginPath();
+          first = true;
+          for (let t = -2.5; t <= 2.5; t += 0.02) {
+            const px = ox + sign * 1.2 * Math.cosh(t) * sc,
+              py = oy - 0.9 * Math.sinh(t) * sc;
+            if (px > 10 && px < W - 10 && py > 10 && py < H - 10) {
+              first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+              first = false;
+            }
+          }
+          ctx.stroke();
+        });
+        const items = [
+          [c.accent, "Parabola: Q² = 4pP"],
+          [c.secondary, "Ellipse: P²/α² + Q²/β² = 1"],
+          [c.quat, "Circle: P² + Q² = r²"],
+          [c.mark, "Hyperbola: P²/α² − Q²/β² = 1"],
+        ];
+        let ly = H * 0.08;
+        items.forEach(([col, lbl]) => {
+          ctx.strokeStyle = col;
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(W * 0.58, ly - 4);
+          ctx.lineTo(W * 0.65, ly - 4);
+          ctx.stroke();
+          ctx.fillStyle = col;
+          ctx.font = "11px Inter,sans-serif";
+          ctx.fillText(lbl, W * 0.66, ly);
+          ly += 24;
+        });
+      }
+
+      function drawAll() {
+        drawRotCanvas();
+        drawRotGen();
+        drawParDef();
+        drawParStd();
+        drawParTrans();
+        drawParUp();
+        drawParFour();
+        drawPar45();
+        drawParGen();
+        drawEllDef();
+        drawEllStd();
+        drawCircle();
+        drawEllVert();
+        drawEll45();
+        drawEllGen();
+        drawHypDef();
+        drawHypStd();
+        drawHypBoth();
+        drawHypRect();
+        drawHypGen();
+        drawAllConics();
+      }
+
+      if (document.readyState === "loading")
+        document.addEventListener("DOMContentLoaded", drawAll);
+      else drawAll();
+      window.addEventListener("resize", drawAll);
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", drawAll);
+    </script>
+  </body>
+</html>
