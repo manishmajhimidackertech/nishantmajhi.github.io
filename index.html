@@ -1,53 +1,70 @@
 ---
 layout: default
-title: "Projects | Manish Majhi"
+title: "Manish Majhi · Software Developer"
 ---
-<header>
-  <h1>Projects</h1>
-  <p class="tagline">A running ledger of things built for the fun of building them − from a grade calculator to a recursive multiplier.</p>
-</header>
+<section class="hero" id="top">
+  <canvas id="plot" aria-hidden="true"></canvas>
 
-<div class="stats">
-  <div class="stat"><div class="val">{{ site.data.projects.size }}</div><div class="lbl">Featured builds</div></div>
-  <div class="stat"><div class="val" id="repo-count">−</div><div class="lbl">Repos</div></div>
-  <div class="stat"><div class="val" id="lang-count">−</div><div class="lbl">Categories</div></div>
-</div>
+  <div class="readout" aria-hidden="true">
+    <span class="tag">FIG. 00</span>
+    <strong id="conic-name">ELLIPSE</strong>
+    <span>PF ÷ PD = <b id="conic-e">0.62</b></span>
+    <span class="hint">↔ move</span>
+  </div>
 
-<div class="section-label" id="featured">
-  <span class="num">01</span>
-  <h2>Featured entries</h2>
-  <span class="rest"></span>
-</div>
+  <div class="hero-foot">
+    <h1><span class="l1"><span>Manish</span></span><span class="l2"><span>Majhi</span></span></h1>
 
-<div class="grid">
-  {% for project in site.data.projects %}
-  <div class="card">
-    <a href="{{ project.folder }}/" style="display:block;">
-      <div class="thumb">
-        <span class="entry-badge">No. {% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
-        <img src="{{ '/assets/thumbs/' | append: project.thumb | relative_url }}" alt="{{ project.title }} preview" loading="lazy" />
+    <dl class="titleblock">
+      <div><dt>Role</dt><dd>Software Developer</dd></div>
+      <div><dt>Base</dt><dd>Kathmandu, NP</dd></div>
+      <div><dt>Core</dt><dd>C · JS · PHP · Linux</dd></div>
+      <div><dt>Live builds</dt><dd class="num">{{ site.data.projects.size }}</dd></div>
+      <div><dt>Repos</dt><dd class="num" id="repo-count">−</dd></div>
+      <div><dt>Stacks</dt><dd class="num" id="lang-count">−</dd></div>
+      <div class="status"><dt>Status</dt><dd><a href="#contact"><i class="pulse"></i>Open to work</a></dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="sheet" id="work">
+  <div class="dim"><span class="dim-no">01</span><h2>Work</h2><i></i><span class="dim-n">{{ site.data.projects.size }}</span></div>
+
+  <div class="figs">
+    {% for project in site.data.projects %}
+    <a class="fig" href="{{ project.folder }}/" data-demo="{{ project.folder }}">
+      <div class="fig-stage">
+        <canvas aria-hidden="true"></canvas>
+        <img src="{{ '/assets/thumbs/' | append: project.thumb | relative_url }}" alt="" loading="lazy" />
       </div>
+      <div class="fig-cap">
+        <span class="fig-no">FIG. {% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+        <h3>{{ project.title }}</h3>
+        <span class="fig-go" aria-hidden="true">↗</span>
+      </div>
+      <span class="sr">{{ project.desc }}</span>
     </a>
-    <div class="card-body">
-      <a class="title-link" href="{{ project.folder }}/"><h3>{{ project.title }}</h3></a>
-      <div class="byline">{{ project.byline }}</div>
-      <p class="desc">{{ project.desc }}</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="sheet paper" id="index">
+  <div class="dim"><span class="dim-no">02</span><h2>Index</h2><i></i><span class="dim-n" id="index-n">−</span></div>
+
+  <div class="spectrum" id="spectrum" aria-hidden="true"></div>
+
+  <label class="filter">
+    <span class="sr">Filter repositories</span>
+    <input id="repo-filter" type="search" placeholder="filter" autocomplete="off" spellcheck="false" />
+    <kbd>/</kbd>
+  </label>
+
+  <nav id="repo-nav" aria-label="Repositories">
+    <div id="repo-list">
+      <div id="loading-msg">Loading GitHub repos…</div>
     </div>
-  </div>
-  {% endfor %}
-</div>
-
-<div class="section-label" id="index">
-  <span class="num">02</span>
-  <h2>Index</h2>
-  <span class="rest"></span>
-</div>
-
-<nav id="repo-nav">
-  <div id="repo-list">
-    <div id="loading-msg" style="font-family:var(--mono); font-size:0.85rem; color:var(--faint);">Loading GitHub repos…</div>
-  </div>
-</nav>
+  </nav>
+</section>
 
 <script>
   const USERNAME = {{ site.github_username | jsonify }};
@@ -59,3 +76,26 @@ title: "Projects | Manish Majhi"
   const REPO_CATEGORY = {{ site.repo_categories | jsonify }};
 </script>
 <script src="{{ '/assets/js/repo-index.js' | relative_url }}"></script>
+
+<section class="sheet" id="path">
+  <div class="dim"><span class="dim-no">03</span><h2>Path</h2><i></i><span class="dim-n">2019 →</span></div>
+
+  <ol class="path">
+    <li><time>2019 – 23</time><b>BSc. CSIT</b><span>Mechi Multiple Campus</span></li>
+    <li><time>2024</time><b>PHP Developer, Intern</b><span>Crystal Solution</span></li>
+    <li><time>2024 – 26</time><b>Computer Science Teacher</b><span>Nidi Secondary School</span></li>
+    <li class="now"><time>2026 →</time><b>MSc. CSIT</b><span>Tribhuvan University</span></li>
+  </ol>
+</section>
+
+<section class="sheet signal" id="contact">
+  <div class="dim"><span class="dim-no">04</span><h2>Contact</h2><i></i><span class="dim-n">27.7°N 85.3°E</span></div>
+
+  <a class="mail" id="mail" href="mailto:manishmajhi79@gmail.com">manishmajhi79<wbr />@gmail.com</a>
+
+  <div class="actions">
+    <button type="button" id="copy-mail" data-mail="manishmajhi79@gmail.com">Copy</button>
+    <a href="{{ '/Resume/Manish_Majhi-Resume.pdf' | relative_url }}" download>Résumé ↓</a>
+    <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+  </div>
+</section>
