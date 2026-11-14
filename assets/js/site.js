@@ -1,6 +1,6 @@
 /*
- * A sand mandala. A design is drawn from a number, with twelve outer petals
- * for the twelve works, then turned into loose grains that pour out from the
+ * A sand mandala. A design is drawn from a number, with twelve outer petals,
+ * then turned into loose grains that pour out from the
  * centre. Dragging moves the sand and it stays moved. Sweeping gathers every
  * grain back to the centre and pours a design that has not existed before.
  *
@@ -30,7 +30,7 @@
 
   /* -- drawing a design ---------------------------------------------------- */
 
-  const PETALS = 12; // one per work
+  const PETALS = 12;
   const OUTER = 0.74; // where the twelve petals begin, as a fraction of the radius
   const CREAM = "#f4ecdc";
 
@@ -211,14 +211,13 @@
   let onStage = true; // whether the first page is on screen
 
   let count = 0;
-  let X, Y, VX, VY, HX, HY, HR, HA, DELAY, COL, LIT, PET;
+  let X, Y, VX, VY, HX, HY, HR, HA, DELAY, COL;
 
   let seed = 0;
   let phase = "form"; // form | rest | sweep
   let phaseStart = 0;
   let formEnd = 0;
   let awake = 0; // frames of physics left to run
-  let hover = -1;
   let tick = 0;
   let stale = true;
 
@@ -255,11 +254,9 @@
     HX = new Float32Array(max); HY = new Float32Array(max);
     HR = new Float32Array(max); HA = new Float32Array(max);
     DELAY = new Float32Array(max);
-    COL = new Uint32Array(max); LIT = new Uint32Array(max);
-    PET = new Int8Array(max);
+    COL = new Uint32Array(max);
 
     let n = 0;
-    const up = -Math.PI / 2, step = TAU / PETALS;
     for (let y = 0; y < S; y++) {
       for (let x = 0; x < S; x++) {
         const i = (y * S + x) * 4;
@@ -275,8 +272,6 @@
         const k = 0.8 + jitter() * 0.34;
         const cr = Math.min(255, data[i] * k), cg = Math.min(255, data[i + 1] * k), cb = Math.min(255, data[i + 2] * k);
         COL[n] = (255 << 24) | (cb << 16) | (cg << 8) | cr;
-        LIT[n] = (255 << 24) | ((cb + (255 - cb) * 0.45) << 16) | ((cg + (255 - cg) * 0.45) << 8) | (cr + (255 - cr) * 0.45);
-        PET[n] = r > RAD * OUTER ? Math.round((((a - up) % TAU) + TAU) / step) % PETALS : -1;
         n++;
       }
     }
@@ -310,7 +305,7 @@
 
   const plot = (i) => {
     const px = X[i] | 0, py = Y[i] | 0;
-    if (px >= 0 && px < BW && py >= 0 && py < BH) pixels[py * BW + px] = PET[i] === hover ? LIT[i] : COL[i];
+    if (px >= 0 && px < BW && py >= 0 && py < BH) pixels[py * BW + px] = COL[i];
   };
 
   function frame(now) {
@@ -386,35 +381,6 @@
 
   /* -- hands --------------------------------------------------------------- */
 
-  const works = [...document.querySelectorAll("#works a")].map((a) => ({
-    title: a.querySelector("b").textContent,
-    href: a.href,
-  }));
-  const petalLink = $("petal");
-
-  function show(id) {
-    if (id === hover) return;
-    hover = id;
-    stale = true;
-    canvas.classList.toggle("petal", id >= 0);
-    const work = works[id];
-    petalLink.hidden = !work;
-    if (work) {
-      petalLink.href = work.href;
-      petalLink.textContent = "";
-      const num = document.createElement("i");
-      num.textContent = String(id + 1).padStart(2, "0");
-      petalLink.append(num, work.title);
-    }
-  }
-
-  function petalAt(bx, by) {
-    const r = Math.hypot(bx - CX, by - CY) / RAD;
-    if (r < OUTER || r > 1) return -1;
-    const a = Math.atan2(by - CY, bx - CX) + Math.PI / 2;
-    return Math.round((((a % TAU) + TAU) % TAU) / (TAU / PETALS)) % PETALS;
-  }
-
   // Push the sand along a stroke from (x0, y0) to (x1, y1).
   function drag(x0, y0, x1, y1) {
     const reach = RAD * 0.085, reach2 = reach * reach;
@@ -466,36 +432,20 @@
       }
       held.x = x;
       held.y = y;
-    } else if (ev.pointerType !== "touch" && phase === "rest") show(petalAt(x, y));
+    }
   });
-  const release = (ev) => {
-    if (!held) return;
-    const tapped = held.moved <= 6 * scale;
-    const type = held.type;
+  const release = () => {
     held = null;
     canvas.classList.remove("drag");
-    if (!tapped || phase !== "rest") return;
-    const [x, y] = toBuffer(ev);
-    const id = petalAt(x, y);
-    // a mouse has already seen the name by hovering; a finger sees it first
-    if (type === "mouse" && id >= 0 && works[id]) location.href = works[id].href;
-    else show(id);
   };
   canvas.addEventListener("pointerup", release);
-  canvas.addEventListener("pointercancel", () => {
-    held = null;
-    canvas.classList.remove("drag");
-  });
-  canvas.addEventListener("pointerleave", () => {
-    if (!held) show(-1);
-  });
+  canvas.addEventListener("pointercancel", release);
 
   const freshSeed = () => 1 + Math.floor(Math.random() * 999999);
 
   function sweep() {
     if (phase === "sweep") return;
     if (still) return pour(freshSeed());
-    show(-1);
     for (let i = 0; i < count; i++) {
       const dx = X[i] - CX, dy = Y[i] - CY;
       HR[i] = Math.hypot(dx, dy);
