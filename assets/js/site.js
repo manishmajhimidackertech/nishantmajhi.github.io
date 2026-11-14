@@ -606,37 +606,93 @@
     g.putImageData(out, 0, 0);
   }
 
-  /* -- the repositories: a filter ------------------------------------------ */
+  /* -- the repositories: a ledger, and a filter ---------------------------- */
 
   const input = $("repo-filter");
   const list = $("repo-list");
 
+  /*
+   * repo-index.js writes each stack as a heading followed by a flat run of
+   * kinds and rows. Gather every kind and the rows under it into one line,
+   * so a line can be laid out, and hidden, as a unit.
+   */
+  function arrange() {
+    const groups = list.querySelectorAll(".lang-group:not(.arranged)");
+    for (const group of groups) {
+      group.classList.add("arranged");
+      const heading = group.querySelector("h4");
+      const rows = group.querySelectorAll(".index-row").length;
+      const tally = document.createElement("small");
+      tally.textContent = rows;
+      heading.append(tally);
+
+      let line = null;
+      const open = (sub) => {
+        line = document.createElement("div");
+        line.className = sub ? "kind" : "kind bare";
+        const names = document.createElement("div");
+        names.className = "names";
+        group.insertBefore(line, sub || null);
+        if (sub) line.append(sub);
+        line.append(names);
+        return line;
+      };
+      for (const el of [...group.children].slice(1)) {
+        if (el.classList.contains("index-sub")) open(el);
+        else if (el.classList.contains("index-row")) {
+          if (!line) {
+            line = open(null);
+            group.insertBefore(line, el);
+          }
+          line.lastChild.append(el);
+        }
+      }
+    }
+    mark();
+    return groups.length > 0;
+  }
+
+  // The last name showing on each line carries no grain after it.
+  function mark() {
+    for (const names of list.querySelectorAll(".names")) {
+      let last = null;
+      for (const row of names.children) {
+        row.classList.remove("last");
+        if (!row.hidden) last = row;
+      }
+      if (last) last.classList.add("last");
+    }
+  }
+
   function filter() {
     const q = input.value.trim().toLowerCase();
     for (const group of list.querySelectorAll(".lang-group")) {
-      const heading = group.querySelector("h4").textContent.toLowerCase();
+      const heading = group.querySelector("h4").firstChild.textContent.toLowerCase();
       let any = false;
-      let sub = null, subText = "", subAny = false;
-      const closeSub = () => {
-        if (sub) sub.hidden = !subAny;
-      };
-      for (const el of [...group.children].slice(1)) {
-        if (el.classList.contains("index-sub")) {
-          closeSub();
-          sub = el;
-          subText = el.textContent.toLowerCase();
-          subAny = false;
-          continue;
+      for (const line of group.querySelectorAll(".kind")) {
+        const sub = line.querySelector(".index-sub");
+        const subText = sub ? sub.textContent.toLowerCase() : "";
+        let lineAny = false;
+        for (const row of line.querySelectorAll(".index-row")) {
+          const hit = !q || heading.includes(q) || subText.includes(q) || row.textContent.toLowerCase().includes(q);
+          row.hidden = !hit;
+          if (hit) lineAny = true;
         }
-        const hit = !q || heading.includes(q) || subText.includes(q) || el.textContent.toLowerCase().includes(q);
-        el.hidden = !hit;
-        if (hit) any = subAny = true;
+        line.hidden = !lineAny;
+        if (lineAny) any = true;
       }
-      closeSub();
       group.hidden = !any;
     }
+    mark();
   }
   input.addEventListener("input", filter);
+
+  if (!arrange()) {
+    const watch = new MutationObserver(() => {
+      if (arrange()) watch.disconnect();
+    });
+    watch.observe(list, { childList: true });
+  }
 
   addEventListener("keydown", (ev) => {
     const typing = document.activeElement === input;
