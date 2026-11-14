@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#04050d" />
 <link rel="shortcut icon" href="{{ '/favicon.ico' | relative_url }}" type="image/x-icon" />
 <title>{{ page.title | default: site.title }}</title>
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
 
 <!-- SEO: Primary Meta Tags -->
 <meta name="title" content="{{ page.title | default: site.title }}" />
@@ -28,44 +28,29 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
 </head>
 <body>
 
-<nav class="site-nav">
-  <div class="brand"><span class="path">~/manish-majhi/projects</span> $ <span id="typed"></span><span class="cursor">&nbsp;</span></div>
-  <div class="links">
-    <a href="#featured">Featured</a>
-    <a href="#index">Index</a>
-    <a class="resume" href="{{ '/Resume/Manish_Majhi-Resume.pdf' | relative_url }}" download>Download Resume</a>
-  </div>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<nav class="site-nav" aria-label="Site">
+  <a class="mark" href="#top">Manish Majhi</a>
+  <a href="#work">Work</a>
+  <a href="#index">Index</a>
+  <a href="#path">Path</a>
+  <a href="#contact">Contact</a>
+  <a class="resume" href="{{ '/Resume/Manish_Majhi-Resume.pdf' | relative_url }}" download>Résumé ↓</a>
 </nav>
 
-<div class="wrap">
-  {{ content }}
+<div class="clock" aria-hidden="true"><i id="clock-dot"></i><b id="clock-time">02:00</b><span>Kathmandu</span></div>
+<div class="star-tip" id="star-tip" aria-hidden="true"></div>
 
-  <footer>
-    <div class="note">Balance carried forward.</div>
-    <div class="links">
-      <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer">GitHub</a>
-      <a href="#">LinkedIn</a>
-    </div>
-  </footer>
-</div>
+<main>
+{{ content }}
+</main>
 
-<script>
-  const text = "whoami";
-  const el = document.getElementById('typed');
-  let i = 0;
-  function type(){
-    if(i <= text.length){
-      el.textContent = text.slice(0, i);
-      i++;
-      setTimeout(type, 90);
-    }
-  }
-  type();
-</script>
-
+<script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
 </body>
 </html>
