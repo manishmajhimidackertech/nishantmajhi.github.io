@@ -1,53 +1,57 @@
 ---
 layout: default
-title: "Projects | Manish Majhi"
+title: "Manish Majhi"
 ---
-<header>
-  <h1>Projects</h1>
-  <p class="tagline">A running ledger of things built for the fun of building them − from a grade calculator to a recursive multiplier.</p>
+<canvas id="sand" aria-hidden="true"></canvas>
+
+<header class="sig">
+  <h1>Manish <em>Majhi</em></h1>
+  <p>Software developer · Kathmandu</p>
 </header>
 
-<div class="stats">
-  <div class="stat"><div class="val">{{ site.data.projects.size }}</div><div class="lbl">Featured builds</div></div>
-  <div class="stat"><div class="val" id="repo-count">−</div><div class="lbl">Repos</div></div>
-  <div class="stat"><div class="val" id="lang-count">−</div><div class="lbl">Categories</div></div>
-</div>
-
-<div class="section-label" id="featured">
-  <span class="num">01</span>
-  <h2>Featured entries</h2>
-  <span class="rest"></span>
-</div>
-
-<div class="grid">
-  {% for project in site.data.projects %}
-  <div class="card">
-    <a href="{{ project.folder }}/" style="display:block;">
-      <div class="thumb">
-        <span class="entry-badge">No. {% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
-        <img src="{{ '/assets/thumbs/' | append: project.thumb | relative_url }}" alt="{{ project.title }} preview" loading="lazy" />
-      </div>
-    </a>
-    <div class="card-body">
-      <a class="title-link" href="{{ project.folder }}/"><h3>{{ project.title }}</h3></a>
-      <div class="byline">{{ project.byline }}</div>
-      <p class="desc">{{ project.desc }}</p>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-
-<div class="section-label" id="index">
-  <span class="num">02</span>
-  <h2>Index</h2>
-  <span class="rest"></span>
-</div>
-
-<nav id="repo-nav">
-  <div id="repo-list">
-    <div id="loading-msg" style="font-family:var(--mono); font-size:0.85rem; color:var(--faint);">Loading GitHub repos…</div>
-  </div>
+<nav class="links" aria-label="Site">
+  <button type="button" id="open-index" aria-controls="drawer" aria-expanded="false">Index</button>
+  <a href="{{ '/Resume/Manish_Majhi-Resume.pdf' | relative_url }}" download>Résumé</a>
+  <a href="mailto:manishmajhi79@gmail.com">Say hello</a>
 </nav>
+
+<p class="caption" aria-live="polite">
+  <a id="petal" hidden></a>
+  <span id="hint">Twelve petals, twelve works · draw a finger through the sand</span>
+</p>
+
+<p class="number" aria-hidden="true">Nº <b id="seed">······</b></p>
+<button type="button" class="sweep" id="sweep">Sweep it away</button>
+
+<aside class="drawer" id="drawer" aria-label="Index">
+  <button type="button" class="close" id="close-index" aria-label="Close">×</button>
+
+  <h2>Works</h2>
+  <ol class="works" id="works">
+    {% for project in site.data.projects %}
+    <li><a href="{{ project.folder }}/">{{ project.title }}</a></li>
+    {% endfor %}
+  </ol>
+
+  <h2>Repositories</h2>
+  <p class="tally"><b id="repo-count">−</b> in <b id="lang-count">−</b> stacks</p>
+
+  <label class="filter">
+    <span class="sr">Filter repositories</span>
+    <input id="repo-filter" type="search" placeholder="Search" autocomplete="off" spellcheck="false" />
+  </label>
+
+  <nav id="repo-nav" aria-label="Repositories">
+    <div id="repo-list">
+      <div id="loading-msg">Loading GitHub repos…</div>
+    </div>
+  </nav>
+
+  <p class="reach">
+    <a href="mailto:manishmajhi79@gmail.com">manishmajhi79@gmail.com</a>
+    <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+  </p>
+</aside>
 
 <script>
   const USERNAME = {{ site.github_username | jsonify }};
