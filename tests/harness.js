@@ -35,6 +35,37 @@ const ROOT = path.join(__dirname, "..");
  */
 const BASELINE_SUBJECT = "used flex instead of grid";
 
+/*
+ * Thrown when this clone's history does not hold that commit -- a copy of the
+ * repository started from a single squashed commit, say. The code the
+ * regression tests compare against is then simply not here to run.
+ */
+class BaselineMissing extends Error {
+  constructor() {
+    super(`no commit with the subject "${BASELINE_SUBJECT}" in this history, so the original code cannot be read`);
+    this.name = "BaselineMissing";
+  }
+}
+
+/*
+ * node:test's `test`, except that a test which reaches for the original code
+ * where the baseline commit is missing is reported as skipped, with that
+ * reason, instead of failed. Every other failure is a failure as usual, and
+ * where the commit exists nothing is skipped. Assertions a test makes before
+ * it reads the original still run.
+ */
+function test(name, options, fn) {
+  if (typeof options === "function") [options, fn] = [{}, options];
+  return require("node:test")(name, options, async (t) => {
+    try {
+      await fn(t);
+    } catch (err) {
+      if (!(err instanceof BaselineMissing)) throw err;
+      t.skip(err.message);
+    }
+  });
+}
+
 let cachedBaseline = null;
 function baselineSha() {
   if (cachedBaseline) return cachedBaseline;
@@ -43,7 +74,7 @@ function baselineSha() {
     ["log", "--all", "--format=%H", "--grep=^" + BASELINE_SUBJECT + "$", "--max-count=1"],
     { cwd: ROOT, encoding: "utf8" },
   ).trim();
-  if (!out) throw new Error(`no commit with the subject "${BASELINE_SUBJECT}"`);
+  if (!out) throw new BaselineMissing();
   cachedBaseline = out;
   return out;
 }
@@ -244,6 +275,8 @@ function extractFunction(src, name) {
 
 module.exports = {
   ROOT,
+  test,
+  BaselineMissing,
   baselineSha,
   readSource,
   inert,

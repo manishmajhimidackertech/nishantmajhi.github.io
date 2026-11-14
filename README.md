@@ -164,7 +164,9 @@ would. For the home page's Index it reads the real `_config.yml` and fills
 in `index.html`'s Liquid the way Jekyll does (`tests/site.js`). Tests named
 `regression:` also run their scenario against the code before the fixes,
 taken from git, and require it to get the answer wrong. They need the
-repository's history, and fail in a shallow clone.
+repository's history: the commit "used flex instead of grid". In a clone
+whose history does not hold that commit, the tests that read the original
+code are reported as skipped, with that reason, and the rest still run.
 
 The browser suite needs Chrome or Edge, and prints SKIP without one. It
 serves the folder over loopback and answers every outside request itself, so

@@ -1,6 +1,6 @@
 "use strict";
 
-const test = require("node:test");
+const { test } = require("./harness");
 const assert = require("node:assert/strict");
 const { load, fakeDocument, FakeElement, readSource } = require("./harness");
 
