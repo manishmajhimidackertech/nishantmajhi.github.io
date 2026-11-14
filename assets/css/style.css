@@ -106,39 +106,61 @@ html:not(.js) .plate img { opacity: 1; }
 .cap b { font-weight: 400; font-style: italic; font-size: clamp(1.4rem, 2.3vw, 2.1rem); line-height: 1.05; transition: color 0.3s; }
 .work:hover .cap b { color: var(--saffron); }
 
-/* The repositories, set as verse: a stanza for each stack. */
-.repos { position: relative; max-width: 1040px; margin: 0 auto; padding: 8vh 0 14vh; text-align: center; background: var(--ground); box-shadow: 0 0 60px 60px var(--ground); }
-.tally { margin-top: 18px; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+/* The repositories, as a ledger: the stack in the margin, then one line for
+   each kind within it. Only three sizes of type: stack, kind, name. */
+.repos { position: relative; max-width: 1180px; margin: 0 auto; padding: 8vh 0 14vh; background: var(--ground); box-shadow: 0 0 60px 60px var(--ground); }
+.repos h2 { text-align: left; }
+.repos-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px 40px; margin-bottom: 44px; }
+.tally { margin-top: 16px; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .tally b { font-weight: 400; color: var(--fg); }
 
-.filter { display: block; width: min(300px, 70vw); margin: 34px auto 60px; border-bottom: 1px solid var(--hair); transition: border-color 0.3s; }
+.filter { display: block; width: min(320px, 100%); border-bottom: 1px solid var(--dim); transition: border-color 0.3s; }
 .filter:focus-within { border-color: var(--saffron); }
 .filter input {
-  width: 100%; padding: 8px 0; border: 0; outline: 0; background: none; text-align: center;
-  color: var(--fg); font: italic 1.5rem var(--serif);
+  width: 100%; padding: 8px 0; border: 0; outline: 0; background: none;
+  color: var(--fg); font: italic 1.35rem var(--serif);
 }
 .filter input::placeholder { color: var(--dim); }
 .filter input::-webkit-search-cancel-button { display: none; }
 
 #loading-msg { font: 0.78rem var(--mono); color: var(--dim) !important; }
-.lang-group { margin-bottom: 54px; overflow-wrap: anywhere; font-size: clamp(1.3rem, 2.2vw, 1.85rem); line-height: 1.5; text-wrap: balance; }
+
+.lang-group {
+  display: grid; grid-template-columns: 250px minmax(0, 1fr); column-gap: 32px;
+  padding: 22px 0; border-top: 1px solid var(--hair);
+}
+.lang-group:last-of-type { border-bottom: 1px solid var(--hair); }
 .lang-group h4 {
-  margin-bottom: 8px;
-  font-family: var(--mono); font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--saffron);
+  grid-column: 1; grid-row: 1 / span 60; align-self: start;
+  font-style: italic; font-weight: 400; font-size: 1.7rem; line-height: 1.2; color: var(--saffron);
 }
+.lang-group h4 small {
+  margin-left: 10px; vertical-align: 0.3em;
+  font-family: var(--mono); font-style: normal; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--dim);
+}
+
+/* one line: the kind (if the stack has kinds), then its repositories */
+.kind { grid-column: 2; display: grid; grid-template-columns: 170px minmax(0, 1fr); column-gap: 20px; align-items: baseline; padding: 5px 0; }
+.kind.bare { grid-template-columns: minmax(0, 1fr); }
 .index-sub {
-  display: inline; margin: 0 0.5em 0 0.2em; vertical-align: 0.25em;
-  font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim);
+  font-family: var(--mono); font-size: 0.74rem; font-weight: 500; line-height: 1.9rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: #6fc7c1;
 }
-.index-row { display: inline; }
+.names { display: flex; flex-wrap: wrap; column-gap: 0; row-gap: 2px; }
+.index-row { display: inline-flex; align-items: baseline; max-width: 100%; }
 .index-row .idx, .index-row .ext { display: none; }
-.index-row a { font-weight: 300; transition: color 0.2s; }
-.index-row a:hover { color: var(--saffron); font-style: italic; }
-/* a grain between one and the next */
-.index-row::after { content: "·"; margin: 0 0.42em; color: var(--saffron); opacity: 0.8; }
-.index-row:nth-of-type(3n)::after { color: #1f9c95; }
-.index-row:nth-of-type(3n + 1)::after { color: #d63b2a; }
-.index-row:last-child::after { content: none; }
+.index-row a {
+  font-size: 1.3rem; line-height: 1.9rem; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+  transition: color 0.2s;
+}
+.index-row a:hover { color: var(--saffron); }
+/* a grain between one name and the next */
+.index-row::after { content: "·"; margin: 0 0.6em; color: var(--dim); }
+.index-row.last::after { content: none; }
+
+/* before the script has arranged it: still a readable list */
+.lang-group > .index-sub, .lang-group > .index-row { grid-column: 2; }
 
 /* -- small screens -------------------------------------------------------- */
 
@@ -150,10 +172,10 @@ html:not(.js) .plate img { opacity: 1; }
   .works { grid-template-columns: 1fr; row-gap: 8vh; padding-bottom: 12vh; }
   .works li:nth-child(even) { top: 0; }
   .works li:nth-child(odd) .cap { flex-direction: row; text-align: left; }
-  .repos { text-align: left; }
-  .filter { margin-left: 0; }
-  .filter input { text-align: left; }
-  .lang-group { text-wrap: wrap; }
+  .lang-group { grid-template-columns: minmax(0, 1fr); }
+  .lang-group h4 { grid-row: auto; margin-bottom: 8px; }
+  .kind, .lang-group > .index-sub, .lang-group > .index-row { grid-column: 1; }
+  .kind { grid-template-columns: minmax(0, 1fr); padding: 6px 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

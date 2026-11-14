@@ -6,38 +6,24 @@
     <title>Name Codes</title>
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💄</text></svg>"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>"
     />
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap");
 
       :root {
-        /* Barbie glass palette */
-        --bg-1: #ffd7ec;
-        --bg-2: #ffb8dd;
-        --bg-3: #e3bbff;
-        --bg-4: #fff0f8;
-
-        --hot-pink: #ff2d95;
-        --hot-pink-deep: #d6127a;
-        --magenta: #c2186b;
-        --plum: #6b0f45;
-        --plum-soft: #a3527a;
-
-        --glass: rgba(255, 255, 255, 0.42);
-        --glass-strong: rgba(255, 255, 255, 0.62);
-        --glass-border: rgba(255, 255, 255, 0.75);
-        --glass-shadow: rgba(214, 18, 122, 0.18);
-
-        --pink-chip: rgba(255, 45, 149, 0.14);
-        --pink-chip-border: rgba(255, 45, 149, 0.38);
-
-        --gold: #ffcf6e;
-        --good: #35b871;
-        --good-soft: rgba(53, 184, 113, 0.16);
-        --bad: #ff2f6d;
-        --bad-soft: rgba(255, 47, 109, 0.14);
-        --dropped: #c98bb0;
+        /* airport signage: black on yellow */
+        --yellow: #ffd200;
+        --ink: #121212;
+        --panel: #141414;
+        --line: #2c2a24;
+        --cream: #fff3c4;
+        --gold: #a8892a;
+        --gold-dim: #5c4c1b;
+        --good: #2fbf71;
+        --bad: #ff5a4f;
+        --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
       }
 
       * {
@@ -49,484 +35,560 @@
         padding: 0;
       }
       body {
-        position: relative;
-        background: linear-gradient(
-          160deg,
-          var(--bg-4) 0%,
-          var(--bg-1) 38%,
-          var(--bg-2) 68%,
-          var(--bg-3) 100%
-        );
-        color: var(--plum);
-        font-family:
-          "Quicksand",
-          -apple-system,
-          "Segoe UI",
-          sans-serif;
+        background: var(--yellow);
+        color: var(--ink);
+        font-family: var(--mono);
         min-height: 100vh;
-        padding: clamp(28px, 6vw, 64px) clamp(16px, 5vw, 24px) 64px;
+        padding: clamp(20px, 4vw, 44px) clamp(14px, 4vw, 28px) 64px;
         -webkit-font-smoothing: antialiased;
-        overflow-x: hidden;
-      }
-
-      /* floating glass blobs for depth */
-      body::before,
-      body::after {
-        content: "";
-        position: fixed;
-        border-radius: 50%;
-        filter: blur(60px);
-        z-index: 0;
-        pointer-events: none;
-      }
-      body::before {
-        width: 380px;
-        height: 380px;
-        top: -120px;
-        right: -100px;
-        background: radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.9),
-          var(--hot-pink) 70%
-        );
-        opacity: 0.35;
-      }
-      body::after {
-        width: 320px;
-        height: 320px;
-        bottom: -80px;
-        left: -100px;
-        background: radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.9),
-          var(--bg-3) 70%
-        );
-        opacity: 0.5;
       }
 
       .wrap {
-        max-width: 620px;
+        max-width: 860px;
         margin: 0 auto;
-        position: relative;
-        z-index: 1;
       }
 
-      .eyebrow {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.7rem;
-        font-weight: 600;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--hot-pink-deep);
-        margin-bottom: 14px;
-        display: inline-flex;
+      /* -- the sign above the desk ----------------------------------------- */
+
+      .topline {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 8px;
-        background: var(--glass-strong);
-        border: 1px solid var(--glass-border);
-        padding: 6px 14px 6px 10px;
-        border-radius: 999px;
-        backdrop-filter: blur(16px) saturate(180%);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-        box-shadow: 0 6px 18px -10px var(--glass-shadow);
+        gap: 12px;
+        padding-bottom: 12px;
+        border-bottom: 3px solid var(--ink);
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
       }
+      .topline .gate {
+        background: var(--ink);
+        color: var(--yellow);
+        padding: 4px 10px;
+        border-radius: 4px;
+      }
+
       h1 {
-        font-family: "Baloo 2", sans-serif;
-        font-weight: 700;
-        font-size: clamp(2.1rem, 6vw, 3rem);
-        line-height: 1.1;
-        margin: 0 0 12px;
-        color: var(--magenta);
-        letter-spacing: -0.01em;
-        text-shadow: 0 2px 0 rgba(255, 255, 255, 0.6);
+        font-family: var(--display);
+        font-weight: 900;
+        font-size: clamp(3.4rem, 12.5vw, 7.6rem);
+        line-height: 0.86;
+        letter-spacing: -0.005em;
+        text-transform: uppercase;
+        margin: clamp(18px, 3vw, 30px) 0 14px;
       }
-      h1 .sparkle {
-        color: var(--gold);
-        -webkit-text-stroke: 0;
-      }
-      .rule {
-        width: 60px;
-        height: 5px;
-        background: linear-gradient(90deg, var(--hot-pink), var(--gold));
-        border: none;
-        margin: 0 0 18px;
-        border-radius: 999px;
+      h1 .hollow {
+        color: transparent;
+        -webkit-text-stroke: 2px var(--ink);
       }
       .lede {
-        color: var(--plum-soft);
-        font-size: 0.98rem;
-        line-height: 1.65;
-        max-width: 48ch;
-        margin: 0 0 32px;
-        font-weight: 500;
+        max-width: 54ch;
+        margin: 0 0 clamp(22px, 4vw, 34px);
+        font-size: 0.8rem;
+        font-weight: 700;
+        line-height: 1.6;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
       }
 
-      .card {
-        background: var(--glass);
-        border: 1px solid var(--glass-border);
-        border-radius: 26px;
-        padding: clamp(22px, 4vw, 32px);
-        backdrop-filter: blur(22px) saturate(180%);
-        -webkit-backdrop-filter: blur(22px) saturate(180%);
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.8),
-          0 24px 50px -22px var(--glass-shadow),
-          0 2px 8px rgba(214, 18, 122, 0.08);
-        position: relative;
+      .label {
+        font-size: 0.66rem;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--gold);
       }
-      .card::before {
+
+      /* -- the boarding pass ------------------------------------------------ */
+
+      .pass {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 290px;
+        background: var(--panel);
+        color: var(--cream);
+        border-radius: 16px;
+      }
+      /* the tear line, with a bite out of the card at each end */
+      .pass::before,
+      .pass::after {
         content: "";
         position: absolute;
-        top: 0;
-        left: 12%;
-        right: 12%;
-        height: 1px;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.95),
-          transparent
-        );
+        right: 290px;
+        width: 26px;
+        height: 26px;
+        margin-right: -13px;
+        border-radius: 50%;
+        background: var(--yellow);
+      }
+      .pass::before {
+        top: -13px;
+      }
+      .pass::after {
+        bottom: -13px;
       }
 
-      .field {
-        margin-bottom: 22px;
+      .main {
+        padding: 24px 30px 28px;
+        min-width: 0;
       }
+      .passhead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 14px;
+        margin-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+      }
+      .passhead .carrier {
+        color: var(--yellow);
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.2em;
+      }
+
       .field label {
         display: block;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: var(--magenta);
-        margin-bottom: 8px;
+        margin-bottom: 4px;
       }
       .field input {
         width: 100%;
-        border: 1px solid var(--glass-border);
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.55);
-        font-family: "Baloo 2", sans-serif;
-        font-weight: 600;
-        font-size: clamp(1.3rem, 4vw, 1.6rem);
-        padding: 13px 16px;
-        color: var(--plum);
+        padding: 0 0 6px;
+        border: 0;
+        border-bottom: 3px solid var(--cream);
+        border-radius: 0;
         outline: none;
-        transition:
-          border-color 0.15s,
-          box-shadow 0.15s,
-          background 0.15s;
+        background: none;
+        color: var(--cream);
+        font-family: var(--display);
+        font-weight: 900;
+        font-size: clamp(2.4rem, 7vw, 3.4rem);
+        line-height: 1.1;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        transition: border-color 0.15s;
       }
       .field input:focus {
-        border-color: var(--hot-pink);
-        background: rgba(255, 255, 255, 0.78);
-        box-shadow: 0 0 0 4px var(--pink-chip);
+        border-color: var(--yellow);
       }
       .field input::placeholder {
-        color: #e4a9c9;
-        font-weight: 500;
-      }
-
-      hr.divider {
-        border: none;
-        border-top: 1px dashed rgba(214, 18, 122, 0.25);
-        margin: 6px 0 22px;
-      }
-
-      .section-label {
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: var(--magenta);
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
+        color: var(--gold-dim);
       }
 
       .strip {
         display: flex;
-        align-items: flex-end;
-        gap: 6px;
-        min-height: 48px;
+        align-items: center;
         flex-wrap: wrap;
-        margin-bottom: 26px;
+        gap: 6px;
+        min-height: 42px;
+        margin-top: 20px;
       }
       .tile {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 1.1rem;
-        font-weight: 700;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 1.7rem;
-        height: 2.2rem;
-        border-radius: 10px;
-        padding: 0 4px;
-        position: relative;
-        transition:
-          transform 0.18s ease,
-          opacity 0.18s ease;
+        min-width: 34px;
+        height: 40px;
+        padding: 0 6px;
+        border-radius: 5px;
+        font-size: 1.05rem;
+        font-weight: 800;
+        text-transform: uppercase;
       }
       .tile.kept {
-        color: var(--hot-pink-deep);
-        background: var(--pink-chip);
-        border: 1px solid var(--pink-chip-border);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-      }
-      .tile.kept::after {
-        content: "";
-        position: absolute;
-        left: 22%;
-        right: 22%;
-        bottom: 4px;
-        height: 2px;
-        background: var(--hot-pink);
-        border-radius: 2px;
-        opacity: 0.55;
+        background: var(--yellow);
+        color: var(--ink);
       }
       .tile.dropped {
-        color: var(--dropped);
+        border: 1.5px dashed var(--gold-dim);
+        color: var(--gold-dim);
         text-decoration: line-through;
-        opacity: 0.55;
       }
       .tile.merged {
-        font-size: 0.68rem;
-        opacity: 0.55;
-        color: var(--plum-soft);
+        min-width: 0;
         height: auto;
-        align-self: center;
+        margin-left: -2px;
+        padding: 0 2px;
+        font-size: 0.7rem;
+        color: var(--gold-dim);
         text-decoration: line-through;
-        margin-left: -3px;
       }
       .empty-hint {
-        color: #e4a9c9;
-        font-size: 0.92rem;
-        font-style: italic;
-        font-weight: 500;
-      }
-
-      .output-grid {
-        display: flex;
-        gap: 14px;
-        flex-wrap: wrap;
-        margin-bottom: 6px;
-      }
-      .code-card {
-        flex: 1 1 170px;
-        border: 1px solid var(--glass-border);
-        border-radius: 18px;
-        padding: 16px 18px;
-        background: rgba(255, 255, 255, 0.5);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-      }
-      .code-card.is-primary {
-        background: linear-gradient(
-          160deg,
-          rgba(255, 255, 255, 0.75),
-          var(--pink-chip)
-        );
-        border-color: var(--pink-chip-border);
-        box-shadow: 0 12px 26px -14px var(--glass-shadow);
-      }
-      .code-card .label {
-        font-size: 0.66rem;
+        color: var(--gold-dim);
+        font-size: 0.72rem;
         font-weight: 700;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: var(--plum-soft);
-        margin-bottom: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .code-card .code {
-        font-family: "JetBrains Mono", monospace;
-        font-weight: 700;
-        letter-spacing: 0.07em;
-        font-size: 1.7rem;
-        color: var(--plum);
-      }
-      .code-card.is-primary .code {
-        color: var(--hot-pink-deep);
-        font-size: 2rem;
-      }
-      .code-card .status {
-        font-size: 0.64rem;
-        font-weight: 700;
-        padding: 3px 9px;
-        border-radius: 999px;
-      }
-      .code-card .status.available {
-        background: var(--good-soft);
-        color: var(--good);
-      }
-      .code-card .status.taken {
-        background: var(--bad-soft);
-        color: var(--bad);
-      }
-      .use-btn {
-        margin-top: 12px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        border: none;
-        border-radius: 999px;
-        padding: 8px 14px;
-        cursor: pointer;
-        background: linear-gradient(135deg, var(--hot-pink), var(--gold));
-        color: #4a0026;
-        transition:
-          opacity 0.15s,
-          transform 0.12s;
-        font-family: "Quicksand", sans-serif;
-        box-shadow: 0 8px 18px -10px rgba(255, 45, 149, 0.55);
-      }
-      .use-btn:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-      }
-      .use-btn:disabled {
-        background: rgba(214, 18, 122, 0.14);
-        color: var(--plum-soft);
-        cursor: not-allowed;
-        box-shadow: none;
       }
 
       .hint {
         display: none;
-        align-items: flex-start;
-        gap: 9px;
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: var(--magenta);
-        background: rgba(255, 255, 255, 0.55);
-        border: 1px solid var(--pink-chip-border);
-        border-radius: 14px;
-        padding: 11px 14px;
-        margin-top: 16px;
+        gap: 10px;
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px dashed var(--line);
+        color: var(--gold);
+        font-size: 0.7rem;
+        font-weight: 700;
+        line-height: 1.6;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
       }
       .hint.show {
         display: flex;
       }
+      .hint span:first-child {
+        color: var(--yellow);
+      }
 
-      .directory {
-        margin-top: 28px;
-      }
-      .directory .card {
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.8),
-          0 14px 34px -20px var(--glass-shadow);
-      }
-      .dir-add {
+      /* -- the stub: where the name is going -------------------------------- */
+
+      .stub {
         display: flex;
-        gap: 8px;
-        margin-bottom: 14px;
+        flex-direction: column;
+        padding: 24px 22px 20px;
+        border-left: 2px dashed var(--gold-dim);
       }
-      .dir-add input {
-        flex: 1;
-        border: 1px solid var(--glass-border);
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.55);
-        padding: 10px 13px;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.85rem;
-        outline: none;
-        color: var(--plum);
+      .output-grid {
+        display: flex;
+        flex-direction: column;
       }
-      .dir-add input:focus {
-        border-color: var(--hot-pink);
+      .output-grid:empty::before {
+        content: "TO";
+        font-size: 0.66rem;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        color: var(--gold);
       }
-      .dir-add button {
-        background: linear-gradient(135deg, var(--magenta), var(--hot-pink));
-        color: #fff;
-        border: none;
-        border-radius: 14px;
-        padding: 10px 20px;
-        font-weight: 700;
-        font-size: 0.82rem;
+      .output-grid:empty::after {
+        content: "– – – –";
+        font-family: var(--display);
+        font-weight: 900;
+        font-size: 4.2rem;
+        line-height: 1.1;
+        color: var(--gold-dim);
+        white-space: nowrap;
+      }
+
+      .code-card .label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .code-card .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.6rem;
+        letter-spacing: 0.16em;
+      }
+      .code-card .status::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .code-card .status.available {
+        color: var(--good);
+      }
+      .code-card .status.taken {
+        color: var(--bad);
+      }
+      .code-card .code {
+        font-family: var(--display);
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        overflow-wrap: anywhere;
+      }
+
+      .code-card.is-primary .code {
+        margin: 6px 0 12px;
+        color: var(--yellow);
+        font-size: 4.6rem;
+      }
+      .code-card:not(.is-primary) {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        column-gap: 10px;
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+      }
+      .code-card:not(.is-primary) .label {
+        grid-column: 1 / -1;
+      }
+      .code-card:not(.is-primary) .code {
+        margin-top: 6px;
+        color: var(--cream);
+        font-size: 2.3rem;
+      }
+
+      .use-btn {
+        width: 100%;
+        padding: 11px 12px;
+        border: 2px solid var(--yellow);
+        border-radius: 6px;
+        background: var(--yellow);
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
         cursor: pointer;
-        font-family: "Quicksand", sans-serif;
-        box-shadow: 0 8px 18px -10px rgba(214, 18, 122, 0.5);
+        transition:
+          background 0.15s,
+          color 0.15s;
       }
-      .dir-add button:hover {
-        opacity: 0.92;
+      .use-btn:hover {
+        background: var(--cream);
+        border-color: var(--cream);
       }
+      .code-card:not(.is-primary) .use-btn {
+        width: auto;
+        margin-top: 6px;
+        padding: 8px 10px;
+        background: none;
+        color: var(--yellow);
+        font-size: 0.62rem;
+        letter-spacing: 0.14em;
+      }
+      .code-card:not(.is-primary) .use-btn:hover {
+        background: var(--yellow);
+        border-color: var(--yellow);
+        color: var(--ink);
+      }
+      .use-btn:disabled,
+      .code-card:not(.is-primary) .use-btn:disabled {
+        background: none;
+        border-color: var(--line);
+        color: var(--gold-dim);
+        cursor: not-allowed;
+      }
+
+      .barcode {
+        height: 34px;
+        margin-top: auto;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--gold) 0 2px,
+          transparent 2px 5px,
+          var(--gold) 5px 6px,
+          transparent 6px 8px,
+          var(--gold) 8px 11px,
+          transparent 11px 13px,
+          var(--gold) 13px 14px,
+          transparent 14px 18px
+        );
+      }
+      .stub .barcode {
+        margin-top: 20px;
+      }
+      .stub .output-grid {
+        flex: 1;
+      }
+
+      /* -- the board of codes already taken -------------------------------- */
+
+      .board {
+        margin-top: 34px;
+        padding: 22px 26px 26px;
+        background: var(--panel);
+        color: var(--cream);
+        border-radius: 16px;
+      }
+      .boardhead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 14px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .boardhead h2 {
+        margin: 0;
+        font-family: var(--display);
+        font-weight: 900;
+        font-size: 1.7rem;
+        line-height: 1;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: var(--yellow);
+      }
+      .count {
+        min-width: 28px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background: var(--yellow);
+        color: var(--ink);
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-align: center;
+      }
+
       .chips {
         display: flex;
-        gap: 8px;
         flex-wrap: wrap;
-      }
-      .chip {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.78rem;
-        background: rgba(255, 255, 255, 0.55);
-        border: 1px solid var(--pink-chip-border);
-        color: var(--plum);
-        padding: 6px 8px 6px 13px;
-        border-radius: 999px;
-        display: flex;
-        align-items: center;
         gap: 8px;
+        margin-bottom: 16px;
+      }
+      /* a split-flap tile: one code, hinged across the middle */
+      .chip,
+      .chips-empty i {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 86px;
+        height: 42px;
+        padding: 0 10px 0 14px;
+        border-radius: 4px;
+        background: #1f1f1f;
+      }
+      .chips-empty i::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        height: 1px;
+        background: #0a0a0a;
+      }
+      .chip span {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.5rem;
+        letter-spacing: 0.08em;
+        color: var(--cream);
       }
       .chip button {
+        position: relative;
+        z-index: 1;
+        margin-left: auto;
+        padding: 0 2px;
+        border: 0;
         background: none;
-        border: none;
-        color: var(--plum-soft);
-        cursor: pointer;
-        font-size: 0.9rem;
-        padding: 0;
+        color: var(--gold);
+        font-size: 1rem;
         line-height: 1;
+        cursor: pointer;
       }
       .chip button:hover {
         color: var(--bad);
       }
       .chips-empty {
-        color: var(--plum-soft);
-        font-size: 0.82rem;
-        font-weight: 500;
+        display: flex;
+        gap: 8px;
       }
 
+      .dir-add {
+        display: flex;
+        gap: 8px;
+      }
+      .dir-add input {
+        flex: 1;
+        min-width: 0;
+        padding: 12px 14px;
+        border: 1.5px dashed var(--gold-dim);
+        border-radius: 6px;
+        outline: none;
+        background: none;
+        color: var(--cream);
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .dir-add input:focus {
+        border-color: var(--yellow);
+        border-style: solid;
+      }
+      .dir-add input::placeholder {
+        color: var(--gold-dim);
+      }
+      .dir-add button {
+        padding: 0 20px;
+        border: 0;
+        border-radius: 6px;
+        background: var(--yellow);
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+      .dir-add button:hover {
+        background: var(--cream);
+      }
+
+      /* -- the small print -------------------------------------------------- */
+
       details {
-        margin-top: 26px;
-        color: var(--plum-soft);
-        font-size: 0.88rem;
-        line-height: 1.65;
-        background: var(--glass);
-        border: 1px solid var(--glass-border);
-        border-radius: 18px;
-        padding: 16px 20px;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        margin-top: 34px;
+        padding: 16px 0;
+        border-top: 3px solid var(--ink);
+        border-bottom: 3px solid var(--ink);
+        font-size: 0.8rem;
+        font-weight: 500;
+        line-height: 1.7;
       }
       summary {
         cursor: pointer;
-        color: var(--magenta);
-        font-weight: 700;
-        font-size: 0.84rem;
-        font-family: "Baloo 2", sans-serif;
+        font-family: var(--display);
+        font-weight: 900;
+        font-size: 1.4rem;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
       }
       details p {
-        margin: 11px 0 0;
-        font-weight: 500;
+        max-width: 70ch;
+        margin: 12px 0 0;
       }
       details code {
-        background: rgba(255, 255, 255, 0.6);
-        border: 1px solid var(--pink-chip-border);
         padding: 1px 6px;
-        border-radius: 6px;
-        color: var(--hot-pink-deep);
-        font-size: 0.82em;
+        border-radius: 3px;
+        background: var(--ink);
+        color: var(--yellow);
+        font-family: var(--mono);
+        font-size: 0.92em;
       }
 
       footer {
-        margin-top: 30px;
-        color: var(--plum-soft);
-        font-size: 0.78rem;
-        opacity: 0.85;
-        text-align: center;
-        font-weight: 500;
+        margin-top: 20px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        line-height: 1.6;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.7;
+      }
+
+      @media (max-width: 720px) {
+        .pass {
+          grid-template-columns: 1fr;
+        }
+        .pass::before,
+        .pass::after {
+          display: none;
+        }
+        .main {
+          padding: 20px 20px 24px;
+        }
+        .stub {
+          border-left: 0;
+          border-top: 2px dashed var(--gold-dim);
+          padding: 20px;
+        }
+        .board {
+          padding: 20px;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -535,70 +597,80 @@
         }
       }
       :focus-visible {
-        outline: 2px solid var(--hot-pink);
-        outline-offset: 2px;
+        outline: 2px solid var(--yellow);
+        outline-offset: 3px;
+      }
+      body > .wrap > :focus-visible,
+      details :focus-visible {
+        outline-color: var(--ink);
       }
     </style>
   </head>
   <body>
     <div class="wrap">
-      <div class="eyebrow">💗 Consonant skeleton generator</div>
-      <h1>
-        Every name has a<br />glam little skeleton<span class="sparkle">.</span>
-      </h1>
-      <hr class="rule" />
+      <div class="topline">
+        <span>✈ Name Codes</span>
+        <span class="gate">Gate NC</span>
+      </div>
+
+      <h1>Boarding<br /><span class="hollow">now</span> your name.</h1>
       <p class="lede">
-        Consonants stay, internal vowels go, and aspirated pairs like sh, kh,
-        and th count as one sound. The result is capped at 4 letters — short
-        enough to use, sparkly enough to still recognize.
+        Consonants stay. Inner vowels go. Pairs like sh, kh and th count as one
+        sound. Four letters at most, like an airport.
       </p>
 
-      <div class="card">
-        <div class="field">
-          <label>First name</label>
-          <input
-            id="firstName"
-            type="text"
-            placeholder="e.g. Govinda"
-            autocomplete="off"
-          />
+      <div class="pass">
+        <div class="main">
+          <div class="passhead">
+            <span class="label">Boarding pass</span>
+            <span class="carrier">✈ NC</span>
+          </div>
+
+          <div class="field">
+            <label class="label" for="firstName">From</label>
+            <input
+              id="firstName"
+              type="text"
+              placeholder="Govinda"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="strip" id="strip">
+            <span class="empty-hint">Type a first name</span>
+          </div>
+
+          <div class="hint" id="hint">
+            <span>!</span
+            ><span
+              >This code has no vowels at all - the alternate restores one if it
+              reads too dense.</span
+            >
+          </div>
         </div>
 
-        <hr class="divider" />
-
-        <div class="section-label">✨ Letter map</div>
-        <div class="strip" id="strip">
-          <span class="empty-hint">Start typing a name above…</span>
-        </div>
-
-        <div class="section-label">💎 Generated code</div>
-        <div class="output-grid" id="output"></div>
-        <div class="hint" id="hint">
-          <span>💡</span
-          ><span
-            >This code has no vowels at all - the alternate below restores one
-            if it reads too dense.</span
-          >
+        <div class="stub">
+          <div class="output-grid" id="output"></div>
+          <div class="barcode" aria-hidden="true"></div>
         </div>
       </div>
 
-      <div class="directory">
-        <div class="section-label">🎀 Already assigned codes</div>
-        <div class="card">
-          <div class="dir-add">
-            <input
-              id="dirInput"
-              type="text"
-              placeholder="Add a code already in use, e.g. GVND"
-            />
-            <button id="dirAdd">Add</button>
-          </div>
-          <div class="chips" id="chips">
-            <span class="chips-empty"
-              >No codes registered yet. Codes you mark "Use" below will appear
-              here automatically.</span
-            >
-          </div>
+      <div class="board">
+        <div class="boardhead">
+          <h2>Taken</h2>
+          <span class="count" id="takenCount">0</span>
+        </div>
+        <div class="chips" id="chips">
+          <span class="chips-empty"><i></i><i></i><i></i></span>
+        </div>
+        <div class="dir-add">
+          <input
+            id="dirInput"
+            type="text"
+            placeholder="+ Add a code, e.g. GVND"
+            aria-label="Add a code already in use"
+          />
+          <button id="dirAdd">Add</button>
         </div>
       </div>
 
@@ -637,7 +709,7 @@
         strip.innerHTML = "";
         if (!units.length) {
           strip.innerHTML =
-            '<span class="empty-hint">Start typing a name above…</span>';
+            '<span class="empty-hint">Type a first name</span>';
           return;
         }
         decided.forEach((u) => {
@@ -667,8 +739,8 @@
       function renderOutput(primary, secondary) {
         const out = document.getElementById("output");
         out.innerHTML =
-          codeCardHTML(primary, "Suggested", true) +
-          (secondary ? codeCardHTML(secondary, "Alternate", false) : "");
+          codeCardHTML(primary, "To", true) +
+          (secondary ? codeCardHTML(secondary, "Alt", false) : "");
         out.querySelectorAll(".use-btn").forEach((btn) => {
           btn.addEventListener("click", () => {
             usedCodes.add(btn.dataset.code);
@@ -683,10 +755,11 @@
 
       function renderDirectory() {
         const chips = document.getElementById("chips");
+        document.getElementById("takenCount").textContent = usedCodes.size;
         chips.innerHTML = "";
         if (!usedCodes.size) {
           chips.innerHTML =
-            '<span class="chips-empty">No codes registered yet. Codes you mark "Use" below will appear here automatically.</span>';
+            '<span class="chips-empty"><i></i><i></i><i></i></span>';
           return;
         }
         [...usedCodes].sort().forEach((code) => {
