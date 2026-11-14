@@ -283,7 +283,6 @@
     count = n;
     formEnd = 3.9 + FLIGHT;
 
-    $("seed").textContent = String(seed).padStart(6, "0");
     try {
       history.replaceState(null, "", `#${seed}`);
     } catch (e) {
@@ -392,7 +391,6 @@
     href: a.href,
   }));
   const petalLink = $("petal");
-  const number = $("number");
 
   function show(id) {
     if (id === hover) return;
@@ -401,7 +399,6 @@
     canvas.classList.toggle("petal", id >= 0);
     const work = works[id];
     petalLink.hidden = !work;
-    number.hidden = !!work;
     if (work) {
       petalLink.href = work.href;
       petalLink.textContent = "";
