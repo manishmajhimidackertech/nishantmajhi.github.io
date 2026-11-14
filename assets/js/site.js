@@ -5,7 +5,9 @@
  * grain back to the centre and pours a design that has not existed before.
  *
  * The number is kept in the address (#482913), so a mandala can be shared.
- * The Index in the drawer is built by repo-index.js; this file only filters it.
+ * One page down, each work's screenshot is poured as a sand painting, and a
+ * thread of spilled grains runs between them. The repository list there is
+ * built by repo-index.js; this file only filters it.
  */
 
 (function () {
@@ -56,6 +58,7 @@
     }
     let turn = 0;
     const next = () => palette[turn++ % palette.length];
+    colours = palette;
 
     const at = (r, a) => [Math.cos(a) * r * R, Math.sin(a) * r * R];
     const ring = (r0, r1, colour) => {
@@ -195,11 +198,17 @@
 
   /* -- the sand ------------------------------------------------------------ */
 
+  let colours = PALETTES[0]; // the palette of the mandala now on the table
+  const stage = $("top");
   const canvas = $("sand");
   const ctx = canvas.getContext("2d");
   let BW = 0, BH = 0, scale = 1; // the pixel buffer, and buffer px per CSS px
   let image, pixels;
   let CX = 0, CY = 0, RAD = 0; // the mandala's centre and radius, in buffer px
+
+  let measured = { w: 0, h: 0 };
+  let pouredOnce = false;
+  let onStage = true; // whether the first page is on screen
 
   let count = 0;
   let X, Y, VX, VY, HX, HY, HR, HA, DELAY, COL, LIT, PET;
@@ -217,10 +226,12 @@
   const SWEEP = 2.3;
 
   function measure() {
-    const small = Math.min(innerWidth, innerHeight) < 620;
+    const w = stage.clientWidth, h = stage.clientHeight;
+    const small = Math.min(w, h) < 620;
     scale = small ? Math.min(devicePixelRatio || 1, 2) : 1;
-    BW = Math.round(innerWidth * scale);
-    BH = Math.round(innerHeight * scale);
+    BW = Math.round(w * scale);
+    BH = Math.round(h * scale);
+    measured = { w, h };
     canvas.width = BW;
     canvas.height = BH;
     image = ctx.createImageData(BW, BH);
@@ -279,6 +290,8 @@
       /* the address just keeps the old number */
     }
 
+    if (pouredOnce) thread();
+    pouredOnce = true;
     if (instantly || still) settle();
     else {
       phase = "form";
@@ -303,6 +316,7 @@
 
   function frame(now) {
     requestAnimationFrame(frame);
+    if (!onStage) return;
     tick++;
 
     if (phase === "form") {
@@ -373,9 +387,12 @@
 
   /* -- hands --------------------------------------------------------------- */
 
-  const works = [...document.querySelectorAll("#works a")].map((a) => ({ title: a.textContent, href: a.href }));
+  const works = [...document.querySelectorAll("#works a")].map((a) => ({
+    title: a.querySelector("b").textContent,
+    href: a.href,
+  }));
   const petalLink = $("petal");
-  const hint = $("hint");
+  const number = $("number");
 
   function show(id) {
     if (id === hover) return;
@@ -384,7 +401,7 @@
     canvas.classList.toggle("petal", id >= 0);
     const work = works[id];
     petalLink.hidden = !work;
-    hint.hidden = !!work;
+    number.hidden = !!work;
     if (work) {
       petalLink.href = work.href;
       petalLink.textContent = "";
@@ -419,11 +436,26 @@
   }
 
   let held = null; // { x, y, moved, type } while a pointer is down
-  const toBuffer = (ev) => [ev.clientX * scale, ev.clientY * scale];
+  const toBuffer = (ev) => {
+    const box = canvas.getBoundingClientRect();
+    return [(ev.clientX - box.left) * scale, (ev.clientY - box.top) * scale];
+  };
+  const onSand = (x, y) => Math.hypot(x - CX, y - CY) < RAD * 1.06;
+
+  // A finger on the mandala moves sand; a finger anywhere else scrolls the page.
+  canvas.addEventListener(
+    "touchstart",
+    (ev) => {
+      const [x, y] = toBuffer(ev.touches[0]);
+      if (phase === "rest" && onSand(x, y)) ev.preventDefault();
+    },
+    { passive: false },
+  );
 
   canvas.addEventListener("pointerdown", (ev) => {
     if (phase !== "rest") return;
     const [x, y] = toBuffer(ev);
+    if (ev.pointerType === "touch" && !onSand(x, y)) return;
     held = { x, y, moved: 0, type: ev.pointerType };
     canvas.setPointerCapture(ev.pointerId);
   });
@@ -482,29 +514,155 @@
   addEventListener("resize", () => {
     clearTimeout(resizing);
     resizing = setTimeout(() => {
-      measure();
-      pour(seed, true);
+      // a phone's address bar sliding away is not a reason to lose the sand
+      const w = stage.clientWidth, h = stage.clientHeight;
+      if (w !== measured.w || Math.abs(h - measured.h) > 120) {
+        measure();
+        pour(seed, true);
+      }
+      thread();
     }, 150);
   });
 
-  /* -- the drawer ---------------------------------------------------------- */
+  new IntersectionObserver(([entry]) => {
+    onStage = entry.isIntersecting;
+    stale = true;
+  }).observe(stage);
 
-  const drawer = $("drawer");
-  const opener = $("open-index");
+  /* -- one page down: the works as sand paintings -------------------------- */
+
+  // Pour one screenshot into its canvas, from the middle outwards.
+  function plate(holder) {
+    const img = holder.querySelector("img");
+    const cv = holder.querySelector("canvas");
+    const begin = () => {
+      const w = Math.min(760, Math.round(holder.clientWidth * Math.min(devicePixelRatio || 1, 2)));
+      const h = Math.round((w * 602) / 1358);
+      if (!w || !img.naturalWidth) return;
+      const off = document.createElement("canvas");
+      off.width = w;
+      off.height = h;
+      const og = off.getContext("2d", { willReadFrequently: true });
+      og.drawImage(img, 0, 0, w, h);
+      let src;
+      try {
+        src = og.getImageData(0, 0, w, h).data;
+      } catch (e) {
+        return holder.classList.add("plain");
+      }
+      cv.width = w;
+      cv.height = h;
+      const g = cv.getContext("2d");
+      const out = g.createImageData(w, h);
+      const px = new Uint32Array(out.data.buffer);
+      const rand = rng(w * 7919 + img.src.length);
+      const edge = w * 0.03;
+
+      // Each painting is poured in two sands: one colour from the mandala
+      // for the dark of the screenshot, cream for its light.
+      const order = [...document.querySelectorAll(".plate")].indexOf(holder);
+      const strong = colours.filter((hex) => hex.toLowerCase() !== CREAM && hex.toLowerCase() !== "#fdf0d5");
+      const ink = parseInt(strong[order % strong.length].slice(1), 16);
+      const ir = ink >> 16, ig = (ink >> 8) & 255, ib = ink & 255;
+      let lo = 255, hi = 0, sum = 0, seen = 0;
+      for (let i = 0; i < src.length; i += 16) {
+        const l = (src[i] * 3 + src[i + 1] * 6 + src[i + 2]) / 10;
+        if (l < lo) lo = l;
+        if (l > hi) hi = l;
+        sum += l;
+        seen++;
+      }
+      const range = Math.max(1, hi - lo);
+      // a curve that keeps a dark screen mostly colour and a light one mostly
+      // cream, while pulling what is drawn on it apart from its ground
+      const mean = Math.min(0.97, Math.max(0.03, (sum / seen - lo) / range));
+      const curve = Math.min(3, Math.max(0.3, Math.log(mean < 0.5 ? 0.2 : 0.82) / Math.log(mean)));
+
+      const grains = [];
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const i = (y * w + x) * 4;
+          const light = Math.pow(((src[i] * 3 + src[i + 1] * 6 + src[i + 2]) / 10 - lo) / range, curve);
+          // thinner toward the edge, so the painting has a ragged border
+          const margin = Math.min(x, y, w - 1 - x, h - 1 - y) / edge;
+          if (rand() > (0.5 + 0.36 * light) * Math.min(1, margin * margin + 0.08)) continue;
+          const k = 0.8 + rand() * 0.34;
+          const m = light * light * (3 - 2 * light);
+          const r = Math.min(255, (ir + (244 - ir) * m) * k), gg = Math.min(255, (ig + (236 - ig) * m) * k), b = Math.min(255, (ib + (220 - ib) * m) * k);
+          const dx = (x - w / 2) / w, dy = (y - h / 2) / w;
+          grains.push(y * w + x, (255 << 24) | (b << 16) | (gg << 8) | r, Math.hypot(dx, dy) * 1.5 + rand() * 0.25);
+        }
+      }
+      if (still) {
+        for (let n = 0; n < grains.length; n += 3) px[grains[n]] = grains[n + 1];
+        return g.putImageData(out, 0, 0);
+      }
+      const t0 = performance.now();
+      const step = (now) => {
+        const t = (now - t0) / 1500;
+        for (let n = 0; n < grains.length; n += 3) if (grains[n + 2] < t) px[grains[n]] = grains[n + 1];
+        g.putImageData(out, 0, 0);
+        if (t < 1.2) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    if (img.complete && img.naturalWidth) begin();
+    else img.addEventListener("load", begin, { once: true });
+  }
+
+  const plates = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        plates.unobserve(entry.target);
+        plate(entry.target);
+      }
+    },
+    { rootMargin: "0px 0px -12% 0px" },
+  );
+  document.querySelectorAll(".plate").forEach((el) => {
+    el.querySelector("img").loading = "eager";
+    plates.observe(el);
+  });
+
+  // The thread of spilled sand the works hang from, in the mandala's colours.
+  const trail = $("trail");
+  const worksList = $("works");
+  function thread() {
+    if (!trail || !worksList) return;
+    const width = 160;
+    const height = Math.min(16000, worksList.offsetTop + worksList.offsetHeight - 40);
+    trail.width = width;
+    trail.height = height;
+    trail.style.height = `${height}px`;
+    const g = trail.getContext("2d");
+    const out = g.createImageData(width, height);
+    const px = new Uint32Array(out.data.buffer);
+    const rand = rng(seed + 77);
+    const inks = colours.concat(CREAM).map((hex) => {
+      const v = parseInt(hex.slice(1), 16);
+      return (255 << 24) | ((v & 255) << 16) | (v & 0xff00) | (v >> 16);
+    });
+    const narrow = innerWidth <= 760;
+    for (let y = 0; y < height; y++) {
+      const sway = narrow ? 0 : Math.sin(y / 210) * 34 + Math.sin(y / 67) * 6;
+      const fade = Math.min(1, y / 240, (height - y) / 300);
+      const grainsHere = (narrow ? 2.4 : 3.6) * fade;
+      for (let n = 0; n < grainsHere; n++) {
+        if (rand() > grainsHere - n) continue;
+        // mostly close to the line, a few strays well off it
+        const off = (rand() + rand() + rand() - 1.5) * (rand() < 0.08 ? 44 : 9);
+        const x = Math.round((narrow ? 22 : width / 2) + sway + off);
+        if (x >= 0 && x < width) px[y * width + x] = inks[(rand() * inks.length) | 0];
+      }
+    }
+    g.putImageData(out, 0, 0);
+  }
+
+  /* -- the repositories: a filter ------------------------------------------ */
+
   const input = $("repo-filter");
   const list = $("repo-list");
-
-  function setDrawer(open) {
-    drawer.classList.toggle("open", open);
-    drawer.inert = !open;
-    opener.setAttribute("aria-expanded", String(open));
-    if (open) $("close-index").focus({ preventScroll: true });
-    else if (drawer.contains(document.activeElement)) opener.focus();
-  }
-  setDrawer(false);
-  opener.addEventListener("click", () => setDrawer(!drawer.classList.contains("open")));
-  $("close-index").addEventListener("click", () => setDrawer(false));
-  canvas.addEventListener("pointerdown", () => setDrawer(false));
 
   function filter() {
     const q = input.value.trim().toLowerCase();
@@ -535,12 +693,14 @@
 
   addEventListener("keydown", (ev) => {
     const typing = document.activeElement === input;
-    if (ev.key === "Escape") setDrawer(false);
-    else if (ev.key === "/" && !typing && !ev.ctrlKey && !ev.metaKey) {
+    if (ev.key === "Escape" && typing) {
+      input.value = "";
+      filter();
+      input.blur();
+    } else if (ev.key === "/" && !typing && !ev.ctrlKey && !ev.metaKey) {
       ev.preventDefault();
-      setDrawer(true);
       input.focus();
-    } else if (ev.key === " " && !typing && document.activeElement === document.body) {
+    } else if (ev.key === " " && onStage && scrollY < 40 && document.activeElement === document.body) {
       ev.preventDefault();
       sweep();
     }
@@ -551,5 +711,7 @@
   measure();
   const asked = parseInt(location.hash.slice(1), 10);
   pour(asked > 0 && asked < 1e6 ? asked : freshSeed());
+  thread();
+  addEventListener("load", thread);
   requestAnimationFrame(frame);
 })();

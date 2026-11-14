@@ -2,56 +2,70 @@
 layout: default
 title: "Manish Majhi"
 ---
-<canvas id="sand" aria-hidden="true"></canvas>
+<section class="stage" id="top">
+  <canvas id="sand" aria-hidden="true"></canvas>
 
-<header class="sig">
-  <h1>Manish <em>Majhi</em></h1>
-  <p>Software developer · Kathmandu</p>
-</header>
+  <header class="sig">
+    <h1>Manish <em>Majhi</em></h1>
+    <p>Software developer · Kathmandu</p>
+  </header>
 
-<nav class="links" aria-label="Site">
-  <button type="button" id="open-index" aria-controls="drawer" aria-expanded="false">Index</button>
-  <a href="{{ '/Resume/Manish_Majhi-Resume.pdf' | relative_url }}" download>Résumé</a>
-  <a href="mailto:manishmajhi79@gmail.com">Say hello</a>
-</nav>
+  <a class="to-index" href="#index">Index</a>
 
-<p class="caption" aria-live="polite">
-  <a id="petal" hidden></a>
-  <span id="hint">Twelve petals, twelve works · draw a finger through the sand</span>
-</p>
+  <a class="mail" href="mailto:manishmajhi79@gmail.com">manishmajhi79@gmail.com</a>
 
-<p class="number" aria-hidden="true">Nº <b id="seed">······</b></p>
-<button type="button" class="sweep" id="sweep">Sweep it away</button>
+  <p class="caption" aria-live="polite">
+    <a id="petal" hidden></a>
+    <span id="number">Nº <b id="seed">······</b></span>
+  </p>
 
-<aside class="drawer" id="drawer" aria-label="Index">
-  <button type="button" class="close" id="close-index" aria-label="Close">×</button>
+  <button type="button" class="sweep" id="sweep">Sweep it away</button>
+</section>
+
+<main class="index" id="index">
+  <canvas class="trail" id="trail" aria-hidden="true"></canvas>
 
   <h2>Works</h2>
+
   <ol class="works" id="works">
     {% for project in site.data.projects %}
-    <li><a href="{{ project.folder }}/">{{ project.title }}</a></li>
+    <li>
+      <a class="work" href="{{ project.folder }}/">
+        <span class="plate">
+          <canvas aria-hidden="true"></canvas>
+          <img src="{{ '/assets/thumbs/' | append: project.thumb | relative_url }}" alt="" loading="lazy" />
+        </span>
+        <span class="cap"><i>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</i><b>{{ project.title }}</b></span>
+      </a>
+    </li>
     {% endfor %}
   </ol>
 
-  <h2>Repositories</h2>
-  <p class="tally"><b id="repo-count">−</b> in <b id="lang-count">−</b> stacks</p>
+  <section class="repos" id="repos">
+    <h2>Repositories</h2>
+    <p class="tally"><b id="repo-count">−</b> in <b id="lang-count">−</b> stacks</p>
 
-  <label class="filter">
-    <span class="sr">Filter repositories</span>
-    <input id="repo-filter" type="search" placeholder="Search" autocomplete="off" spellcheck="false" />
-  </label>
+    <label class="filter">
+      <span class="sr">Filter repositories</span>
+      <input id="repo-filter" type="search" placeholder="sift" autocomplete="off" spellcheck="false" />
+    </label>
 
-  <nav id="repo-nav" aria-label="Repositories">
-    <div id="repo-list">
-      <div id="loading-msg">Loading GitHub repos…</div>
-    </div>
-  </nav>
+    <nav id="repo-nav" aria-label="Repositories">
+      <div id="repo-list">
+        <div id="loading-msg">Loading GitHub repos…</div>
+      </div>
+    </nav>
+  </section>
 
-  <p class="reach">
-    <a href="mailto:manishmajhi79@gmail.com">manishmajhi79@gmail.com</a>
-    <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-  </p>
-</aside>
+  <footer class="reach">
+    <a class="big" href="mailto:manishmajhi79@gmail.com">manishmajhi79@gmail.com</a>
+    <p>
+      <a href="{{ '/Resume/Manish_Majhi-Resume.pdf' | relative_url }}" download>Résumé</a>
+      <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="#top">Back to the sand</a>
+    </p>
+  </footer>
+</main>
 
 <script>
   const USERNAME = {{ site.github_username | jsonify }};

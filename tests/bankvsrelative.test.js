@@ -1,6 +1,6 @@
 "use strict";
 
-const test = require("node:test");
+const { test } = require("./harness");
 const assert = require("node:assert/strict");
 const vm = require("node:vm");
 const { load, readSource, inlineScripts, extractFunction, createContext } = require("./harness");
