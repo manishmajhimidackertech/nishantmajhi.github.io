@@ -114,8 +114,12 @@ html:not(.js) .plate img { opacity: 1; }
 .tally { margin-top: 16px; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .tally b { font-weight: 400; color: var(--fg); }
 
-.filter { display: block; width: min(320px, 100%); border-bottom: 1px solid var(--dim); transition: border-color 0.3s; }
-.filter:focus-within { border-color: var(--saffron); }
+.filter {
+  display: flex; align-items: center; gap: 10px; width: min(320px, 100%);
+  border-bottom: 1px solid var(--dim); color: var(--dim); transition: border-color 0.3s, color 0.3s;
+}
+.filter:focus-within { border-color: var(--saffron); color: var(--saffron); }
+.filter svg { flex: none; width: 1.05rem; height: 1.05rem; }
 .filter input {
   width: 100%; padding: 8px 0; border: 0; outline: 0; background: none;
   color: var(--fg); font: italic 1.35rem var(--serif);
@@ -133,10 +137,6 @@ html:not(.js) .plate img { opacity: 1; }
 .lang-group h4 {
   grid-column: 1; grid-row: 1 / span 60; align-self: start;
   font-style: italic; font-weight: 400; font-size: 1.7rem; line-height: 1.2; color: var(--saffron);
-}
-.lang-group h4 small {
-  margin-left: 10px; vertical-align: 0.3em;
-  font-family: var(--mono); font-style: normal; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--dim);
 }
 
 /* one line: the kind (if the stack has kinds), then its repositories */
