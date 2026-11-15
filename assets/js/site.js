@@ -620,12 +620,6 @@
     const groups = list.querySelectorAll(".lang-group:not(.arranged)");
     for (const group of groups) {
       group.classList.add("arranged");
-      const heading = group.querySelector("h4");
-      const rows = group.querySelectorAll(".index-row").length;
-      const tally = document.createElement("small");
-      tally.textContent = rows;
-      heading.append(tally);
-
       let line = null;
       const open = (sub) => {
         line = document.createElement("div");
